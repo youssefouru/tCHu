@@ -14,13 +14,22 @@ public final class Station {
 
     /**
      * return the identification number of the station
-     * @return id (int)
+     * @return id (int) : the
      */
     public int id(){
         return id;
     }
 
+    /**
+     * return the name of the station
+     * @return name(String): return the attribute name
+     */
     public String name(){
         return this.name;
+    }
+
+    @Override
+    public String toString(){
+        return this.name();
     }
 }

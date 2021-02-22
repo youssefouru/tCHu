@@ -1,6 +1,5 @@
-package ch.epfl.tCHu;
+package ch.epfl.tchu;
 
-import ch.epfl.tchu.Precodition;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -1,6 +1,5 @@
-package ch.epfl.tCHu.game;
+package ch.epfl.tchu.game;
 
-import ch.epfl.tchu.game.Station;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

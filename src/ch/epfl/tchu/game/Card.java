@@ -25,7 +25,7 @@ public enum Card {
     private final Color color;
 
     /**
-     * contructor of the
+     * contructor of the Card enum type
      * @param color (Color) : color of the card
      */
     Card(Color color){

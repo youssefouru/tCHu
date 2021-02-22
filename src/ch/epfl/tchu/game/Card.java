@@ -20,25 +20,27 @@ public enum Card {
     // ALL contains all the element of this enum type
     public final static List<Card> ALL = List.of(Card.values());
     //CARS contains the element of this enum type from BLACK to WHITE
-    public final static List<Card> CARS = List.of(BLACK,VIOLET,BLUE,GREEN,YELLOW, ORANGE, RED, WHITE);
+    public final static List<Card> CARS = List.of(BLACK, VIOLET, BLUE, GREEN, YELLOW, ORANGE, RED, WHITE);
     //This represent the color of the enum type
     private final Color color;
 
     /**
      * contructor of the Card enum type
+     *
      * @param color (Color) : color of the card
      */
-    Card(Color color){
-        this.color =color;
+    Card(Color color) {
+        this.color = color;
     }
 
     /**
      * this method creat a card of a color that you put in paramter
+     *
      * @param color (Color) : color of the card
      * @return card (Card) : return the card with the color that has been choosen in parameter
      */
-    public static Card of(Color color){
-        switch (color){
+    public static Card of(Color color) {
+        switch (color) {
             case BLACK:
                 return Card.BLACK;
             case VIOLET:
@@ -63,9 +65,10 @@ public enum Card {
 
     /**
      * this methode retrun the color of the card
+     *
      * @return color (Color) : the color of the card
      */
-    public Color color(){
+    public Color color() {
         return this.color;
     }
 }

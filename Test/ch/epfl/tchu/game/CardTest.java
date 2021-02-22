@@ -28,11 +28,11 @@ public class CardTest {
 
   @Test
   void checkTheElements(){
-      var expectedValues = new Card[]{
+      var expected = new Card[]{
               BLACK, VIOLET, BLUE, GREEN, YELLOW, ORANGE, RED, WHITE, LOCOMOTIVE
       };
 
-      assertArrayEquals(expectedValues, Card.values());
+      assertArrayEquals(expected, Card.values());
   }
 
     @Test

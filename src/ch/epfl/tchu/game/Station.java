@@ -43,8 +43,4 @@ public final class Station {
         return this.name();
     }
 
-
-    public class Builder {
-
-    }
 }

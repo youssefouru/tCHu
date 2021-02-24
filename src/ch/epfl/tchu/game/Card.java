@@ -1,8 +1,12 @@
 package ch.epfl.tchu.game;
 
 import java.util.List;
-
-//Amine Youssef Louis Barinka
+/**
+ * Cards
+ *
+ * @author Amine Youssef (324253)
+ * @author Louis Yves André Barinka (329847)
+ */
 public enum Card {
     BLACK(Color.BLACK),
     VIOLET(Color.VIOLET),
@@ -15,13 +19,21 @@ public enum Card {
     LOCOMOTIVE(null);
 
 
-    // COUNT represent the number of all the values of this enum type
+    /**
+     * COUNT (int) :  represent the number of all the values of this enum type
+     */
     public final static int COUNT = 9;
-    // ALL contains all the element of this enum type
+    /**
+     * ALL (List<Card>) : contains all the element of this enum type
+     */
     public final static List<Card> ALL = List.of(Card.values());
-    //CARS contains the element of this enum type from BLACK to WHITE
+    /**
+     * CARS (List<Card>) : contains the element of this enum type from BLACK to WHITE
+     */
     public final static List<Card> CARS = List.of(BLACK, VIOLET, BLUE, GREEN, YELLOW, ORANGE, RED, WHITE);
-    //This represent the color of the enum type
+    /**
+     * color (Color) : This represent the color of the enum type
+     */
     private final Color color;
 
     /**

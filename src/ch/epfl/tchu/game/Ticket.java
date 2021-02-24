@@ -2,23 +2,54 @@ package ch.epfl.tchu.game;
 
 import ch.epfl.tchu.Precondition;
 
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.TreeSet;
 
-public class Ticket implements Comparable<Ticket> {
+/**
+ * A ticket
+ *
+ * @author Amine Youssef (324253)
+ * @author Louis Yves André Barinka (329847)
+ */
+public final class Ticket implements Comparable<Ticket> {
+
+    /**
+     * (List<Trip>) : this attribute of all trips linked to this ticket
+     */
     private final List<Trip> trips;
+    /**
+     * (String) : the text written on the ticket
+     */
     private final String text;
 
-
+    /**
+     * Constructor of Ticket
+     *
+     * @param trips (List<Trip>) : the list of Trips linked to this ticket
+     */
     public Ticket(List<Trip> trips) {
         Precondition.checkArgument(!trips.isEmpty());
         this.trips = Objects.requireNonNull(trips);
         text = computeText();
     }
 
+    /**
+     * Constructor of Ticket
+     *
+     * @param from   (Station) : the departure's station of trip linked to this ticket
+     * @param to     (Station) : the arrival's station of the trip linked to this ticket
+     * @param points (Station) : the points earned in the trip linked to this ticket
+     */
     public Ticket(Station from, Station to, int points) {
-        this(Arrays.asList(new Trip(from, to, points)));
+        this(List.of(new Trip(from, to, points)));
     }
 
+    /**
+     * this method compute and return the text wich has been to be written on the ticket
+     *
+     * @return (String) : the text wich has to be written on the ticket
+     */
     private String computeText() {
         TreeSet<String> destinations = new TreeSet<String>();
         String departureStation = trips.get(0).from().name();
@@ -41,10 +72,21 @@ public class Ticket implements Comparable<Ticket> {
         return finalText;
     }
 
+    /**
+     * return the text written on the ticket
+     *
+     * @return text (String) : the attribute text
+     */
     public String text() {
-        return text;
+        return this.text;
     }
 
+    /**
+     * this method the number of points the ticket is worth knowing that the connectivity in paramater is that of the player owning the ticket
+     *
+     * @param connectivity (StationConnectivity) : represent network to which we want to check the connection of the two stations from and to
+     * @return points (int) : it returns the points based on the connectivity of the from's station and the to's station
+     */
     public int points(StationConnectivity connectivity) {
         int maxPointsEarned = 0;
         int minPoint = trips.get(0).points();
@@ -70,15 +112,20 @@ public class Ticket implements Comparable<Ticket> {
                 totalPoint = minPoint * (-1);
             }
         }
-            return totalPoint;
+        return totalPoint;
     }
 
+
+    /**
+     * this method compare this (Ticket) to that (That) based on the alphabetic order
+     *
+     * @param ticket (Ticket) : Ticket that we compare this to
+     * @return compare (int) : return a number based on the comparison
+     */
     public int compareTo(Ticket ticket) {
         int compare = text.compareTo(ticket.text());
         return compare;
     }
-
-
 
 
 }

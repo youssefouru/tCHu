@@ -1,11 +1,19 @@
 package ch.epfl.tchu.game;
 
+/**
+ * StationConnectivity
+ *
+ * @author Amine Youssef (324253)
+ * @author Louis Yves André Barinka (329847)
+ */
 public interface StationConnectivity {
+
     /**
      * return true if and only if station1 and station2 are connected
-     * @param station1 (Station)
-     * @param station2 (Station)
-     * @return aboolean(Boolean)
+     *
+     * @param station1 (Station) : the first station
+     * @param station2 (Station) : the second station
+     * @return aboolean(Boolean) : return true if the two station are connected and false if they are not
      */
-    boolean connected(Station station1,Station station2);
+    boolean connected(Station station1, Station station2);
 }

@@ -1,8 +1,12 @@
 package ch.epfl.tchu;
 
-public final class Precodition {
+public final class Precondition {
 
-    private Precodition(){
+    private Precondition(){
+    }
+
+    public static void main(String[] args) {
+
     }
 
     public static void checkArgument(boolean argument){

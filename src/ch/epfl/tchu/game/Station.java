@@ -1,12 +1,11 @@
 package ch.epfl.tchu.game;
-import ch.epfl.tchu.Precodition;
-import org.junit.jupiter.api.Test;
+import ch.epfl.tchu.Precondition;
 
 public final class Station {
     private int id;
     private String name;
     public Station(int id,String name){
-        Precodition.checkArgument(id>=0);
+        Precondition.checkArgument(id>=0);
         this.id=id;
         this.name=name;
 

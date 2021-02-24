@@ -7,9 +7,9 @@ package ch.epfl.tchu;
  * @author Louis Yves André Barinka (329847)
  */
 
-public final class Precondition {
+public final class Preconditions {
 
-    private Precondition(){
+    private Preconditions(){
     }
 
     /**

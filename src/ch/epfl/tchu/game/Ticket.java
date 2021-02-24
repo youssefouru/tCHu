@@ -1,6 +1,6 @@
 package ch.epfl.tchu.game;
 
-import ch.epfl.tchu.Precondition;
+import ch.epfl.tchu.Preconditions;
 
 import java.util.List;
 import java.util.Objects;
@@ -25,7 +25,7 @@ public final class Ticket implements Comparable<Ticket> {
      * @param trips (List<Trip>) : the list of Trips linked to this ticket
      */
     public Ticket(List<Trip> trips) {
-        Precondition.checkArgument(!trips.isEmpty());
+        Preconditions.checkArgument(!trips.isEmpty());
         boolean cond  = true;
         String name = trips.get(0).from().name();
         for(Trip trip : trips){
@@ -34,7 +34,7 @@ public final class Ticket implements Comparable<Ticket> {
 
             }
         }
-        Precondition.checkArgument(cond);
+        Preconditions.checkArgument(cond);
         this.trips = Objects.requireNonNull(trips);
 
         text = computeText();

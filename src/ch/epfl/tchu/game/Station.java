@@ -1,6 +1,6 @@
 package ch.epfl.tchu.game;
 
-import ch.epfl.tchu.Precondition;
+import ch.epfl.tchu.Preconditions;
 
 /**
  * A Station
@@ -21,7 +21,7 @@ public final class Station {
      * @param name (String) : the name of the station
      */
     public Station(int id, String name) {
-        Precondition.checkArgument(id >= 0);
+        Preconditions.checkArgument(id >= 0);
         this.id = id;
         this.name = name;
 

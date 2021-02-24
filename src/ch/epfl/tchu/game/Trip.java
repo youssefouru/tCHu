@@ -1,5 +1,7 @@
 package ch.epfl.tchu.game;
 
+import ch.epfl.tchu.Precondition;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -17,9 +19,9 @@ public class Trip {
      * @param points (int) : point corresponding to the trip
      */
     public Trip(Station from, Station to, int points) {
+        Precondition.checkArgument(points>0);
         this.from = Objects.requireNonNull(from);
         this.to = Objects.requireNonNull(to);
-
         this.points = points;
     }
 

@@ -1,5 +1,7 @@
 package ch.epfl.tchu.game;
 
+import ch.epfl.tchu.Precondition;
+
 import java.util.*;
 
 public class Ticket implements Comparable<Ticket> {
@@ -8,6 +10,7 @@ public class Ticket implements Comparable<Ticket> {
 
 
     public Ticket(List<Trip> trips) {
+        Precondition.checkArgument(!trips.isEmpty());
         this.trips = Objects.requireNonNull(trips);
         text = computeText();
     }
@@ -28,7 +31,8 @@ public class Ticket implements Comparable<Ticket> {
             String dp = String.format("%s (%s)", destination, points);
             destinations.add(dp);
         }
-        String rightPart = String.join(",", destinations);
+
+        String rightPart = String.join(", ", destinations);
         if (destinations.size() == 1) {
             finalText = String.format("%s - %s", departureStation, rightPart);
         } else {

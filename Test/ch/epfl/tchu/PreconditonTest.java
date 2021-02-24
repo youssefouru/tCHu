@@ -8,7 +8,7 @@ public class PreconditonTest {
     @Test
     void checkIfCheckArgumentThrowsTheRightException() {
         assertThrows(IllegalArgumentException.class, () -> {
-            Precodition.checkArgument(false);
+            Precondition.checkArgument(false);
         });
     }
 }

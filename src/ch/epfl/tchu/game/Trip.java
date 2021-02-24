@@ -9,7 +9,13 @@ public class Trip {
     final private Station from;
     final private Station to;
     final private int points;
-
+    
+    /**
+     * constructor of Trip
+     * @param from (Station) : the departure station of the the trip
+     * @param to (Station) : the arrival station of the trip
+     * @param points (int) : point corresponding to the trip
+     */
     public Trip(Station from, Station to, int points) {
         this.from = Objects.requireNonNull(from);
         this.to = Objects.requireNonNull(to);

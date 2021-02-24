@@ -26,10 +26,10 @@ public final class Ticket implements Comparable<Ticket> {
      */
     public Ticket(List<Trip> trips) {
         Preconditions.checkArgument(!trips.isEmpty());
-        boolean cond  = true;
+        boolean cond = true;
         String name = trips.get(0).from().name();
-        for(Trip trip : trips){
-            if(!(trip.from().name()).equals(name)){
+        for (Trip trip : trips) {
+            if (!(trip.from().name()).equals(name)) {
                 cond = false;
 
             }
@@ -37,7 +37,7 @@ public final class Ticket implements Comparable<Ticket> {
         Preconditions.checkArgument(cond);
         this.trips = Objects.requireNonNull(trips);
 
-        text = computeText();
+        text = computeText(this.trips);
     }
 
     /**
@@ -52,11 +52,12 @@ public final class Ticket implements Comparable<Ticket> {
     }
 
     /**
-     * this method compute and return the text wich has been to be written on the ticket
+     * this method compute and return the text wich has been to be written on the ticket based on the trips in parameter
      *
-     * @return (String) : the text wich has to be written on the ticket
+     * @param trips (List<Trip>) : Set of the trips whose ticket we want to print
+     * @return text (String)     : the text wich has to be written on the ticket corresponding to the trips in parameter
      */
-    private String computeText() {
+    private static String computeText(List<Trip> trips) {
         TreeSet<String> destinations = new TreeSet<String>();
         String departureStation = trips.get(0).from().name();
         String finalText;
@@ -131,6 +132,16 @@ public final class Ticket implements Comparable<Ticket> {
     public int compareTo(Ticket ticket) {
         int compare = text.compareTo(ticket.text());
         return compare;
+    }
+
+    /**
+     * this method returns the text written on this ticket
+     *
+     * @return text (Text) : return the same return of the text() method
+     */
+    @Override
+    public String toString() {
+        return text();
     }
 
 

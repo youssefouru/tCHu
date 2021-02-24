@@ -87,7 +87,7 @@ public final class Trip {
      * @return points (int) : it returns the points based on the connectivity of the from's station and the to's station
      */
     public int points(StationConnectivity connectivity) {
-        return (connectivity.connected(from, to) ? points : -points);
+        return (connectivity.connected(from, to) ? points : points*(-1));
     }
 }
 

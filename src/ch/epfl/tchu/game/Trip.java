@@ -13,17 +13,11 @@ import java.util.Objects;
  * @author Louis Yves André Barinka (329847)
  */
 public final class Trip {
-    /**
-     * (Station) departure Station
-     */
+
     final private Station from;
-    /**
-     * (Station) arrival station
-     */
+
     final private Station to;
-    /**
-     * (int) point of a trip
-     */
+
     final private int points;
 
     /**

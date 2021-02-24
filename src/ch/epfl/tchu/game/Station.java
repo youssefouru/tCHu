@@ -9,7 +9,9 @@ import ch.epfl.tchu.Precondition;
  * @author Louis Yves André Barinka (329847)
  */
 public final class Station {
+
     private int id;
+
     private String name;
 
     /**

@@ -12,6 +12,11 @@ public final class Precondition {
     private Precondition(){
     }
 
+    /**
+     * Verify if the argument is true else it throws IllegalArgumentException exception
+     *
+     * @param argument (boolean) : the argument wich will be checked
+     */
     public static void checkArgument(boolean argument){
         if(!argument){
             throw new IllegalArgumentException();

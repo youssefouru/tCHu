@@ -14,13 +14,9 @@ import java.util.TreeSet;
  */
 public final class Ticket implements Comparable<Ticket> {
 
-    /**
-     * (List<Trip>) : this attribute of all trips linked to this ticket
-     */
+
     private final List<Trip> trips;
-    /**
-     * (String) : the text written on the ticket
-     */
+
     private final String text;
 
     /**

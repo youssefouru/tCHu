@@ -52,6 +52,7 @@ public enum Card {
      * @return card (Card) : return the card with the color that has been choosen in parameter
      */
     public static Card of(Color color) {
+
         switch (color) {
             case BLACK:
                 return Card.BLACK;

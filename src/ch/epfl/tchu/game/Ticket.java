@@ -36,7 +36,6 @@ public final class Ticket implements Comparable<Ticket> {
         }
         Preconditions.checkArgument(cond);
         this.trips = Objects.requireNonNull(trips);
-
         text = computeText(this.trips);
     }
 

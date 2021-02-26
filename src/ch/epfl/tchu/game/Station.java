@@ -54,4 +54,17 @@ public final class Station {
     public String toString() {
         return this.name();
     }
+
+    /**
+     * check if this station and the station in parameter are equals
+     *
+     * @param station   (Station) : this is the station we want to check if it's equal to this station
+     * @return aboolean (boolean) : return true if the two station are equal and false if they are not
+     */
+    public boolean equals(Station station){
+        if(station.id() == this.id() && this.name.equals(station.name())){
+            return true;
+        }
+        return false;
+    }
 }

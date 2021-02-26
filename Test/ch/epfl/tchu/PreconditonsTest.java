@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class PreconditonTest {
+public class PreconditonsTest {
     @Test
     void checkIfCheckArgumentThrowsTheRightException() {
         assertThrows(IllegalArgumentException.class, () -> {

@@ -165,7 +165,6 @@ public final class Route {
         for(Card card : drawnCards){
             for(Card myCard: claimCards){
                 if(card == myCard || card == Card.LOCOMOTIVE){
-                    count = count;
                     ++count;
                 }
             }

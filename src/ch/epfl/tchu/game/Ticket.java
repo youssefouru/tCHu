@@ -2,9 +2,7 @@ package ch.epfl.tchu.game;
 
 import ch.epfl.tchu.Preconditions;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * A ticket
@@ -33,6 +31,7 @@ public final class Ticket implements Comparable<Ticket> {
                 cond = false;
 
             }
+           
         }
         Preconditions.checkArgument(cond);
         this.trips = Objects.requireNonNull(trips);

@@ -161,12 +161,23 @@ public final class Route {
      */
     int additionalClaimCardsCount(SortedBag<Card> claimCards, SortedBag<Card> drawnCards) {
         Preconditions.checkArgument((this.level() == Level.UNDERGROUND) && (drawnCards.size() == 3));
-        claimCards.contains(Card.LOCOMOTIVE);
+        int count = 0;
+        for(Card card : drawnCards){
+            for(Card myCard: claimCards){
+                if(card == myCard || card == Card.LOCOMOTIVE){
+                    ++count;
+                }
+            }
+        }
 
-        return 0;
+        return count;
     }
 
-
+    /**
+     *
+     *
+     * @return
+     */
     private static Map<Integer,Integer> definePointMap(){
         Map<Integer,Integer> map = new HashMap<>();
         map.put(1,1);
@@ -175,7 +186,6 @@ public final class Route {
         map.put(4,7);
         map.put(5,10);
         map.put(6,15);
-
         return map;
     }
 

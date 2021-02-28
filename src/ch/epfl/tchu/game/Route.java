@@ -18,7 +18,7 @@ public final class Route {
     private final int length;
     private final Level level;
     private final Color color;
-    private Map<Integer,Integer> pointMap;
+    private final Map<Integer,Integer> pointMap;
 
 
     /**
@@ -157,16 +157,14 @@ public final class Route {
      *
      * @param claimCards the claim cards
      * @param drawnCards the drawn cards
-     * @return int
+     * @return count(int) : number of additional cards wich are needed to take a underground route
      */
     int additionalClaimCardsCount(SortedBag<Card> claimCards, SortedBag<Card> drawnCards) {
         Preconditions.checkArgument((this.level() == Level.UNDERGROUND) && (drawnCards.size() == 3));
         int count = 0;
         for(Card card : drawnCards){
-            for(Card myCard: claimCards){
-                if(card == myCard || card == Card.LOCOMOTIVE){
-                    ++count;
-                }
+            if(card == Card.LOCOMOTIVE || claimCards.contains(card)){
+                ++count;
             }
         }
 

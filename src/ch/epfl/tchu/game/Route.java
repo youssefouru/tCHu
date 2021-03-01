@@ -156,7 +156,7 @@ public final class Route {
      * @param drawnCards the drawn cards
      * @return count(int) : number of additional cards wich are needed to take a underground route
      */
-    int additionalClaimCardsCount(SortedBag<Card> claimCards, SortedBag<Card> drawnCards) {
+    public int additionalClaimCardsCount(SortedBag<Card> claimCards, SortedBag<Card> drawnCards) {
         Preconditions.checkArgument((this.level() == Level.UNDERGROUND) && (drawnCards.size() == 3));
         int count = 0;
         for(Card card : drawnCards){

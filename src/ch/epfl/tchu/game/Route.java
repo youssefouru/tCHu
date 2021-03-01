@@ -32,7 +32,7 @@ public final class Route {
      * @param color    (Color)   : the Color of the Route
      */
     public Route(String id, Station station1, Station station2, int length, Level level, Color color) {
-        Preconditions.checkArgument((station1 != station2) && (length >= Constants.MIN_ROUTE_LENGTH && length <= Constants.MAX_ROUTE_LENGTH));
+        Preconditions.checkArgument(!(station1.equals(station2)) && (length >= Constants.MIN_ROUTE_LENGTH && length <= Constants.MAX_ROUTE_LENGTH));
         this.id = id;
         this.length = length;
         this.station1 = Objects.requireNonNull(station1);
@@ -66,7 +66,6 @@ public final class Route {
      * @return station2(Station) :the attribute station2
      */
     public Station station2() {
-
         return this.station2;
     }
 
@@ -113,9 +112,7 @@ public final class Route {
      * @return station (Station) : the opposite station to the station in parameter
      */
     public Station stationOpposite(Station station) {
-        if (!stations().contains(station)) {
-            throw new IllegalArgumentException();
-        }
+        Preconditions.checkArgument(stations().contains(station));
         if (station.equals(station1())) {
             return station2();
         } else {
@@ -163,7 +160,7 @@ public final class Route {
         Preconditions.checkArgument((this.level() == Level.UNDERGROUND) && (drawnCards.size() == 3));
         int count = 0;
         for(Card card : drawnCards){
-            if(card == Card.LOCOMOTIVE || claimCards.contains(card)){
+            if(card.color() == null || claimCards.contains(card)){
                 ++count;
             }
         }
@@ -191,13 +188,14 @@ public final class Route {
         return Constants.ROUTE_CLAIM_POINTS.get(length);
     }
 
+
     public static Station findCommonStation(Route route1, Route route2) {
-        Station commonStation;
+        Station commonStation = null;
         boolean stationInCommon = true;
-        if (route2.stations().contains(route1.station1)) {
-            commonStation = route1.station1;
-        } else if (route2.stations().contains(route1.station2)) {
-            commonStation = route1.station2;
+        if (route2.stations().contains(route1.station1())) {
+            commonStation = route1.station1();
+        } else if (route2.stations().contains(route1.station2())) {
+            commonStation = route1.station2();
         } else {
             stationInCommon = false;
         }

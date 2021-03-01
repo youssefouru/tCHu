@@ -18,7 +18,7 @@ public final class Route {
     private final int length;
     private final Level level;
     private final Color color;
-    private final Map<Integer,Integer> pointMap;
+
 
 
     /**
@@ -39,7 +39,7 @@ public final class Route {
         this.station2 = Objects.requireNonNull(station2);
         this.level = level;
         this.color = color;
-        pointMap = definePointMap();
+
     }
 
     /**
@@ -171,21 +171,7 @@ public final class Route {
         return count;
     }
 
-    /**
-     *
-     *
-     * @return
-     */
-    private static Map<Integer,Integer> definePointMap(){
-        Map<Integer,Integer> map = new HashMap<>();
-        map.put(1,1);
-        map.put(2,2);
-        map.put(3,4);
-        map.put(4,7);
-        map.put(5,10);
-        map.put(6,15);
-        return map;
-    }
+
 
     /**
      * Level enum type
@@ -202,7 +188,7 @@ public final class Route {
      * @return the int
      */
     public int claimPoints(){
-        return pointMap.get(length);
+        return Constants.ROUTE_CLAIM_POINTS.get(length);
     }
 
     public static Station findCommonStation(Route route1, Route route2) {

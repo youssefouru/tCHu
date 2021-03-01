@@ -205,4 +205,18 @@ public final class Route {
         return pointMap.get(length);
     }
 
+    public static Station findCommonStation(Route route1, Route route2) {
+        Station commonStation;
+        boolean stationInCommon = true;
+        if (route2.stations().contains(route1.station1)) {
+            commonStation = route1.station1;
+        } else if (route2.stations().contains(route1.station2)) {
+            commonStation = route1.station2;
+        } else {
+            stationInCommon = false;
+        }
+        Preconditions.checkArgument(stationInCommon);
+        return commonStation;
+    }
+
 }

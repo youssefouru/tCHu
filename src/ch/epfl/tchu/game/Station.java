@@ -65,7 +65,7 @@ public final class Station {
      * @return aboolean (boolean) : return true if the two station are equal and false if they are not
      */
     public boolean equals(Station station){
-        if(station.id() == this.id() && this.name.equals(station.name())){
+        if(station.id() == this.id()){
             return true;
         }
         return false;

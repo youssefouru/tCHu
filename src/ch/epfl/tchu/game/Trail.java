@@ -3,16 +3,23 @@ package ch.epfl.tchu.game;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A Trail
+ *
+ * @author Amine Youssef (324253)
+ * @author Louis Yves André Barinka (329847)
+ */
 public final class Trail {
     private final List<Route> routesOfTheTrail;
 
-    public Trail(List<Route> routesOfTheTrail) {
+    private Trail(List<Route> routesOfTheTrail) {
         this.routesOfTheTrail = routesOfTheTrail;
     }
 
 
     /**
      * add a route to the right of the list of routes of the train
+     *
      * @param trail, the trail to which we will add a route to the right
      * @param route, the route that must be added
      * @return the trail considered modified, with a route added to the right
@@ -26,19 +33,21 @@ public final class Trail {
 
     /**
      * add a route to the left of the list of routes of the train
+     *
      * @param trail, the trail to which we will add a route to the left
      * @param route, the route that must be added
      * @return the trail considered modified, with a route added to the left
      */
     private static Trail addARouteToTheLeft(Trail trail, Route route) {
         Trail newTrail = new Trail(trail.routesOfTheTrail);
-        newTrail.routesOfTheTrail.add(0,route);
+        newTrail.routesOfTheTrail.add(0, route);
 
         return newTrail;
     }
 
     /**
      * Return the two extreme stations of a trail in a list
+     *
      * @param trail
      * @return extremeStation, the list of the two extreme station
      */
@@ -65,6 +74,7 @@ public final class Trail {
 
     /**
      * Creates a List of trail that are only composed of one different route
+     *
      * @param routes, the basic routes that serve the trivialTrailCreation
      * @return trails, A list of trail that are only composed of one road
      */
@@ -81,6 +91,7 @@ public final class Trail {
 
     /**
      * Return the longest that can be created from a given list of routes
+     *
      * @param routes list
      * @return the longest trail that can be created from those routes
      */
@@ -135,6 +146,7 @@ public final class Trail {
 
     /**
      * Given a list of trails, return the longest trail of them all (by adding the distance of each route)
+     *
      * @param trails
      * @return Trail the longest trails of them all
      */
@@ -155,7 +167,8 @@ public final class Trail {
     }
 
     /**
-     *Return the length of a given trail (the sum of the distance of its routes) and is static
+     * Return the length of a given trail (the sum of the distance of its routes) and is static
+     *
      * @param trail
      * @return length
      */
@@ -170,14 +183,16 @@ public final class Trail {
 
     /**
      * Give the length of the trail on which it is use on
+     *
      * @return length of the trail
      */
     public int length() {
-       return lengthStatic(this);
+        return lengthStatic(this);
     }
 
     /**
      * Return the first station from a given trail ( the departure or not, what matters is that it's not the same extreme location than station2
+     *
      * @return A station at the end of the trail
      */
     public Station station1() {
@@ -186,7 +201,7 @@ public final class Trail {
         if (routes.size() == 0) {
             toBeReturned = null;
         } else {
-        toBeReturned= extremeStationOfTheTrail(this).get(0);
+            toBeReturned = extremeStationOfTheTrail(this).get(0);
         }
 
 
@@ -194,7 +209,8 @@ public final class Trail {
     }
 
     /**
-     *  the complementary extreme location to station1
+     * the complementary extreme location to station1
+     *
      * @return the other extreme Station
      */
     public Station station2() {
@@ -203,14 +219,20 @@ public final class Trail {
         if (routes.size() == 0) {
             toBeReturned = null;
         } else {
-            toBeReturned= extremeStationOfTheTrail(this).get(1);
+            toBeReturned = extremeStationOfTheTrail(this).get(1);
         }
-
 
 
         return toBeReturned;
     }
-  public String toString() {
+
+    /**
+     * this method returns a textual representation of the trail
+     *
+     * @return the textual representation of the trail
+     */
+    @Override
+    public String toString() {
         int trailLength = lengthStatic(this);
         String testTrail = String.format("%s - %s (%s)", this.station1().toString(), this.station2().toString(), trailLength);
         return testTrail;

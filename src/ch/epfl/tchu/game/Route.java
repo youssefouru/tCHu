@@ -192,7 +192,7 @@ public final class Route {
     }
 
     public static Station findCommonStation(Route route1, Route route2) {
-        Station commonStation;
+        Station commonStation = null;
         boolean stationInCommon = true;
         if (route2.stations().contains(route1.station1)) {
             commonStation = route1.station1;

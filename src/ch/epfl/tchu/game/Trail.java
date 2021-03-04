@@ -6,7 +6,7 @@ import java.util.List;
 public final class Trail {
     private final List<Route> routesOfTheTrail;
 
-    private Trail(List<Route> routesOfTheTrail) {
+    public Trail(List<Route> routesOfTheTrail) {
         this.routesOfTheTrail = routesOfTheTrail;
     }
 
@@ -55,8 +55,8 @@ public final class Trail {
                 Route routeBeforeEnd = trail.routesOfTheTrail.get(trail.routesOfTheTrail.size() - 2);
 
                 // Now we identify the common station
-                extremeStation.add(Route.findCommonStation(routeBegin, routeAfterBegin));
-                extremeStation.add(Route.findCommonStation(routeEnd, routeBeforeEnd));
+                extremeStation.add(routeBegin.stationOpposite(Route.findCommonStation(routeBegin, routeAfterBegin)));
+                extremeStation.add(routeEnd.stationOpposite(Route.findCommonStation(routeEnd, routeBeforeEnd)));
             }
         }
 
@@ -87,38 +87,49 @@ public final class Trail {
     public static Trail longest(List<Route> routes) {
         List<Trail> trailsToBeTested = trivialTrailCreation(routes);
         List<Trail> maximalTrail = new ArrayList<>();
+        Trail toBeReturned = null;
 
-        List<Trail> tempTrails = new ArrayList<>();
-        while (!trailsToBeTested.isEmpty()) {
-            for (Trail trail : trailsToBeTested) {
-                Boolean canBeContinued = false;
-                List<Route> routesOfThisTrail = trail.routesOfTheTrail;
-                List<Station> extremeStation = extremeStationOfTheTrail(trail);
-                List<Route> routesToTest = new ArrayList<>();
-                routesToTest.addAll(routes);
-                routesToTest.removeAll(routesOfThisTrail);
+        if (routes.size() != 0) {
+            List<Trail> tempTrails = new ArrayList<>();
+            while (!trailsToBeTested.isEmpty()) {
+                for (Trail trail : trailsToBeTested) {
+                    Boolean canBeContinued = false;
+                    List<Route> routesOfThisTrail = trail.routesOfTheTrail;
+                    List<Station> extremeStation = extremeStationOfTheTrail(trail);
+                    List<Route> routesToTest = new ArrayList<>();
+                    routesToTest.addAll(routes);
+                    routesToTest.removeAll(routesOfThisTrail);
 
-                for (Route route : routesToTest) {
-                    if (route.stations().contains(extremeStation.get(0))) {
-                        tempTrails.add(addARouteToTheLeft(trail, route));
-                        canBeContinued = true;
+                    for (Route route : routesToTest) {
+                       /* if (route.stations().contains(extremeStation.get(0))) {
+                            tempTrails.add(addARouteToTheLeft(trail, route));
+                            canBeContinued = true;
+                        }*/
+                        if (route.stations().contains(extremeStation.get(1))) {
+                            tempTrails.add(addARouteToTheRight(trail, route));
+                            canBeContinued = true;
+                        }
+
                     }
-                    if (route.stations().contains(extremeStation.get(1))) {
-                        tempTrails.add(addARouteToTheRight(trail, route));
-                        canBeContinued = true;
+                    if (canBeContinued == false) {
+                        maximalTrail.add(trail);
                     }
-
                 }
-                if (canBeContinued == false) {
-                    maximalTrail.add(trail);
-                }
+                trailsToBeTested = List.copyOf(tempTrails);
+                tempTrails.clear();
             }
-            trailsToBeTested = List.copyOf(tempTrails);
-            tempTrails.clear();
+            toBeReturned = longestTrailOfAList(maximalTrail);
+        }
+        if (routes.size() == 0) {
+            Route trivialRoute = new Route(null, null, null, 0, null, null);
+            List<Route> trivialList = new ArrayList();
+            trivialList.add(trivialRoute);
+            Trail trivialTrail = new Trail(trivialList);
+            toBeReturned = trivialTrail;
 
         }
 
-        return longestTrailOfAList(maximalTrail);
+        return toBeReturned;
 
     }
 
@@ -174,8 +185,10 @@ public final class Trail {
         Station toBeReturned;
         if (routes.size() == 0) {
             toBeReturned = null;
-        }
+        } else {
         toBeReturned= extremeStationOfTheTrail(this).get(0);
+        }
+
 
         return toBeReturned;
     }
@@ -189,11 +202,18 @@ public final class Trail {
         Station toBeReturned;
         if (routes.size() == 0) {
             toBeReturned = null;
+        } else {
+            toBeReturned= extremeStationOfTheTrail(this).get(1);
         }
-        toBeReturned= extremeStationOfTheTrail(this).get(1);
+
+
 
         return toBeReturned;
     }
-
+  public String toString() {
+        int trailLength = lengthStatic(this);
+        String testTrail = String.format("%s - %s (%s)", this.station1().toString(), this.station2().toString(), trailLength);
+        return testTrail;
+    }
 
 }

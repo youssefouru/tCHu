@@ -132,9 +132,7 @@ public final class Trail {
             toBeReturned = longestTrailOfAList(maximalTrail);
         }
         if (routes.size() == 0) {
-            Route trivialRoute = new Route(null, null, null, 0, null, null);
             List<Route> trivialList = new ArrayList<>();
-            trivialList.add(trivialRoute);
             Trail trivialTrail = new Trail(trivialList);
             toBeReturned = trivialTrail;
 

@@ -12,7 +12,7 @@ import java.util.List;
 public final class Trail {
     private final List<Route> routesOfTheTrail;
 
-    private Trail(List<Route> routesOfTheTrail) {
+    public Trail(List<Route> routesOfTheTrail) {
         this.routesOfTheTrail = routesOfTheTrail;
     }
 

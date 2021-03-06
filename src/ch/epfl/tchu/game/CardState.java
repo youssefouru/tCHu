@@ -19,6 +19,7 @@ public final class CardState extends PublicCardState {
     private final Deck<Card> deck;
     private final SortedBag<Card> discardCards;
 
+
     /**
      * Constructor of CardState
      *
@@ -109,12 +110,14 @@ public final class CardState extends PublicCardState {
      * @param additionalDiscards (SortedBag<Card>) : the cards that we want to add
      * @return a CardState with the discard Cards of this CardStat to which we add the additional Discards in parameter
      */
-    CardState withMoreDiscardedCards(SortedBag<Card> additionalDiscards) {
+    public CardState withMoreDiscardedCards(SortedBag<Card> additionalDiscards) {
         List<Card> myList = new ArrayList<>(discardCards.toList());
         myList.addAll(additionalDiscards.toList());
         return new CardState(this.deck, SortedBag.of(myList));
 
     }
+
+
 
 
 }

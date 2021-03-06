@@ -4,6 +4,7 @@ import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -22,7 +23,7 @@ public final class Deck<C extends Comparable<C>> {
      * @param cards (SortedBag<C>) : the  Cs that are contained by the Deck
      */
     private Deck(SortedBag<C> cards) {
-        this.cards = cards;
+        this.cards = SortedBag.of(cards);
     }
 
     /**
@@ -87,13 +88,13 @@ public final class Deck<C extends Comparable<C>> {
      */
     public SortedBag<C> topCards(int count) {
         Preconditions.checkArgument(count >= 0 && count <= size());
-        SortedBag.Builder<C> builder = new SortedBag.Builder<>();
-        Deck<C> myDeck = this;
+        List<C> myList = new LinkedList<>();
+        Deck<C> myDeck = new Deck<>(this.cards);
         for (int i = 0; i < count; ++i) {
-            builder.add(myDeck.topCard());
-            myDeck = myDeck.withoutTopCard();
+            myDeck.withoutTopCard();
+            myList.add(myDeck.topCard());
         }
-        return builder.build();
+        return SortedBag.of(myList);
     }
 
 
@@ -104,7 +105,7 @@ public final class Deck<C extends Comparable<C>> {
      */
     public Deck<C> withoutTopCard() {
         Preconditions.checkArgument(!isEmpty());
-        List<C> myList = cards.toList();
+        List<C> myList = SortedBag.of(cards).toList();
         myList.remove(0);
         return new Deck<>(SortedBag.of(myList));
     }
@@ -117,7 +118,7 @@ public final class Deck<C extends Comparable<C>> {
      */
     public Deck<C> withoutTopCards(int count) {
         Preconditions.checkArgument(count >= 0 && count <= size());
-        Deck<C> myDeck = this;
+        Deck<C> myDeck = new Deck<>(this.cards);
         for (int i = 0; i < count; ++i) {
             myDeck = myDeck.withoutTopCard();
         }

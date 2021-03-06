@@ -19,17 +19,17 @@ public class PublicCardState {
 
 
     /**
-     *Constructor of PublicCardState
+     * Constructor of PublicCardState
      *
      * @param faceUpCards  (List<Card>): a list of cards that are face up
      * @param deckSize     (int)       : the total number of card in the deck
      * @param discardsSize (int)       : the number of cards in the discard
      */
-    public PublicCardState(List<Card> faceUpCards,int deckSize,int discardsSize){
-        Preconditions.checkArgument(faceUpCards.size() == 5 && discardsSize>=0);
-        this.faceUpCards= List.copyOf(faceUpCards);
-        this.deckSize=deckSize;
-        this.discardsSize=discardsSize;
+    public PublicCardState(List<Card> faceUpCards, int deckSize, int discardsSize) {
+        Preconditions.checkArgument(faceUpCards.size() == 5 && discardsSize >= 0);
+        this.faceUpCards = List.copyOf(faceUpCards);
+        this.deckSize = deckSize;
+        this.discardsSize = discardsSize;
     }
 
     /**
@@ -37,7 +37,7 @@ public class PublicCardState {
      *
      * @return the total number of cards
      */
-    public int totalSize(){
+    public int totalSize() {
         return faceUpCards.size() + deckSize + discardsSize;
     }
 
@@ -46,18 +46,18 @@ public class PublicCardState {
      *
      * @return the attribute faceUpCards
      */
-    public List<Card> faceUpCards(){
+    public List<Card> faceUpCards() {
         return faceUpCards;
     }
 
     /**
-     *this method returns the slot faceUpCard
+     * this method returns the slot faceUpCard
      *
      * @param slot (int) : this parameter is the index of card that we wnat
      * @return the card of
      */
-    public Card faceUpCard(int slot){
-        Objects.checkIndex(slot,5);
+    public Card faceUpCard(int slot) {
+        Objects.checkIndex(slot, 5);
         return faceUpCards.get(slot);
     }
 
@@ -66,7 +66,7 @@ public class PublicCardState {
      *
      * @return the attribute deckSize
      */
-    public int deckSize(){
+    public int deckSize() {
         return deckSize;
     }
 
@@ -75,8 +75,8 @@ public class PublicCardState {
      *
      * @return a boolean which is true if the DeckSize is equals to 0
      */
-    public boolean isDeckEmpty(){
-        return deckSize ==0;
+    public boolean isDeckEmpty() {
+        return deckSize == 0;
     }
 
     /**
@@ -84,7 +84,7 @@ public class PublicCardState {
      *
      * @return the attribute discardsSize
      */
-    public int discardsSize(){
+    public int discardsSize() {
         return discardsSize;
     }
 

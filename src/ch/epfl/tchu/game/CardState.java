@@ -3,26 +3,42 @@ package ch.epfl.tchu.game;
 import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.LinkedList;
+import java.util.Random;
+import java.util.Objects;
 
-public final class CardState extends PublicCardState{
+/**
+ * A CardState
+ *
+ * @author Amine Youssef (324253)
+ * @author Louis Yves André Barinka (329847)
+ */
+public final class CardState extends PublicCardState {
     private final Deck<Card> deck;
     private final SortedBag<Card> discardCards;
 
     /**
      * Constructor of CardState
      *
-     * @param deck this is the deck from which we will take cards
+     * @param deck (Deck<Card>) : the deck of cards
      */
     private CardState(Deck<Card> deck) {
-        super(deck.topCards(5).toList(),deck.size() - 5,0);
+        super(deck.topCards(5).toList(), deck.size() - 5, 0);
         this.deck = deck;
-        this.discardCards = SortedBag.of(List.of());
+        List<Card> emptyList = new ArrayList<>();
+        this.discardCards = SortedBag.of(emptyList);
     }
 
-
-    private CardState(Deck<Card> deck,SortedBag<Card> discardCards){
-        super(deck.topCards(5).toList(),deck.size() -5 , discardCards.size());
+    /**
+     * Constructor of CardState
+     *
+     * @param deck         (Deck<Card>): the deck of cards
+     * @param discardCards (SortedBag<Card>): these are the List of cards that are in initially in the discard
+     */
+    private CardState(Deck<Card> deck, SortedBag<Card> discardCards) {
+        super(deck.topCards(5).toList(), deck.size() - 5, discardCards.size());
         this.deck = deck;
         this.discardCards = discardCards;
     }
@@ -33,22 +49,21 @@ public final class CardState extends PublicCardState{
      * @param deck (Deck<Card>) : this is the deck from which we will take cards
      * @return a card state
      */
-    public static  CardState of(Deck<Card> deck){
+    public static CardState of(Deck<Card> deck) {
         return new CardState(deck);
     }
 
     /**
-     *this method returns a Card State without the faceUpCard on the slot position
+     * this method returns a Card State without the faceUpCard on the slot position
      *
      * @param slot (int) : it's the index of the card that we remove from the faceUpCards
      * @return a new CardState with
      */
-    public CardState withDrawnFaceUpCard(int slot){
-        Objects.checkIndex(slot,5);
+    public CardState withDrawnFaceUpCard(int slot) {
+        Objects.checkIndex(slot, 5);
         Preconditions.checkArgument(!deck.isEmpty());
-        LinkedList<Card>  myList = new LinkedList<>(super.faceUpCards());
-        myList.remove(slot);
-        myList.add(slot,deck.topCard());
+        List<Card> myList = new LinkedList<>(super.faceUpCards());
+        myList.set(slot, deck.topCard());
         return new CardState(Deck.of(SortedBag.of(myList)));
 
     }
@@ -59,7 +74,7 @@ public final class CardState extends PublicCardState{
      *
      * @return the deck's top card
      */
-    public Card topDeckCard(){
+    public Card topDeckCard() {
         Preconditions.checkArgument(!deck.isEmpty());
         return deck.topCard();
     }
@@ -70,23 +85,36 @@ public final class CardState extends PublicCardState{
      *
      * @return a new CardState created using the deck of this CardState without the top Card
      */
-    public CardState withoutTopDeckCard(){
+    public CardState withoutTopDeckCard() {
         Preconditions.checkArgument(!deck.isEmpty());
         return new CardState(deck.withoutTopCard());
     }
 
 
     /**
+     * this method create a new CardState with the discard cards as a deck
      *
-     *
-     * @param rng
+     * @param rng (Random) : the object that we will shuffle with
      * @return
      */
-    public CardState withDeckRecreatedFromDiscards(Random rng){
+    public CardState withDeckRecreatedFromDiscards(Random rng) {
         Preconditions.checkArgument(deck.isEmpty());
-        return new CardState(Deck.of(discardCards,rng));
+        return new CardState(Deck.of(discardCards, rng));
     }
 
+
+    /**
+     * this method creates a CardState with a the discard Cards of this CardStat to which we add the additional Discards in parameter
+     *
+     * @param additionalDiscards (SortedBag<Card>) : the cards that we want to add
+     * @return a CardState with the discard Cards of this CardStat to which we add the additional Discards in parameter
+     */
+    CardState withMoreDiscardedCards(SortedBag<Card> additionalDiscards) {
+        List<Card> myList = new ArrayList<>(discardCards.toList());
+        myList.addAll(additionalDiscards.toList());
+        return new CardState(this.deck, SortedBag.of(myList));
+
+    }
 
 
 }

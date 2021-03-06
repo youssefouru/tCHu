@@ -36,7 +36,7 @@ public final class Deck<C extends Comparable<C>> {
     public static <C extends Comparable<C>> Deck<C> of(SortedBag<C> cards, Random rng) {
         List<C> c = cards.toList();
         Collections.shuffle(c, rng);
-        return new Deck<C>(SortedBag.of(c));
+        return new Deck<>(SortedBag.of(c));
     }
 
     /**
@@ -44,10 +44,10 @@ public final class Deck<C extends Comparable<C>> {
      *
      * @param cards (SortedBag<C>) : the set of C that will be used as parameter to create a Deck
      * @param <C>   : the type of the objects the type of object collected in the deck
-     * @return deck (Deck<C>) : a deck wich has the SortedBag cards shuffled as parameter
+     * @return deck (Deck<C>) : a deck which has the SortedBag cards shuffled as parameter
      */
-    public static <C extends Comparable<C>> Deck<C> of(SortedBag<C> cards){
-        return new Deck<C>(cards);
+    public static <C extends Comparable<C>> Deck<C> of(SortedBag<C> cards) {
+        return new Deck<>(cards);
     }
 
     /**
@@ -87,7 +87,7 @@ public final class Deck<C extends Comparable<C>> {
      */
     public SortedBag<C> topCards(int count) {
         Preconditions.checkArgument(count >= 0 && count <= size());
-        SortedBag.Builder builder = new SortedBag.Builder();
+        SortedBag.Builder<C> builder = new SortedBag.Builder<>();
         Deck<C> myDeck = this;
         for (int i = 0; i < count; ++i) {
             builder.add(myDeck.topCard());
@@ -106,7 +106,7 @@ public final class Deck<C extends Comparable<C>> {
         Preconditions.checkArgument(!isEmpty());
         List<C> myList = cards.toList();
         myList.remove(0);
-        return new Deck<C>(SortedBag.of(myList));
+        return new Deck<>(SortedBag.of(myList));
     }
 
     /**

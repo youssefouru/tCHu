@@ -89,10 +89,10 @@ public final class Deck<C extends Comparable<C>> {
     public SortedBag<C> topCards(int count) {
         Preconditions.checkArgument(count >= 0 && count <= size());
         List<C> myList = new LinkedList<>();
-        Deck<C> myDeck = new Deck<>(this.cards);
+        Deck< C> myDeck = new Deck<>(this.cards);
         for (int i = 0; i < count; ++i) {
-            myDeck.withoutTopCard();
             myList.add(myDeck.topCard());
+            myDeck = myDeck.withoutTopCard();
         }
         return SortedBag.of(myList);
     }
@@ -118,8 +118,8 @@ public final class Deck<C extends Comparable<C>> {
      */
     public Deck<C> withoutTopCards(int count) {
         Preconditions.checkArgument(count >= 0 && count <= size());
-        Deck<C> myDeck = new Deck<>(this.cards);
-        for (int i = 0; i < count; ++i) {
+        Deck<C> myDeck = new Deck<>(cards);
+        for(int i = 0 ; i<count;++i){
             myDeck = myDeck.withoutTopCard();
         }
         return myDeck;

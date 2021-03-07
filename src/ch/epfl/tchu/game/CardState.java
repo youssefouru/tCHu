@@ -96,7 +96,7 @@ public final class CardState extends PublicCardState {
      * this method create a new CardState with the discard cards as a deck
      *
      * @param rng (Random) : the object that we will shuffle with
-     * @return
+     * @return a deck recreated from the discard and shuffled
      */
     public CardState withDeckRecreatedFromDiscards(Random rng) {
         Preconditions.checkArgument(deck.isEmpty());

@@ -22,7 +22,7 @@ public enum Card {
     /**
      * COUNT (int) :  represent the number of all the values of this enum type
      */
-    public final static int COUNT = 9;
+    public final static int COUNT = Card.values().length;
     /**
      * ALL (List<Card>) : contains all the element of this enum type
      */

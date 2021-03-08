@@ -3,11 +3,7 @@ package ch.epfl.tchu.game;
 import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.LinkedList;
-import java.util.Random;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * A CardState
@@ -20,17 +16,15 @@ public final class CardState extends PublicCardState {
     private final SortedBag<Card> discardCards;
 
 
-
-
     /**
      * Constructor of CardState
      *
-     * @param deck (Deck<Card>) : the deck of cards
-     * @param faceUpCards (List<Card>) : the List of faceUpCards of the CardState
+     * @param deck         (Deck<Card>) : the deck of cards
+     * @param faceUpCards  (List<Card>) : the List of faceUpCards of the CardState
      * @param discardCards (SortedBag<Card>): these are the List of cards that are in initially in the discard
      */
-    private CardState(Deck<Card> deck, List<Card> faceUpCards,SortedBag<Card> discardCards){
-        super(faceUpCards,deck.size(),discardCards.size());
+    private CardState(Deck<Card> deck, List<Card> faceUpCards, SortedBag<Card> discardCards) {
+        super(List.copyOf(faceUpCards), deck.size(), discardCards.size());
         this.deck = deck;
         this.discardCards = discardCards;
 
@@ -43,7 +37,7 @@ public final class CardState extends PublicCardState {
      * @return a card state
      */
     public static CardState of(Deck<Card> deck) {
-        return new CardState(deck,deck.topCards(5).toList(),SortedBag.of());
+        return new CardState(deck, deck.topCards(5).toList(), SortedBag.of());
     }
 
     /**
@@ -55,9 +49,9 @@ public final class CardState extends PublicCardState {
     public CardState withDrawnFaceUpCard(int slot) {
         Objects.checkIndex(slot, 5);
         Preconditions.checkArgument(!deck.isEmpty());
-        List<Card> myList = new LinkedList<>(super.faceUpCards());
+        List<Card> myList = new ArrayList<>(super.faceUpCards());
         myList.set(slot, deck.topCard());
-        return new CardState(deck.withoutTopCard(),myList,discardCards);
+        return new CardState(deck.withoutTopCard(), myList, discardCards);
 
     }
 
@@ -80,7 +74,7 @@ public final class CardState extends PublicCardState {
      */
     public CardState withoutTopDeckCard() {
         Preconditions.checkArgument(!deck.isEmpty());
-        return new CardState(deck.withoutTopCard(),super.faceUpCards(),discardCards);
+        return new CardState(deck.withoutTopCard(), super.faceUpCards(), discardCards);
     }
 
 
@@ -92,7 +86,7 @@ public final class CardState extends PublicCardState {
      */
     public CardState withDeckRecreatedFromDiscards(Random rng) {
         Preconditions.checkArgument(deck.isEmpty());
-        return new CardState(Deck.of(discardCards, rng),super.faceUpCards(),SortedBag.of());
+        return new CardState(Deck.of(discardCards.toList(), rng), super.faceUpCards(), SortedBag.of());
     }
 
 
@@ -105,12 +99,9 @@ public final class CardState extends PublicCardState {
     public CardState withMoreDiscardedCards(SortedBag<Card> additionalDiscards) {
         List<Card> myList = new ArrayList<>(discardCards.toList());
         myList.addAll(additionalDiscards.toList());
-        return new CardState(this.deck,super.faceUpCards(),SortedBag.of(myList));
+        return new CardState(this.deck, super.faceUpCards(), SortedBag.of(myList));
 
     }
-
-
-
 
 
 }

@@ -155,8 +155,8 @@ public final class Route {
     /**
      * Additional claim cards count int.
      *
-     * @param claimCards the claim cards
-     * @param drawnCards the drawn cards
+     * @param claimCards (SortedBag<Card>) : the claim cards
+     * @param drawnCards (SortedBag<Card>) : the drawn cards
      * @return count(int) : number of additional cards wich are needed to take a underground route
      */
     public int additionalClaimCardsCount(SortedBag<Card> claimCards, SortedBag<Card> drawnCards) {

@@ -3,6 +3,7 @@ package ch.epfl.tchu.game;
 import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -14,15 +15,15 @@ import java.util.Random;
  * @author Louis Yves André Barinka (329847)
  */
 public final class Deck<C extends Comparable<C>> {
-    private final SortedBag<C> cards;
+    private final List<C> cards;
 
     /**
      * private constructor of Deck
      *
      * @param cards (SortedBag<C>) : the  Cs that are contained by the Deck
      */
-    private Deck(SortedBag<C> cards) {
-        this.cards = SortedBag.of(cards);
+    private Deck(List<C> cards) {
+        this.cards = List.copyOf(cards);
     }
 
     /**
@@ -33,11 +34,11 @@ public final class Deck<C extends Comparable<C>> {
      * @param <C>   : the type of the objects the type of object collected in the deck
      * @return deck (Deck<C>) : a deck wich has the SortedBag cards shuffled as parameter
      */
-    public static <C extends Comparable<C>> Deck<C> of(SortedBag<C> cards, Random rng) {
-        List<C> c = cards.toList();
-        Collections.shuffle(c, rng);
-        return new Deck<>(SortedBag.of(c));
+    public static <C extends Comparable<C>> Deck<C> of(List<C> cards, Random rng) {
+        Collections.shuffle(cards, rng);
+        return new Deck<>(cards);
     }
+
 
     /**
      * this method returns the number of cards which are in the deck
@@ -76,7 +77,7 @@ public final class Deck<C extends Comparable<C>> {
      */
     public SortedBag<C> topCards(int count) {
         Preconditions.checkArgument(count >= 0 && count <= size());
-        List<C> myList = cards.toList().subList(0,count);
+        List<C> myList = new ArrayList<>(cards.subList(0, count));
         return SortedBag.of(myList);
     }
 
@@ -88,9 +89,9 @@ public final class Deck<C extends Comparable<C>> {
      */
     public Deck<C> withoutTopCard() {
         Preconditions.checkArgument(!isEmpty());
-        List<C> myList = SortedBag.of(cards).toList();
+        List<C> myList = new ArrayList<>(cards);
         myList.remove(0);
-        return new Deck<>(SortedBag.of(myList));
+        return new Deck<>(myList);
     }
 
     /**
@@ -102,7 +103,7 @@ public final class Deck<C extends Comparable<C>> {
     public Deck<C> withoutTopCards(int count) {
         Preconditions.checkArgument(count >= 0 && count <= size());
         Deck<C> myDeck = new Deck<>(cards);
-        for(int i = 0 ; i<count;++i){
+        for (int i = 0; i < count; ++i) {
             myDeck = myDeck.withoutTopCard();
         }
         return myDeck;

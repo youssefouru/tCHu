@@ -185,6 +185,14 @@ public final class Route {
         return Constants.ROUTE_CLAIM_POINTS.get(length);
     }
 
+
+    /**
+     * find the common Station between the route 1 and 2
+     *
+     * @param route1 (Route) : the first Route
+     * @param route2 (Route) : the second Route
+     * @return  the common Station of the route 1 and 2
+     */
     public static Station findCommonStation(Route route1, Route route2) {
         Station commonStation = null;
         boolean stationInCommon = true;

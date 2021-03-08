@@ -21,7 +21,7 @@ public enum Color {
     /**
      * COUNT (int) : represent the number of all the values of this enum type
      */
-    public final static int COUNT = 8;
+    public final static int COUNT = Color.values().length;
 
     /**
      * ALL (List<Color>) : contains all the element of this enum type

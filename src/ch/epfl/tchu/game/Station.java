@@ -27,9 +27,6 @@ public final class Station {
 
     }
 
-    public Station(Object o) {
-    }
-
     /**
      * return the identification number of the station
      *

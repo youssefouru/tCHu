@@ -12,6 +12,11 @@ import java.util.List;
 public final class Trail {
     private final List<Route> routesOfTheTrail;
 
+    /**
+     * Constructor of Trail
+     *
+     * @param routesOfTheTrail (List<Route>) : the route list that we will use
+     */
     private Trail(List<Route> routesOfTheTrail) {
         this.routesOfTheTrail = routesOfTheTrail;
     }
@@ -111,10 +116,6 @@ public final class Trail {
                     routesToTest.removeAll(routesOfThisTrail);
 
                     for (Route route : routesToTest) {
-                       /* if (route.stations().contains(extremeStation.get(0))) {
-                            tempTrails.add(addARouteToTheLeft(trail, route));
-                            canBeContinued = true;
-                        }*/
                         if (route.stations().contains(extremeStation.get(1))) {
                             tempTrails.add(addARouteToTheRight(trail, route));
                             canBeContinued = true;
@@ -193,16 +194,11 @@ public final class Trail {
      * @return A station at the end of the trail
      */
     public Station station1() {
-        List<Route> routes = this.routesOfTheTrail;
-        Station toBeReturned;
-        if (routes.size() == 0) {
-            toBeReturned = null;
+        if (routesOfTheTrail.size() == 0) {
+           return null;
         } else {
-            toBeReturned = extremeStationOfTheTrail(this).get(0);
+            return extremeStationOfTheTrail(this).get(0);
         }
-
-
-        return toBeReturned;
     }
 
     /**
@@ -211,16 +207,11 @@ public final class Trail {
      * @return the other extreme Station
      */
     public Station station2() {
-        List<Route> routes = this.routesOfTheTrail;
-        Station toBeReturned;
-        if (routes.size() == 0) {
-            toBeReturned = null;
+        if (routesOfTheTrail.size() == 0) {
+            return null;
         } else {
-            toBeReturned = extremeStationOfTheTrail(this).get(1);
+            return extremeStationOfTheTrail(this).get(1);
         }
-
-
-        return toBeReturned;
     }
 
     /**
@@ -232,16 +223,15 @@ public final class Trail {
     public String toString() {
         int trailLength = lengthStatic(this);
         String s1,s2;
-        if(length() == 0){
+        if(routesOfTheTrail.size() == 0){
             s1 = "-----";
             s2 = "-----";
         }else{
             s1 = station1().toString();
             s2 = station2().toString();
         }
-
-        String testTrail = String.format("%s - %s (%s)", s1, s2, trailLength);
-        return testTrail;
+        String result = String.format("%s - %s (%s)", s1, s2, trailLength);
+        return result;
     }
 
 }

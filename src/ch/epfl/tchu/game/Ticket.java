@@ -50,10 +50,10 @@ public final class Ticket implements Comparable<Ticket> {
     }
 
     /**
-     * this method compute and return the text wich has been to be written on the ticket based on the trips in parameter
+     * this method compute and return the text which has been to be written on the ticket based on the trips in parameter
      *
      * @param trips (List<Trip>) : Set of the trips whose ticket we want to print
-     * @return text (String)     : the text wich has to be written on the ticket corresponding to the trips in parameter
+     * @return text (String)     : the text which has to be written on the ticket corresponding to the trips in parameter
      */
     private static String computeText(List<Trip> trips) {
         TreeSet<String> destinations = new TreeSet<String>();
@@ -87,7 +87,7 @@ public final class Ticket implements Comparable<Ticket> {
     }
 
     /**
-     * this method the number of points the ticket is worth knowing that the connectivity in paramater is that of the player owning the ticket
+     * this method the number of points the ticket is worth knowing that the connectivity in parameter is that of the player owning the ticket
      *
      * @param connectivity (StationConnectivity) : represent network to which we want to check the connection of the two stations from and to
      * @return points (int) : it returns the points based on the connectivity of the from's station and the to's station

@@ -32,7 +32,7 @@ public final class Deck<C extends Comparable<C>> {
      * @param cards (SortedBag<C>) : the set of C that will be used as parameter to create a Deck
      * @param rng   (Random)       : the object that will be used to shuffle our Cs
      * @param <C>   : the type of the objects the type of object collected in the deck
-     * @return deck (Deck<C>) : a deck wich has the SortedBag cards shuffled as parameter
+     * @return deck (Deck<C>) : a deck which has the SortedBag cards shuffled as parameter
      */
     public static <C extends Comparable<C>> Deck<C> of(List<C> cards, Random rng) {
         Collections.shuffle(cards, rng);
@@ -52,7 +52,7 @@ public final class Deck<C extends Comparable<C>> {
     /**
      * this method return true if there is no card in the deck
      *
-     * @return aboolean (boolean) : it retruns true iff the size of the attribute cards is 0
+     * @return aboolean (boolean) : it returns true iff the size of the attribute cards is 0
      */
     public boolean isEmpty() {
         return size() == 0;

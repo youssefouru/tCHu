@@ -1,6 +1,7 @@
 package ch.epfl.tchu.game;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -30,9 +31,9 @@ public final class Trail {
      * @return the trail considered modified, with a route added to the right
      */
     private static Trail addARouteToTheRight(Trail trail, Route route) { //for this class to be static, a copy of routesOfTheTrailIsMade
-        Trail newTrail = new Trail(trail.routesOfTheTrail);
-        newTrail.routesOfTheTrail.add(route);
-
+        List<Route> myRoutes = new ArrayList<>(trail.routesOfTheTrail);
+        myRoutes.add(route);
+        Trail newTrail = new Trail(myRoutes);
         return newTrail;
     }
 
@@ -44,9 +45,9 @@ public final class Trail {
      * @return the trail considered modified, with a route added to the left
      */
     private static Trail addARouteToTheLeft(Trail trail, Route route) {
-        Trail newTrail = new Trail(trail.routesOfTheTrail);
-        newTrail.routesOfTheTrail.add(0, route);
-
+        List<Route> myRoutes = new LinkedList<>(trail.routesOfTheTrail);
+        myRoutes.add(0,route);
+        Trail newTrail = new Trail(myRoutes);
         return newTrail;
     }
 

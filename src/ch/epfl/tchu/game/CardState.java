@@ -97,9 +97,7 @@ public final class CardState extends PublicCardState {
      * @return a CardState with the discard Cards of this CardStat to which we add the additional Discards in parameter
      */
     public CardState withMoreDiscardedCards(SortedBag<Card> additionalDiscards) {
-        List<Card> myList = new ArrayList<>(discardCards.toList());
-        myList.addAll(additionalDiscards.toList());
-        return new CardState(this.deck, super.faceUpCards(), SortedBag.of(myList));
+        return new CardState(this.deck, super.faceUpCards(), discardCards.union(additionalDiscards));
 
     }
 

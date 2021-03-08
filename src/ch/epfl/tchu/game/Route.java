@@ -113,14 +113,8 @@ public final class Route {
      * @return station (Station) : the opposite station to the station in parameter
      */
     public Station stationOpposite(Station station) {
-        if (!stations().contains(station)) {
-            throw new IllegalArgumentException();
-        }
-        if (station.equals(station1())) {
-            return station2();
-        } else {
-            return station1();
-        }
+        Preconditions.checkArgument(stations().contains(station));
+        return ((station.equals(station1)) ? station2 : station1);
     }
 
 
@@ -130,14 +124,14 @@ public final class Route {
      * @return a list (List<SortedBag<Card>>) :  a list of card's sorted bag that we need to take this route
      */
     public List<SortedBag<Card>> possibleClaimCards() {
-        List<SortedBag<Card>> myList = new ArrayList<SortedBag<Card>>();
+        List<SortedBag<Card>> myList = new ArrayList<>();
         //this list contains all the cards if the color of the route is null or just the of the color of the route if it's not null
         List<Card> myCards = color() == null ? Card.CARS :List.of(Card.of(color()));
         //this constant depends on the road level if the road is overground is 0 if the road is underground it is 0
-        int constante = level() == Level.UNDERGROUND ?1 : 0;
-        //the constant constante is intended to give us an indication about how much iterations we will have to do
-        //if the level is Overground there is no iterations and if it is underground it does lenght + 1 iteration
-        for(int i = 0 ; i<=length*constante;++i) {
+        int constant = level() == Level.UNDERGROUND ?1 : 0;
+        //the constant constant is intended to give us an indication about how much iterations we will have to do
+        //if the level is Overground there is no iterations and if it is underground it does length + 1 iteration
+        for(int i = 0; i<=length* constant; ++i) {
             if(i != length) {
                 for (Card card : myCards) {
                     SortedBag<Card> bag = SortedBag.of(i, Card.LOCOMOTIVE, length - i, card);
@@ -157,7 +151,7 @@ public final class Route {
      *
      * @param claimCards (SortedBag<Card>) : the claim cards
      * @param drawnCards (SortedBag<Card>) : the drawn cards
-     * @return count(int) : number of additional cards wich are needed to take a underground route
+     * @return count(int) : number of additional cards which are needed to take a underground route
      */
     public int additionalClaimCardsCount(SortedBag<Card> claimCards, SortedBag<Card> drawnCards) {
         Preconditions.checkArgument((this.level() == Level.UNDERGROUND) && (drawnCards.size() == 3));

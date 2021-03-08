@@ -56,7 +56,7 @@ public final class Trip {
     /**
      * this method return the departure Station of the Trip
      *
-     * @return from (Station) : retrun the  attribute from
+     * @return from (Station) : return the  attribute from
      */
     public Station from() {
         return this.from;
@@ -65,16 +65,16 @@ public final class Trip {
     /**
      * this method return the arrival Station of the Trip
      *
-     * @return to (Station) : retrun the  attribute to
+     * @return to (Station) : return the  attribute to
      */
     public Station to() {
         return this.to;
     }
 
     /**
-     * this method retrun the points of the trip
+     * this method return the points of the trip
      *
-     * @return points (int) : retrun the  attribute points
+     * @return points (int) : return the  attribute points
      */
     public int points() {
         return this.points;

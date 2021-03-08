@@ -53,8 +53,8 @@ public class PublicCardState {
     /**
      * this method returns the slot faceUpCard
      *
-     * @param slot (int) : this parameter is the index of card that we wnat
-     * @return the card of
+     * @param slot (int) : this parameter is the index of card that we want
+     * @return the card the slot face Up card
      */
     public Card faceUpCard(int slot) {
         Objects.checkIndex(slot, 5);

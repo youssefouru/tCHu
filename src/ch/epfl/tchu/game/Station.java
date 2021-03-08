@@ -10,9 +10,9 @@ import ch.epfl.tchu.Preconditions;
  */
 public final class Station {
 
-    private int id;
+    private final int id;
 
-    private String name;
+    private final String name;
 
     /**
      * Constructor of Station
@@ -62,9 +62,6 @@ public final class Station {
      * @return aboolean (boolean) : return true if the two station are equal and false if they are not
      */
     public boolean equals(Station station){
-        if(station.id() == this.id()){
-            return true;
-        }
-        return false;
+       return station.id() == this.id;
     }
 }

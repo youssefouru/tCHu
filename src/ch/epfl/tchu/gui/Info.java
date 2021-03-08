@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.List;
 
 public final class Info {
-    String player;
+    private final String player;
 
     public Info(String player) {
         this.player = player;

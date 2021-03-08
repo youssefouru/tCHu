@@ -14,11 +14,11 @@ import java.util.Objects;
  */
 public final class Trip {
 
-    final private Station from;
+     private final Station from;
 
-    final private Station to;
+     private final Station to;
 
-    final private int points;
+     private final int points;
 
     /**
      * constructor of Trip

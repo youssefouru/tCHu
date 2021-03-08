@@ -32,11 +32,11 @@ public final class Route {
      * @param color    (Color)   : the Color of the Route
      */
     public Route(String id, Station station1, Station station2, int length, Level level, Color color) {
-        Preconditions.checkArgument((station1 != station2) && (length >= Constants.MIN_ROUTE_LENGTH && length <= Constants.MAX_ROUTE_LENGTH));
-        this.id = id;
-        this.length = length;
+        Preconditions.checkArgument(!(station1.equals(station2)) && (length >= Constants.MIN_ROUTE_LENGTH && length <= Constants.MAX_ROUTE_LENGTH));
         this.station1 = Objects.requireNonNull(station1);
         this.station2 = Objects.requireNonNull(station2);
+        this.id = id;
+        this.length = length;
         this.level = level;
         this.color = color;
 
@@ -155,11 +155,11 @@ public final class Route {
     /**
      * Additional claim cards count int.
      *
-     * @param claimCards the claim cards
-     * @param drawnCards the drawn cards
+     * @param claimCards (SortedBag<Card>) : the claim cards
+     * @param drawnCards (SortedBag<Card>) : the drawn cards
      * @return count(int) : number of additional cards wich are needed to take a underground route
      */
-    int additionalClaimCardsCount(SortedBag<Card> claimCards, SortedBag<Card> drawnCards) {
+    public int additionalClaimCardsCount(SortedBag<Card> claimCards, SortedBag<Card> drawnCards) {
         Preconditions.checkArgument((this.level() == Level.UNDERGROUND) && (drawnCards.size() == 3));
         int count = 0;
         for(Card card : drawnCards){

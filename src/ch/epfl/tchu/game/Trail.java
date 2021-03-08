@@ -20,8 +20,8 @@ public final class Trail {
     /**
      * add a route to the right of the list of routes of the train
      *
-     * @param trail, the trail to which we will add a route to the right
-     * @param route, the route that must be added
+     * @param trail (Trail) the trail to which we will add a route to the right
+     * @param route (Route) the route that must be added
      * @return the trail considered modified, with a route added to the right
      */
     private static Trail addARouteToTheRight(Trail trail, Route route) { //for this class to be static, a copy of routesOfTheTrailIsMade
@@ -34,8 +34,8 @@ public final class Trail {
     /**
      * add a route to the left of the list of routes of the train
      *
-     * @param trail, the trail to which we will add a route to the left
-     * @param route, the route that must be added
+     * @param trail (Trail) the trail to which we will add a route to the left
+     * @param route (Route) the route that must be added
      * @return the trail considered modified, with a route added to the left
      */
     private static Trail addARouteToTheLeft(Trail trail, Route route) {
@@ -48,7 +48,7 @@ public final class Trail {
     /**
      * Return the two extreme stations of a trail in a list
      *
-     * @param trail
+     * @param trail (Trail) : the Trail  we’re going to use
      * @return extremeStation, the list of the two extreme station
      */
     private static List<Station> extremeStationOfTheTrail(Trail trail) {
@@ -75,11 +75,11 @@ public final class Trail {
     /**
      * Creates a List of trail that are only composed of one different route
      *
-     * @param routes, the basic routes that serve the trivialTrailCreation
-     * @return trails, A list of trail that are only composed of one road
+     * @param routes (List<Route>) : the basic routes that serve the trivialTrailCreation
+     * @return trails (Trail) : A list of trail that are only composed of one road
      */
     private static List<Trail> trivialTrailCreation(List<Route> routes) {
-        List<Trail> trails = new ArrayList<Trail>();
+        List<Trail> trails = new ArrayList<>();
         for (Route route : routes) {
             ArrayList<Route> trivialList = new ArrayList<>();
             trivialList.add(route);
@@ -92,7 +92,7 @@ public final class Trail {
     /**
      * Return the longest that can be created from a given list of routes
      *
-     * @param routes list
+     * @param routes (List<Route>) : the route list we’re going to use
      * @return the longest trail that can be created from those routes
      */
     public static Trail longest(List<Route> routes) {
@@ -107,8 +107,7 @@ public final class Trail {
                     Boolean canBeContinued = false;
                     List<Route> routesOfThisTrail = trail.routesOfTheTrail;
                     List<Station> extremeStation = extremeStationOfTheTrail(trail);
-                    List<Route> routesToTest = new ArrayList<>();
-                    routesToTest.addAll(routes);
+                    List<Route> routesToTest = new ArrayList<>(routes);
                     routesToTest.removeAll(routesOfThisTrail);
 
                     for (Route route : routesToTest) {
@@ -122,7 +121,7 @@ public final class Trail {
                         }
 
                     }
-                    if (canBeContinued == false) {
+                    if (!canBeContinued) {
                         maximalTrail.add(trail);
                     }
                 }
@@ -145,7 +144,7 @@ public final class Trail {
     /**
      * Given a list of trails, return the longest trail of them all (by adding the distance of each route)
      *
-     * @param trails
+     * @param trails (Trail) : the Trail list we’re going to use
      * @return Trail the longest trails of them all
      */
     private static Trail longestTrailOfAList(List<Trail> trails) {
@@ -167,7 +166,7 @@ public final class Trail {
     /**
      * Return the length of a given trail (the sum of the distance of its routes) and is static
      *
-     * @param trail
+     * @param trail (Trail) :the Trail  we’re going to use
      * @return length
      */
     private static int lengthStatic(Trail trail) {
@@ -232,7 +231,16 @@ public final class Trail {
     @Override
     public String toString() {
         int trailLength = lengthStatic(this);
-        String testTrail = String.format("%s - %s (%s)", this.station1().toString(), this.station2().toString(), trailLength);
+        String s1,s2;
+        if(length() == 0){
+            s1 = "-----";
+            s2 = "-----";
+        }else{
+            s1 = station1().toString();
+            s2 = station2().toString();
+        }
+
+        String testTrail = String.format("%s - %s (%s)", s1, s2, trailLength);
         return testTrail;
     }
 

@@ -30,6 +30,7 @@ public final class CardState extends PublicCardState {
         this.deck = deck;
         List<Card> emptyList = new ArrayList<>();
         this.discardCards = SortedBag.of(emptyList);
+
     }
 
     /**

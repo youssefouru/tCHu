@@ -4,7 +4,6 @@ import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -88,12 +87,7 @@ public final class Deck<C extends Comparable<C>> {
      */
     public SortedBag<C> topCards(int count) {
         Preconditions.checkArgument(count >= 0 && count <= size());
-        List<C> myList = new LinkedList<>();
-        Deck< C> myDeck = new Deck<>(this.cards);
-        for (int i = 0; i < count; ++i) {
-            myList.add(myDeck.topCard());
-            myDeck = myDeck.withoutTopCard();
-        }
+        List<C> myList = cards.toList().subList(0,count);
         return SortedBag.of(myList);
     }
 

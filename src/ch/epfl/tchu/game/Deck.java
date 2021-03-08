@@ -40,17 +40,6 @@ public final class Deck<C extends Comparable<C>> {
     }
 
     /**
-     * this method creat a C's deck
-     *
-     * @param cards (SortedBag<C>) : the set of C that will be used as parameter to create a Deck
-     * @param <C>   : the type of the objects the type of object collected in the deck
-     * @return deck (Deck<C>) : a deck which has the SortedBag cards shuffled as parameter
-     */
-    public static <C extends Comparable<C>> Deck<C> of(SortedBag<C> cards) {
-        return new Deck<>(cards);
-    }
-
-    /**
      * this method returns the number of cards which are in the deck
      *
      * @return size (int) : the size of the attributes card

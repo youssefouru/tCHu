@@ -3,10 +3,7 @@ package ch.epfl.tchu.game;
 import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * A Deck
@@ -34,9 +31,10 @@ public final class Deck<C extends Comparable<C>> {
      * @param <C>   : the type of the objects the type of object collected in the deck
      * @return deck (Deck<C>) : a deck which has the SortedBag cards shuffled as parameter
      */
-    public static <C extends Comparable<C>> Deck<C> of(List<C> cards, Random rng) {
-        Collections.shuffle(cards, rng);
-        return new Deck<>(cards);
+    public static <C extends Comparable<C>> Deck<C> of(SortedBag<C> cards, Random rng) {
+        List<C> c = cards.toList();
+        Collections.shuffle(c, rng);
+        return new Deck<>(c);
     }
 
 
@@ -102,11 +100,12 @@ public final class Deck<C extends Comparable<C>> {
      */
     public Deck<C> withoutTopCards(int count) {
         Preconditions.checkArgument(count >= 0 && count <= size());
-        Deck<C> myDeck = new Deck<>(cards);
-        for (int i = 0; i < count; ++i) {
-            myDeck = myDeck.withoutTopCard();
+        List<C> c = new LinkedList<>(cards);
+        Deck<C> deck = new Deck<>(cards);
+        for(int i = 0 ; i <count ; ++i){
+            deck = deck.withoutTopCard();
         }
-        return myDeck;
+        return deck;
     }
 
 }

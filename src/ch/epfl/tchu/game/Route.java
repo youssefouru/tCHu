@@ -35,9 +35,9 @@ public final class Route {
         Preconditions.checkArgument(!(station1.equals(station2)) && (length >= Constants.MIN_ROUTE_LENGTH && length <= Constants.MAX_ROUTE_LENGTH));
         this.station1 = Objects.requireNonNull(station1);
         this.station2 = Objects.requireNonNull(station2);
-        this.id = id;
+        this.id = Objects.requireNonNull(id);
         this.length = length;
-        this.level = level;
+        this.level = Objects.requireNonNull(level);
         this.color = color;
 
     }

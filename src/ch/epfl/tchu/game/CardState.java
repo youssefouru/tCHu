@@ -37,7 +37,8 @@ public final class CardState extends PublicCardState {
      * @return a card state
      */
     public static CardState of(Deck<Card> deck) {
-        return new CardState(deck, deck.topCards(5).toList(), SortedBag.of());
+        Preconditions.checkArgument(deck.size()>=5);
+        return new CardState(deck.withoutTopCards(5), deck.topCards(5).toList(), SortedBag.of());
     }
 
     /**
@@ -86,7 +87,7 @@ public final class CardState extends PublicCardState {
      */
     public CardState withDeckRecreatedFromDiscards(Random rng) {
         Preconditions.checkArgument(deck.isEmpty());
-        return new CardState(Deck.of(discardCards.toList(), rng), super.faceUpCards(), SortedBag.of());
+        return new CardState(Deck.of(discardCards, rng), super.faceUpCards(), SortedBag.of());
     }
 
 

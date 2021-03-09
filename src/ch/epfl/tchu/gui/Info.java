@@ -46,6 +46,9 @@ public final class Info {
                 case WHITE:
                     color = StringsFr.WHITE_CARD;
                     break;
+                default:
+                    color = StringsFr.LOCOMOTIVE_CARD;
+
             }
             String.format("%s %s", card.name(), color);
         }

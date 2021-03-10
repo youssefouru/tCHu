@@ -19,7 +19,7 @@ public final class Trail {
      * @param routesOfTheTrail (List<Route>) : the route list that we will use
      */
     private Trail(List<Route> routesOfTheTrail) {
-        this.routesOfTheTrail = List.copyOf(routesOfTheTrail);
+        this.routesOfTheTrail =routesOfTheTrail;
     }
 
 

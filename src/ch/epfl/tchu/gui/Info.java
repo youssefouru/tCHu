@@ -88,7 +88,7 @@ public final class Info {
                     toBeDisplayed.append(String.format("%s %s",StringsFr.AND_SEPARATOR, n, cardName(c,n)));
                 }
             } else if (n > 1) {
-                toBeDisplayed.append(String.format("%s %s", n, cardName(c,n)));
+                toBeDisplayed.append(String.format("%s %s ", n, cardName(c,n)));
             } else {
                 toBeDisplayed.append(String.format("%s %s", n, cardName(c,n)));
             }
@@ -142,7 +142,7 @@ public final class Info {
         if (additionalCost == 0) {
             stringBuilder.append(String.format(StringsFr.NO_ADDITIONAL_COST));
         } else {
-            stringBuilder.append(String.format(StringsFr.SOME_ADDITIONAL_COST, additionalCost));
+            stringBuilder.append(String.format(StringsFr.SOME_ADDITIONAL_COST, additionalCost,sIfPlural(additionalCost)));
         }
         return stringBuilder.toString();
     }
@@ -162,7 +162,6 @@ public final class Info {
     public String won(int points, int loserPoints) {
         return String.format(StringsFr.WINS, player, points,sIfPlural(points), loserPoints, sIfPlural(loserPoints));
     }
-
 
 
 

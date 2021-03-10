@@ -92,7 +92,21 @@ public class CardStateTest {
 
     @Test
     void withMoreDiscardedCardsWorksWell(){
+        SortedBag<Card> sortedBag = all.getDiscardCards();
+        SortedBag<Card> values = deck.topCards(6);
+        List<Card> myList = sortedBag.toList();
+        myList.addAll(values.toList());
+        SortedBag<Card> expected = SortedBag.of(myList);
+        assertEquals(expected,all.withMoreDiscardedCards(values).getDiscardCards());
 
+    }
+
+
+    @Test
+    void withDeckRecreatedFromDiscardsFailsWithNonEmptyDeck(){
+        assertThrows(IllegalArgumentException.class, ()->{
+           all.withDeckRecreatedFromDiscards(new Random());
+        });
     }
 
 

@@ -14,6 +14,11 @@ import java.util.*;
 public final class Deck<C extends Comparable<C>> {
     private final List<C> cards;
 
+
+    public List<C> getCards(){
+        return this.cards;
+    }
+
     /**
      * private constructor of Deck
      *

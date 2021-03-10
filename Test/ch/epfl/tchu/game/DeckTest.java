@@ -2,6 +2,7 @@ package ch.epfl.tchu.game;
 
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.test.TestRandomizer;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -11,6 +12,22 @@ import java.util.Random;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class DeckTest {
+    private static Deck<Card> randomDeck;
+    private static List<Card> randomCards;
+    @BeforeAll
+    public static void init(){
+
+        SortedBag.Builder<Card> builder = new SortedBag.Builder<>();
+        for(Card all : Card.ALL){
+            int r = TestRandomizer.newRandom().nextInt(50) + 1;
+            for(int i = 0 ; i<r;++i){
+                builder.add(all);
+            }
+        }
+        randomDeck = Deck.of(builder.build(),new Random());
+        randomCards = randomDeck.getCards();
+
+    }
    @Test
     void sizeWorksWell(){
         Deck<Card> deck = Deck.of(SortedBag.of(3,Card.BLUE), new Random());
@@ -18,6 +35,11 @@ public class DeckTest {
        Deck<Card> deck1 = Deck.of(SortedBag.of(0,Card.BLUE), new Random());
        assertEquals(deck1.size(),0);
 
+    }
+    @Test
+    void WithoutTopCardsWorksWell(){
+        int i = randomDeck.size() > 5 ? 4:1;
+        assertEquals(randomDeck.withoutTopCards(i).getCards(),randomCards.subList(i, randomDeck.size()));
     }
 
     @Test
@@ -43,10 +65,7 @@ public class DeckTest {
 
     @Test
     void TopcardsWorks(){
-       Deck<Card> deck=Deck.of(SortedBag.of(3,Card.BLUE), new Random());
-       List<Card> cards = List.of(Card.BLUE,Card.BLUE,Card.BLUE);
-       SortedBag<Card> bag = SortedBag.of(cards);
-       assertEquals(deck.topCards(3),bag);
+       assertEquals(randomDeck.topCards(3),SortedBag.of(randomCards.subList(0,3)));
     }
 
 

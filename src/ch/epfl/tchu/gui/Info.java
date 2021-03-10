@@ -19,9 +19,8 @@ public final class Info {
     public static String cardName(Card card, int count) {
         String color = null;
         String cardName = null;
-        if (count == 1 || count == -1) {
+        if (Math.abs(count) == 1) {
             switch (card.color()) {
-
                 case BLACK:
                     color = StringsFr.BLACK_CARD;
                     break;

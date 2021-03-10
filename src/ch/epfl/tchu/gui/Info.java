@@ -18,9 +18,8 @@ public final class Info {
 
     public static String cardName(Card card, int count) {
         String color = null;
-        String cardName = null;
-        if (Math.abs(count) == 1) {
-            switch (card.color()) {
+        String cardName;
+            switch (card) {
                 case BLACK:
                     color = StringsFr.BLACK_CARD;
                     break;
@@ -45,12 +44,16 @@ public final class Info {
                 case WHITE:
                     color = StringsFr.WHITE_CARD;
                     break;
-                default:
+                case LOCOMOTIVE:
                     color = StringsFr.LOCOMOTIVE_CARD;
+                    break;
 
             }
-            String.format("%s %s", card.name(), color);
-        }
+
+            color =color + sIfPlural(count);
+            cardName = String.format("%s",  color);
+
+
         return cardName;
     }
 
@@ -63,7 +66,7 @@ public final class Info {
     }
 
     private static String routePrinter(Route route) {
-        return String.format("s%s%s%", route.station1(), StringsFr.EN_DASH_SEPARATOR, route.station2());
+        return String.format("%s%s%s", route.station1(), StringsFr.EN_DASH_SEPARATOR, route.station2());
     }
 
     private static String cardsCollectionPrinter(SortedBag<Card> cardsCollection) {
@@ -73,21 +76,21 @@ public final class Info {
             int n = cardsCollection.countOf(c);
             if (counter == 0) {
                 if (n > 1) {
-                    toBeDisplayed.append(String.format("%s %ss,", n, c.name()));
+                    toBeDisplayed.append(String.format("%s %s", n, cardName(c,n)));
                 } else {
-                    toBeDisplayed.append(String.format("%s %s,", n, c.name()));
+                    toBeDisplayed.append(String.format("%s %s", n, cardName(c,n)));
                 }
             }
             else if ( counter == cardsCollection.toSet().size() - 1) {
                 if (n > 1) {
-                    toBeDisplayed.append(String.format("%s %s %ss",StringsFr.AND_SEPARATOR, n, c.name()));
+                    toBeDisplayed.append(String.format("%s %s %s",StringsFr.AND_SEPARATOR, n, cardName(c,n)));
                 } else {
-                    toBeDisplayed.append(String.format("%s %s",StringsFr.AND_SEPARATOR, n, c.name()));
+                    toBeDisplayed.append(String.format("%s %s",StringsFr.AND_SEPARATOR, n, cardName(c,n)));
                 }
             } else if (n > 1) {
-                toBeDisplayed.append(String.format(" %s %ss,", n, c.name()));
+                toBeDisplayed.append(String.format(" %s %s", n, cardName(c,n)));
             } else {
-                toBeDisplayed.append(String.format(" %s %s,", n, c.name()));
+                toBeDisplayed.append(String.format(" %s %s", n, cardName(c,n)));
             }
             counter++;
         }
@@ -97,7 +100,7 @@ public final class Info {
     }
 
     public static String draw(List<String> playerNames, int points) {
-        String bothPlayer = String.format("s%s%s%", playerNames.get(0), StringsFr.AND_SEPARATOR, playerNames.get(1));
+        String bothPlayer = String.format("%s%s%s", playerNames.get(0), StringsFr.AND_SEPARATOR, playerNames.get(1));
         return String.format(StringsFr.DRAW, playerNames, points);
     }
 
@@ -121,8 +124,8 @@ public final class Info {
         return String.format(StringsFr.DREW_BLIND_CARD, player);
     }
 
-    public String drewVisibleCard() {
-        return String.format(StringsFr.DREW_VISIBLE_CARD, player);
+    public String drewVisibleCard(Card card) {
+        return String.format("%s %s",StringsFr.DREW_VISIBLE_CARD, player,cardName(card,1));
     }
 
     public String claimedRoute(Route route, SortedBag<Card> initialCards) {
@@ -139,7 +142,7 @@ public final class Info {
         if (additionalCost == 0) {
             stringBuilder.append(String.format(StringsFr.NO_ADDITIONAL_COST));
         } else {
-            stringBuilder.append(String.format(StringsFr.SOME_ADDITIONAL_COST, additionalCost, sIfPlural(additionalCost)));
+            stringBuilder.append(String.format(StringsFr.SOME_ADDITIONAL_COST, additionalCost));
         }
         return stringBuilder.toString();
     }

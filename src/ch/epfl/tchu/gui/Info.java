@@ -88,9 +88,9 @@ public final class Info {
                     toBeDisplayed.append(String.format("%s %s",StringsFr.AND_SEPARATOR, n, cardName(c,n)));
                 }
             } else if (n > 1) {
-                toBeDisplayed.append(String.format(" %s %s", n, cardName(c,n)));
+                toBeDisplayed.append(String.format("%s %s", n, cardName(c,n)));
             } else {
-                toBeDisplayed.append(String.format(" %s %s", n, cardName(c,n)));
+                toBeDisplayed.append(String.format("%s %s", n, cardName(c,n)));
             }
             counter++;
         }
@@ -125,7 +125,7 @@ public final class Info {
     }
 
     public String drewVisibleCard(Card card) {
-        return String.format("%s %s",StringsFr.DREW_VISIBLE_CARD, player,cardName(card,1));
+        return String.format(StringsFr.DREW_VISIBLE_CARD, player,cardName(card,1));
     }
 
     public String claimedRoute(Route route, SortedBag<Card> initialCards) {

@@ -103,11 +103,4 @@ public final class CardState extends PublicCardState {
     }
 
 
-    public SortedBag<Card> getDiscardCards(){
-        return this.discardCards;
-    }
-
-    public Deck<Card> getDeck(){
-        return deck;
-    }
 }

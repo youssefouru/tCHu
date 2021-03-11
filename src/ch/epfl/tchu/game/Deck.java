@@ -15,9 +15,7 @@ public final class Deck<C extends Comparable<C>> {
     private final List<C> cards;
 
 
-    public List<C> getCards(){
-        return this.cards;
-    }
+
 
     /**
      * private constructor of Deck
@@ -105,6 +103,7 @@ public final class Deck<C extends Comparable<C>> {
      */
     public Deck<C> withoutTopCards(int count) {
         Preconditions.checkArgument(count >= 0 && count <= size());
+        List<C> c = new LinkedList<>(cards);
         Deck<C> deck = new Deck<>(cards);
         for(int i = 0 ; i <count ; ++i){
             deck = deck.withoutTopCard();

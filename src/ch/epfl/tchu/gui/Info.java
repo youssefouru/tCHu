@@ -83,15 +83,15 @@ public final class Info {
             }
             else if ( counter == cardsCollection.toSet().size() - 1) {
                 if (n > 1) {
-                    toBeDisplayed.append(String.format("%s %s %s",StringsFr.AND_SEPARATOR, n, cardName(c,n)));
+                    toBeDisplayed.append(String.format("%s%s %s",StringsFr.AND_SEPARATOR, n, cardName(c,n)));
                 } else {
-                    toBeDisplayed.append(String.format("%s %s",StringsFr.AND_SEPARATOR, n, cardName(c,n)));
+                    toBeDisplayed.append(String.format("%s%s %s",StringsFr.AND_SEPARATOR, n, cardName(c,n)));
                 }
 
             } else if (n > 1) {
-                toBeDisplayed.append(String.format("%s %s ", n, cardName(c,n)));
+                toBeDisplayed.append(String.format(", %s %s ", n, cardName(c,n)));
             } else {
-                toBeDisplayed.append(String.format("%s %s", n, cardName(c,n)));
+                toBeDisplayed.append(String.format(", %s %s", n, cardName(c,n)));
             }
             counter++;
         }
@@ -102,7 +102,11 @@ public final class Info {
 
     public static String draw(List<String> playerNames, int points) {
         String bothPlayer = String.format("%s%s%s", playerNames.get(0), StringsFr.AND_SEPARATOR, playerNames.get(1));
-        return String.format(StringsFr.DRAW, playerNames, points);
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(playerNames.get(0));
+        stringBuilder.append(StringsFr.AND_SEPARATOR);
+        stringBuilder.append(playerNames.get(1));
+        return String.format(StringsFr.DRAW, stringBuilder, points);
     }
 
     public String willPlayFirst() {

@@ -87,6 +87,7 @@ public final class Info {
                 } else {
                     toBeDisplayed.append(String.format("%s %s",StringsFr.AND_SEPARATOR, n, cardName(c,n)));
                 }
+
             } else if (n > 1) {
                 toBeDisplayed.append(String.format("%s %s ", n, cardName(c,n)));
             } else {

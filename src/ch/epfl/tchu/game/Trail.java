@@ -127,7 +127,7 @@ public final class Trail {
                         maximalTrail.add(trail);
                     }
                 }
-                trailsToBeTested = List.copyOf(tempTrails);
+                trailsToBeTested = new ArrayList<>(tempTrails);
                 tempTrails.clear();
             }
             toBeReturned = longestTrailOfAList(maximalTrail);

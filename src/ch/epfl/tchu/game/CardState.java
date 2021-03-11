@@ -107,5 +107,7 @@ public final class CardState extends PublicCardState {
         return this.discardCards;
     }
 
-
+    public Deck<Card> getDeck(){
+        return deck;
+    }
 }

@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class CardStateTest {
     public static CardState all;
     public static Deck<Card> deck;
+    public static Deck<Card> deckOfAll;
 
     @BeforeAll
     static void  init(){
@@ -28,6 +29,7 @@ public class CardStateTest {
         }
         deck =Deck.of(SortedBag.of(cards),new Random());
         all = CardState.of(deck);
+        deckOfAll = deck.withoutTopCards(5);
     }
 
     @Test
@@ -73,12 +75,12 @@ public class CardStateTest {
 
     @Test
     void topDeckCardWorks(){
-        assertEquals(deck.topCard(),all.topDeckCard());
+        assertEquals(deckOfAll.topCard(),all.topDeckCard());
     }
 
     @Test
     void withoutTopDeckCardWorksWell(){
-        assertEquals(CardState.of(deck.withoutTopCard()),all.withoutTopDeckCard());
+        assertEquals(CardState.of(deck.withoutTopCard()).getDeck().getCards(),all.withoutTopDeckCard().getDeck().getCards());
     }
 
     @Test

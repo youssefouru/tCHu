@@ -110,8 +110,9 @@ public final class Trail {
             List<Trail> tempTrails = new ArrayList<>();
             while (!trailsToBeTested.isEmpty()) {
                 for (Trail trail : trailsToBeTested) {
-                    Boolean canBeContinued = false;
-                    List<Route> routesOfThisTrail = trail.routesOfTheTrail;
+                    List<Route> copy = new ArrayList<>(trail.routesOfTheTrail);
+                    boolean canBeContinued = false;
+                    List<Route> routesOfThisTrail = copy;
                     List<Station> extremeStation = extremeStationOfTheTrail(trail);
                     List<Route> routesToTest = new ArrayList<>(routes);
                     routesToTest.removeAll(routesOfThisTrail);
@@ -119,6 +120,9 @@ public final class Trail {
                     for (Route route : routesToTest) {
                         if (route.stations().contains(extremeStation.get(1))) {
                             tempTrails.add(addARouteToTheRight(trail, route));
+                            canBeContinued = true;
+                        }if(route.stations().contains(extremeStation.get(0))){
+                            tempTrails.add(addARouteToTheLeft(trail, route));
                             canBeContinued = true;
                         }
 
@@ -151,7 +155,7 @@ public final class Trail {
      */
     private static Trail longestTrailOfAList(List<Trail> trails) {
         int maxLength = 0;
-        Trail longestTrail = new Trail(null);
+        Trail longestTrail = new Trail(new ArrayList<>());
 
         for (Trail trail : trails) {
             int length = lengthStatic(trail);

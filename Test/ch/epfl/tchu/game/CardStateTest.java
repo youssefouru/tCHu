@@ -27,7 +27,7 @@ public class CardStateTest {
                 cards.add(c);
             }
         }
-        deck =Deck.of(SortedBag.of(cards),new Random());
+        deck =Deck.of(SortedBag.of(cards),DeckTest.NON_RANDOM);
         all = CardState.of(deck);
         deckOfAll = deck.withoutTopCards(5);
     }
@@ -80,7 +80,8 @@ public class CardStateTest {
 
     @Test
     void withoutTopDeckCardWorksWell(){
-        assertEquals(CardState.of(deck.withoutTopCard()).getDeck().getCards(),all.withoutTopDeckCard().getDeck().getCards());
+        int i = all.deckSize() - 1;
+        assertEquals(CardState.of(deck.withoutTopCard()).getDeck().topCards(i),(all.withoutTopDeckCard()).getDeck().topCards(all.deckSize() -1 ));
     }
 
     @Test

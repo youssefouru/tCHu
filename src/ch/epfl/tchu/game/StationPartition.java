@@ -21,7 +21,8 @@ public final class StationPartition implements StationConnectivity {
     /**
      * this method returns the representative of a set of stations
      *
-     * @param stationID (List<Station>):
+     * @param stationID (int): the id of the station
+     * @param links (int[]) : the array that contains the representative of each station
      * @return returns the representative of a set of stations
      */
     private  int representative(int stationID ,int[] links) {
@@ -32,13 +33,6 @@ public final class StationPartition implements StationConnectivity {
         }
     }
 
-    public StationPartition(){
-        this.links=null;
-    }
-
-    public int[][] getLinks(){
-        return links;
-    }
 
     /**
      * This method checks if the two stations are connected or not
@@ -64,7 +58,7 @@ public final class StationPartition implements StationConnectivity {
         /**
          * Constructor of the Builder
          *
-         * @param stationCount (int) : the maxium ID
+         * @param stationCount (int) : the maximum ID
          */
         public Builder(int stationCount) {
             Preconditions.checkArgument(stationCount >= 0);
@@ -81,14 +75,14 @@ public final class StationPartition implements StationConnectivity {
 
 
         /**
-         * this method creates a builder where the two station in parameter are conncted
+         * this method creates a builder where the two station in parameter are connected
          *
          * @param station1 (Station) : the first station
          * @param station2 (Station) :  the second station
          * @return the builder with the two stations connected
          */
         public Builder connect(Station station1, Station station2) {
-            stationSet[station1.id()] = stationSet[representative(station2.id(),stationSet)];
+            stationSet[representative(station1.id(),stationSet)] = stationSet[representative(station2.id(),stationSet)];
             return this;
         }
 
@@ -99,7 +93,15 @@ public final class StationPartition implements StationConnectivity {
          * @return a new StationPartition
          */
         public StationPartition build() {
-            return new StationPartition();
+            for(int i = 0 ; i<stationSet.length;++i){
+                stationSet[i] = representative(i,stationSet);
+            }
+            int[][] links = new int[stationCount][stationCount];
+            for(int i = 0  ;i <stationCount ; ++i){
+                links[0][i] = i;
+            }
+            links[1] = stationSet;
+            return new StationPartition(links);
         }
 
     }

@@ -4,7 +4,7 @@ import ch.epfl.tchu.Preconditions;
 
 import java.util.List;
 
-public abstract class PublicPlayerState {
+public class PublicPlayerState {
     private final List<Route> routes;
     private final int ticketCount;
     private final int cardCount;
@@ -61,9 +61,14 @@ public abstract class PublicPlayerState {
         return numberOfWagon;
     }
 
+    /**
+     * this method returns the number of points claimed
+     *
+     * @return returns the number of points of the player
+     */
+    public int claimPoints(){
 
-
-    public abstract int claimPoints();
+    }
 
     private  int computeWagon(){
         int i = 0;

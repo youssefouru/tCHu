@@ -33,7 +33,7 @@ public final class Info {
      * @return (String) the String described
      */
     public static String cardName(Card card, int count) {
-        String color = null;
+        String color = "";
         String cardName;
         switch (card) {
             case BLACK:

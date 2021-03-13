@@ -14,8 +14,4 @@ public class PlayerState extends PublicPlayerState{
         super(ticketCount, cardCount, routes);
     }
 
-    @Override
-    public int claimPoints() {
-        return 0;
-    }
 }

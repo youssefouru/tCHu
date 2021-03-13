@@ -1,10 +1,10 @@
 package ch.epfl.tchu.game;
 
 import ch.epfl.tchu.Preconditions;
+import com.sun.source.tree.Tree;
+import org.w3c.dom.Node;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public final class StationPartition implements StationConnectivity {
     private final int[][] links;
@@ -21,17 +21,23 @@ public final class StationPartition implements StationConnectivity {
     /**
      * this method returns the representative of a set of stations
      *
-     * @param stations (Set<Station>) : the set of stations
+     * @param stationID (List<Station>):
      * @return returns the representative of a set of stations
      */
-    private static int representative(Set<Station> stations) {
-        int max = 0;
-        for (Station station : stations) {
-            if (station.id() >= max) {
-                max = station.id();
-            }
+    private  int representative(int stationID ,int[] links) {
+        if(stationID == links[stationID]){
+            return stationID;
+        }else{
+            return representative(links[stationID],links);
         }
-        return max;
+    }
+
+    public StationPartition(){
+        this.links=null;
+    }
+
+    public int[][] getLinks(){
+        return links;
     }
 
     /**
@@ -49,28 +55,30 @@ public final class StationPartition implements StationConnectivity {
     public final class Builder {
         private final int stationCount;
 
-        private final List<Set<Station>> stationSet;
+        private final int[] stationSet;
 
-        /**
-         * Constructor of the Builder
-         *
-         * @param stationCount (int) : the maximum ID
-         */
-        public Builder(int stationCount) {
-            this(stationCount, new ArrayList<>());
-        }
+
+
+
 
         /**
          * Constructor of the Builder
          *
          * @param stationCount (int) : the maxium ID
-         * @param stationSet   (Set<Set<Station>>) : the set pf stations that are connected
          */
-        private Builder(int stationCount, List<Set<Station>> stationSet) {
+        public Builder(int stationCount) {
             Preconditions.checkArgument(stationCount >= 0);
-            this.stationSet = List.copyOf(stationSet);
             this.stationCount = stationCount;
+            this.stationSet= new int[stationCount];
+            for(int i = 0 ; i< stationCount; ++i){
+                stationSet[i] = i;
+            }
+
         }
+
+
+
+
 
         /**
          * this method creates a builder where the two station in parameter are conncted
@@ -80,21 +88,8 @@ public final class StationPartition implements StationConnectivity {
          * @return the builder with the two stations connected
          */
         public Builder connect(Station station1, Station station2) {
-            List<Set<Station>> stations = new ArrayList<>(stationSet);
-
-            for (Set<Station> station : stations) {
-                if (station.contains(station1) && !station.contains(station2)) {
-                    station.add(station2);
-                    return new Builder(stationCount, stations);
-                }
-                if (station.contains(station2) && !station.contains(station1)) {
-                    station.add(station1);
-                    return new Builder(stationCount, stations);
-                }
-
-            }
-            stations.add(Set.of(station1, station2));
-            return new Builder(stationCount, stationSet);
+            stationSet[station1.id()] = stationSet[representative(station2.id(),stationSet)];
+            return this;
         }
 
 
@@ -104,14 +99,7 @@ public final class StationPartition implements StationConnectivity {
          * @return a new StationPartition
          */
         public StationPartition build() {
-            int[][] links = new int[stationCount][2];
-            for (Set<Station> stationSet : this.stationSet) {
-                for (Station station : stationSet) {
-                    links[station.id()][1] = representative(stationSet);
-                }
-            }
-
-            return new StationPartition(links);
+            return new StationPartition();
         }
 
     }

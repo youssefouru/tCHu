@@ -1,11 +1,9 @@
-package ch.epfl.tchu.game;
+package ch.epfl.tchu.gui;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.Card;
 import ch.epfl.tchu.game.ChMap;
 import ch.epfl.tchu.game.Route;
 import ch.epfl.tchu.game.Trail;
-import ch.epfl.tchu.gui.Info;
-import ch.epfl.tchu.gui.StringsFr;
 import org.junit.jupiter.api.Test;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -70,24 +68,19 @@ public class InfoTest {
     void claimedRouteWorks() {
         Route route = ChMap.routes().get(2);
         SortedBag<Card> cards = SortedBag.of(1, Card.LOCOMOTIVE, 2, Card.ORANGE);
-        String expected = "Hana a pris possession de la route Baden"+ StringsFr.EN_DASH_SEPARATOR+"Bâle au moyen de 2 oranges et 1 locomotive.\n";
+        String expected = "Hana a pris possession de la route Baden"+StringsFr.EN_DASH_SEPARATOR+"Bâle au moyen de 2 oranges et 1 locomotive.\n";
         assertEquals(expected, info.claimedRoute(route, cards));
     }
     @Test
     void attemptsTunnelClaimWorks(){
-        String expected = "Hana tente de s'emparer du tunnel Baden"+StringsFr.EN_DASH_SEPARATOR+"Zürich au moyen de 3 violettes, 5 bleues, 1 orange et 3 locomotives !\n";
-        SortedBag<Card> cards = new SortedBag.Builder().
-                                add(3, Card.LOCOMOTIVE).
-                                add(3, Card.VIOLET).
-                                add(1, Card.ORANGE).
-                                add(5,Card.BLUE).
-                                build();
+        String expected = "Hana tente de s'emparer du tunnel Baden"+StringsFr.EN_DASH_SEPARATOR+"Zürich au moyen de 3 violettes, 1 orange et 2 locomotives !\n";
+        SortedBag<Card> cards = new SortedBag.Builder().add(2, Card.LOCOMOTIVE).add(3, Card.VIOLET).add(1, Card.ORANGE).build();
         Route route = ChMap.routes().get(4);
         assertEquals(expected, info.attemptsTunnelClaim(route, cards));
     }
     @Test
     void drewAdditionalCardsWorks1() {
-        String expected = "Les cartes supplémentaires sont 3 blanches. Elles impliquent un coût additionnel de 3 cartes.\n";
+        String expected = "Les cartes supplémentaires sont 3 blanches. "+"Elles impliquent un coût additionnel de 3 cartes.\n";
         SortedBag<Card> drawnCards = SortedBag.of(3, Card.WHITE);
         assertEquals(expected, info.drewAdditionalCards(drawnCards, 3));
     }

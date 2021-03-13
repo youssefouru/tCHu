@@ -14,6 +14,12 @@ import static org.junit.jupiter.api.Assertions.*;
 public class DeckTest {
     private static Deck<Card> randomDeck;
     private static List<Card> randomCards;
+    public static final Random NON_RANDOM = new Random(){
+        @Override
+        public int nextInt(int i){
+            return i-1;
+        }
+    };
     @BeforeAll
     public static void init(){
 
@@ -24,8 +30,9 @@ public class DeckTest {
                 builder.add(all);
             }
         }
-        randomDeck = Deck.of(builder.build(),new Random());
+        randomDeck = Deck.of(builder.build(),NON_RANDOM);
         randomCards = randomDeck.getCards();
+
 
     }
    @Test
@@ -39,7 +46,19 @@ public class DeckTest {
     @Test
     void WithoutTopCardsWorksWell(){
         int i = randomDeck.size() > 5 ? 4:1;
-        assertEquals(randomDeck.withoutTopCards(i).getCards(),randomCards.subList(i, randomDeck.size()));
+        i = randomDeck.size() < 1 ? 0:i;
+        Deck<Card> result = randomDeck.withoutTopCards(i);
+        SortedBag<Card> cards = result.topCards(result.size());
+        SortedBag<Card> sortedBag =SortedBag.of(randomDeck
+                .topCards(randomDeck.size())
+                .toList()
+                .subList(i, randomDeck.size()));
+
+        assertEquals(result.topCards(result.size()).toList(),
+                randomDeck
+                .topCards(randomDeck.size())
+                .toList()
+                .subList(i, randomDeck.size()));
     }
 
     @Test

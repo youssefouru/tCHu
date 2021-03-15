@@ -295,7 +295,9 @@ public final class SortedBag<E extends Comparable<E>> implements Iterable<E> {
          * @param e l'élément à ajouter
          * @return le bâtisseur (<code>this</code>)
          */
-        public Builder<E> add(E e) {
+        public
+
+        <E> add(E e) {
             return add(1, e);
         }
 

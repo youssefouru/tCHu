@@ -67,7 +67,11 @@ public class PublicPlayerState {
      * @return returns the number of points of the player
      */
     public int claimPoints(){
-
+        int claimPoints = 0;
+        for (Route route : routes) {
+            claimPoints += route.claimPoints();
+        }
+        return claimPoints;
     }
 
     private  int computeWagon(){

@@ -75,7 +75,7 @@ public final class Info {
 
     private static String sIfPlural(int number) {
         String str = "";
-        if (number > 1) {
+        if (number > 1 || number == 0) {
             str = "s";
         }
         return str;

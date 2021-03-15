@@ -4,7 +4,7 @@ import ch.epfl.tchu.Preconditions;
 
 
 /**
- * Info
+ * A StationPartition
  *
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)
@@ -36,7 +36,11 @@ public final class StationPartition implements StationConnectivity {
         return links[station1.id()] == links[station2.id()];
     }
 
-    public final class Builder {
+    /**
+     * Inner Class Builder
+     *
+     */
+    public final static class Builder {
         private final int stationCount;
 
         private final int[] stationSet;

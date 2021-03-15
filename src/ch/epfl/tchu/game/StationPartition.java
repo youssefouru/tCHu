@@ -1,37 +1,27 @@
 package ch.epfl.tchu.game;
 
 import ch.epfl.tchu.Preconditions;
-import com.sun.source.tree.Tree;
-import org.w3c.dom.Node;
 
-import java.util.*;
 
+/**
+ * A StationPartition
+ *
+ * @author Amine Youssef (324253)
+ * @author Louis Yves André Barinka (329847)
+ */
 public final class StationPartition implements StationConnectivity {
-    private final int[][] links;
+    private final int[] links;
 
     /**
      * Constructor of Station Partitions
      *
-     * @param tab (int[][]) : representations of the links of the
+     * @param tab (int[]) : representations of the links of the
      */
-    private StationPartition(int[][] tab) {
+    private StationPartition(int[] tab) {
         this.links = tab;
     }
 
-    /**
-     * this method returns the representative of a set of stations
-     *
-     * @param stationID (int): the id of the station
-     * @param links (int[]) : the array that contains the representative of each station
-     * @return returns the representative of a set of stations
-     */
-    private  int representative(int stationID ,int[] links) {
-        if(stationID == links[stationID]){
-            return stationID;
-        }else{
-            return representative(links[stationID],links);
-        }
-    }
+
 
 
     /**
@@ -43,16 +33,17 @@ public final class StationPartition implements StationConnectivity {
      */
     @Override
     public boolean connected(Station station1, Station station2) {
-        return links[station1.id()][1] == links[station2.id()][1];
+        return links[station1.id()] == links[station2.id()];
     }
 
-    public final class Builder {
+    /**
+     * Inner Class Builder
+     *
+     */
+    public final static class Builder {
         private final int stationCount;
 
         private final int[] stationSet;
-
-
-
 
 
         /**
@@ -63,15 +54,27 @@ public final class StationPartition implements StationConnectivity {
         public Builder(int stationCount) {
             Preconditions.checkArgument(stationCount >= 0);
             this.stationCount = stationCount;
-            this.stationSet= new int[stationCount];
-            for(int i = 0 ; i< stationCount; ++i){
+            this.stationSet = new int[stationCount];
+            for (int i = 0; i < stationCount; ++i) {
                 stationSet[i] = i;
             }
 
         }
 
 
-
+        /**
+         * this method returns the representative of a set of stations
+         *
+         * @param stationID (int): the id of the station
+         * @return returns the representative of a set of stations
+         */
+        private int representative(int stationID) {
+            if (stationID == stationSet[stationID]) {
+                return stationID;
+            } else {
+                return representative(stationSet[stationID]);
+            }
+        }
 
 
         /**
@@ -82,7 +85,7 @@ public final class StationPartition implements StationConnectivity {
          * @return the builder with the two stations connected
          */
         public Builder connect(Station station1, Station station2) {
-            stationSet[representative(station1.id(),stationSet)] = stationSet[representative(station2.id(),stationSet)];
+            stationSet[representative(station1.id())] = stationSet[representative(station2.id())];
             return this;
         }
 
@@ -93,15 +96,11 @@ public final class StationPartition implements StationConnectivity {
          * @return a new StationPartition
          */
         public StationPartition build() {
-            for(int i = 0 ; i<stationSet.length;++i){
-                stationSet[i] = representative(i,stationSet);
+            for (int i = 0; i < stationSet.length; ++i) {
+                stationSet[i] = representative(i);
             }
-            int[][] links = new int[stationCount][stationCount];
-            for(int i = 0  ;i <stationCount ; ++i){
-                links[0][i] = i;
-            }
-            links[1] = stationSet;
-            return new StationPartition(links);
+
+            return new StationPartition(stationSet);
         }
 
     }

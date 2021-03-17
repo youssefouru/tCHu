@@ -15,10 +15,7 @@ public final class Deck<C extends Comparable<C>> {
     private final List<C> cards;
 
 
-    public List<C> getCards(){
-        //TODO : supprime
-        return this.cards;
-    }
+
 
     /**
      * private constructor of Deck

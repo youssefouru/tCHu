@@ -18,7 +18,7 @@ public class PublicPlayerState {
      * @param routes      (List<Route>) : list of routes that the player has
      */
     public PublicPlayerState(int ticketCount, int cardCount, List<Route> routes) {
-        Preconditions.checkArgument(ticketCount >= 0);
+        Preconditions.checkArgument(ticketCount >= 0 && cardCount>=0);
         this.routes = List.copyOf(routes);
         this.ticketCount = ticketCount;
         this.cardCount = cardCount;
@@ -67,7 +67,11 @@ public class PublicPlayerState {
      * @return returns the number of points of the player
      */
     public int claimPoints(){
-
+        int i = 0;
+        for(Route route : routes){
+            i += route.claimPoints();
+        }
+        return i;
     }
 
     private  int computeWagon(){

@@ -102,12 +102,4 @@ public final class CardState extends PublicCardState {
 
     }
 
-    //TODO : supprime
-    public SortedBag<Card> getDiscardCards(){
-        return this.discardCards;
-    }
-    //TODO : supprime
-    public Deck<Card> getDeck(){
-        return deck;
-    }
 }

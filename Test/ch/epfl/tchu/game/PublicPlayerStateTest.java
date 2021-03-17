@@ -57,6 +57,33 @@ public class PublicPlayerStateTest {
             new PublicPlayerState(-4,-1,list);
         });
     }
+
+    @Test
+    void methodsroutesWorks(){
+        List<Route> myList = List.of(ChMap.routes().get(0),ChMap.routes().get(1));
+        PublicPlayerState playerState = new PublicPlayerState(4,6,myList);
+        assertEquals(myList,playerState.routes());
+    }
+
+    @Test
+    void cardCountWorksWell(){
+        List<Route> myList = List.of(ChMap.routes().get(0),ChMap.routes().get(1));
+        PublicPlayerState playerState = new PublicPlayerState(4,6,myList);
+        assertEquals(playerState.cardCount(), playerState.cardCount());
+    }
+    @Test
+    void ticketsCountWorksWell(){
+        List<Route> myList = List.of(ChMap.routes().get(0),ChMap.routes().get(1));
+        PublicPlayerState playerState = new PublicPlayerState(4,6,List.of());
+        assertEquals(playerState.ticketCount(),4);
+    }
+
+    @Test
+    void carCountWorksWell(){
+        List<Route> myList = List.of(ChMap.routes().get(0),ChMap.routes().get(1));
+        PublicPlayerState playerState = new PublicPlayerState(4,6,List.of());
+        assertEquals(playerState.carCount(),40);
+    }
 }
 
 

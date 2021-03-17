@@ -22,8 +22,6 @@ public final class StationPartition implements StationConnectivity {
     }
 
 
-
-
     /**
      * This method checks if the two stations are connected or not
      *
@@ -33,15 +31,14 @@ public final class StationPartition implements StationConnectivity {
      */
     @Override
     public boolean connected(Station station1, Station station2) {
-        if(station1.id()>links.length || station2.id()>links.length ){
+        if (station1.id() > links.length || station2.id() > links.length) {
             return station1.id() == station2.id();
         }
         return links[station1.id()] == links[station2.id()];
     }
 
     /**
-     * Inner Class Builder
-     *
+     * Inner Class Builder of StationPartition
      */
     public final static class Builder {
         private final int stationCount;

@@ -4,6 +4,12 @@ import ch.epfl.tchu.Preconditions;
 
 import java.util.List;
 
+/**
+ * A PublicPlayerState
+ *
+ * @author Amine Youssef (324253)
+ * @author Louis Yves André Barinka (329847)
+ */
 public class PublicPlayerState {
     private final List<Route> routes;
     private final int ticketCount;

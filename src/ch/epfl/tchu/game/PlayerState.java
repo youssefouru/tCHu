@@ -6,6 +6,12 @@ import ch.epfl.tchu.SortedBag;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A PlayerState
+ *
+ * @author Amine Youssef (324253)
+ * @author Louis Yves André Barinka (329847)
+ */
 public class PlayerState extends PublicPlayerState {
 
     private final SortedBag<Ticket> tickets;
@@ -35,7 +41,7 @@ public class PlayerState extends PublicPlayerState {
      */
     public static PlayerState initial(SortedBag<Card> initialCards) {
         Preconditions.checkArgument(initialCards.size() == 4);
-        return new PlayerState(SortedBag.of(), initialCards, new ArrayList<>());
+        return new PlayerState(SortedBag.of(), initialCards, List.of());
     }
 
     private static Color colorOfTheBag(SortedBag<Card> cards) {
@@ -75,9 +81,7 @@ public class PlayerState extends PublicPlayerState {
      * @return (PlayerState) : new PlayerState with the same attributes except for the tickets which we add the new tickets
      */
     public PlayerState withAddedTickets(SortedBag<Ticket> newTickets) {
-        List<Ticket> tickets = tickets().toList();
-        tickets.addAll(newTickets.toList());
-        return new PlayerState(SortedBag.of(tickets), cards, routes);
+        return new PlayerState(tickets.union(newTickets), cards, routes);
     }
 
     /**
@@ -87,7 +91,6 @@ public class PlayerState extends PublicPlayerState {
      * @return (PlayerState) : new PlayerState with the same attributes except for the cards which we add the new cards
      */
     public PlayerState withAddedCards(SortedBag<Card> additionalCards) {
-
         return new PlayerState(tickets, this.cards.union(additionalCards), routes);
     }
 
@@ -155,12 +158,8 @@ public class PlayerState extends PublicPlayerState {
      */
     public List<SortedBag<Card>> possibleAdditionalCards(int additionalCardsCount, SortedBag<Card> initialCards, SortedBag<Card> drawnCards) {
         Preconditions.checkArgument(additionalCardsCount >= 1 && additionalCardsCount <= 3 && !initialCards.isEmpty() && numberOfKinds(initialCards) <= 2 && drawnCards.size() == 3);
-
-
         SortedBag<Card> cards = cards().difference(initialCards);
-
         List<SortedBag<Card>> myList = new ArrayList<>();
-
         if (colorOfTheBag(initialCards) == null) {
             SortedBag<Card> bag = SortedBag.of(additionalCardsCount, Card.LOCOMOTIVE);
             if (cards.contains(bag)) {

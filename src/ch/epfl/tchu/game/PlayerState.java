@@ -27,7 +27,6 @@ public class PlayerState extends PublicPlayerState {
     }
 
 
-
     /**
      * this method creates the initial state of the player
      *
@@ -37,6 +36,27 @@ public class PlayerState extends PublicPlayerState {
     public static PlayerState initial(SortedBag<Card> initialCards) {
         Preconditions.checkArgument(initialCards.size() == 4);
         return new PlayerState(SortedBag.of(), initialCards, new ArrayList<>());
+    }
+
+    private static Color colorOfTheBag(SortedBag<Card> cards) {
+        for (Card card : cards) {
+            if (card.color() != null) {
+                return card.color();
+            }
+        }
+        return null;
+    }
+
+    private static int numberOfKinds(SortedBag<Card> sortedBag) {
+        Color save = sortedBag.get(0).color();
+        int count = 1;
+        for (Card card : sortedBag) {
+            if (save != card.color()) {
+                ++count;
+                save = card.color();
+            }
+        }
+        return count;
     }
 
     /**
@@ -54,11 +74,10 @@ public class PlayerState extends PublicPlayerState {
      * @param newTickets (SortedBag<Ticket>) : the additional tickets
      * @return (PlayerState) : new PlayerState with the same attributes except for the tickets which we add the new tickets
      */
-    public PlayerState withAddedTickets(SortedBag<Ticket> newTickets)
-    {
+    public PlayerState withAddedTickets(SortedBag<Ticket> newTickets) {
         List<Ticket> tickets = tickets().toList();
         tickets.addAll(newTickets.toList());
-        return new PlayerState(SortedBag.of(tickets),cards,routes);
+        return new PlayerState(SortedBag.of(tickets), cards, routes);
     }
 
     /**
@@ -67,8 +86,9 @@ public class PlayerState extends PublicPlayerState {
      * @param additionalCards (SortedBag<Card>) : the additional cards
      * @return (PlayerState) : new PlayerState with the same attributes except for the cards which we add the new cards
      */
-    public PlayerState withAddedCards(SortedBag<Card> additionalCards){
-        return new PlayerState(tickets,cards.union(additionalCards),routes);
+    public PlayerState withAddedCards(SortedBag<Card> additionalCards) {
+
+        return new PlayerState(tickets, this.cards.union(additionalCards), routes);
     }
 
     /**
@@ -77,18 +97,18 @@ public class PlayerState extends PublicPlayerState {
      * @param card (Card) : the card added to the bag of cards
      * @return (Playerstate) : new PlayerState with the same attributes except for the cards which we add the new card
      */
-    public PlayerState withAddedCard(Card card){
+    public PlayerState withAddedCard(Card card) {
         List<Card> cards = this.cards.toList();
         cards.add(card);
-        return new PlayerState(tickets,SortedBag.of(cards),routes);
+        return new PlayerState(tickets, SortedBag.of(cards), routes);
     }
 
     /**
      * this method returns the cards of the player
      *
-     * @return (SortedBag<Card>): the attribute cards
+     * @return (SortedBag < Card >): the attribute cards
      */
-    SortedBag<Card> cards(){
+    SortedBag<Card> cards() {
         return this.cards;
     }
 
@@ -98,27 +118,27 @@ public class PlayerState extends PublicPlayerState {
      * @param route (Route) : the route that the player want
      * @return (boolean) : if the player can claim the route route in parameter
      */
-    public boolean canClaimRoute(Route route){
+    public boolean canClaimRoute(Route route) {
         List<SortedBag<Card>> myList = route.possibleClaimCards();
-        for(SortedBag<Card> sortedBag : myList){
-            if(cards.contains(sortedBag) && super.carCount()>=route.length()){
+        for (SortedBag<Card> sortedBag : myList) {
+            if (cards.contains(sortedBag) && super.carCount() >= route.length()) {
                 return true;
             }
         }
-        return  false;
+        return false;
     }
 
     /**
      * this method returns all the possible claim card to claim the route in parameter
      *
      * @param route (Route) : the route claimed
-     * @return (List<SortedBag<Card>>): list of all the possible cards that we can use to claim the route
+     * @return (List < SortedBag < Card > >): list of all the possible cards that we can use to claim the route
      */
-    List<SortedBag<Card>> possibleClaimCards(Route route){
-        Preconditions.checkArgument(super.carCount()>=route.length());
+    List<SortedBag<Card>> possibleClaimCards(Route route) {
+        Preconditions.checkArgument(super.carCount() >= route.length());
         List<SortedBag<Card>> myList = new ArrayList<>();
-        for(int i = 0 ; i< route.possibleClaimCards().size();++i){
-            if(cards.contains(route.possibleClaimCards().get(i))){
+        for (int i = 0; i < route.possibleClaimCards().size(); ++i) {
+            if (cards.contains(route.possibleClaimCards().get(i))) {
                 myList.add(route.possibleClaimCards().get(i));
             }
         }
@@ -126,87 +146,71 @@ public class PlayerState extends PublicPlayerState {
     }
 
     /**
-     *this method returns the possible additional cards needed to claim an UnderGround route that the player can claim
+     * this method returns the possible additional cards needed to claim an UnderGround route that the player can claim
      *
      * @param additionalCardsCount (int) :  the number of additional cards needed
-     * @param initialCards (SortedBag<Card>) : initial cards played to take the route
-     * @param drawnCards (SortedBag<Card>) : drawn cards
-     * @return (SortedBag<Card>) : returns the possible additional cards that can be played to take the route
+     * @param initialCards         (SortedBag<Card>) : initial cards played to take the route
+     * @param drawnCards           (SortedBag<Card>) : drawn cards
+     * @return (SortedBag < Card >) : returns the possible additional cards that can be played to take the route
      */
-   public List<SortedBag<Card>> possibleAdditionalCards(int additionalCardsCount, SortedBag<Card> initialCards, SortedBag<Card> drawnCards){
-       Preconditions.checkArgument(additionalCardsCount>=1 && additionalCardsCount<=3 && !initialCards.isEmpty() && numberOfKinds(initialCards)<=2  && drawnCards.size()==3);
-       List<SortedBag<Card>> myList = new ArrayList<>();
-       if(colorOfTheBag(initialCards) == null ){
-           SortedBag<Card> bag = SortedBag.of(additionalCardsCount,Card.LOCOMOTIVE);
-           if(cards.contains(bag)) {
-               myList.add(bag);
-           }
-           return myList;
-       }
-       Card card = Card.of(colorOfTheBag(initialCards));
-       for(int i = 0; i<=additionalCardsCount; ++i) {
-           if(i != additionalCardsCount) {
-                   SortedBag<Card> bag = SortedBag.of(i, Card.LOCOMOTIVE, additionalCardsCount - i, card);
-                   if(cards.contains(bag)) {
-                       myList.add(bag);
-                   }
-           }else{
-               SortedBag<Card> bag = SortedBag.of(additionalCardsCount, Card.LOCOMOTIVE);
-               if(cards.contains(bag)) {
-                   myList.add(bag);
-               }
-           }
-       }
+    public List<SortedBag<Card>> possibleAdditionalCards(int additionalCardsCount, SortedBag<Card> initialCards, SortedBag<Card> drawnCards) {
+        Preconditions.checkArgument(additionalCardsCount >= 1 && additionalCardsCount <= 3 && !initialCards.isEmpty() && numberOfKinds(initialCards) <= 2 && drawnCards.size() == 3);
 
 
-            return myList;
-    }
+        SortedBag<Card> cards = cards().difference(initialCards);
 
-    private static Color colorOfTheBag(SortedBag<Card> cards){
-       for(Card card : cards){
-           if(card.color() != null){
-               return card.color();
-           }
-       }
-       return null;
-    }
+        List<SortedBag<Card>> myList = new ArrayList<>();
 
-
-    private static int numberOfKinds(SortedBag<Card> sortedBag){
-       Color save = sortedBag.get(0).color();
-       int count =1;
-       for(Card card : sortedBag){
-            if(save != card.color()){
-                ++count;
-                save = card.color();
+        if (colorOfTheBag(initialCards) == null) {
+            SortedBag<Card> bag = SortedBag.of(additionalCardsCount, Card.LOCOMOTIVE);
+            if (cards.contains(bag)) {
+                myList.add(bag);
             }
-       }
-       return count;
+            return myList;
+        }
+
+        Card card = Card.of(colorOfTheBag(initialCards));
+        for (int i = 0; i <= additionalCardsCount; ++i) {
+            if (i != additionalCardsCount) {
+                SortedBag<Card> bag = SortedBag.of(i, Card.LOCOMOTIVE, additionalCardsCount - i, card);
+                if (cards.contains(bag)) {
+                    myList.add(bag);
+                }
+            } else {
+                SortedBag<Card> bag = SortedBag.of(additionalCardsCount, Card.LOCOMOTIVE);
+                if (cards.contains(bag)) {
+                    myList.add(bag);
+                }
+            }
+        }
+
+
+        return myList;
     }
 
     /**
-     *this method returns a new PlayerState with the route in parameter added to the routes and we remove the claimCards from the cards
+     * this method returns a new PlayerState with the route in parameter added to the routes and we remove the claimCards from the cards
      *
-     * @param route (Route) : the route claimed with the claimCards
+     * @param route      (Route) : the route claimed with the claimCards
      * @param claimCards (SortedBag<Card>) : claimCard used to claim the route
      * @return (PlayerState) : a new PlayerState with the route in parameter added to the routes and we remove the claimCards from the cards
      */
-    public PlayerState withClaimedRoute(Route route, SortedBag<Card> claimCards){
+    public PlayerState withClaimedRoute(Route route, SortedBag<Card> claimCards) {
         List<Route> routes = new ArrayList<>(this.routes);
         routes.add(route);
-        List<Card> cards =this.cards.toList();
+        List<Card> cards = this.cards.toList();
         cards.removeAll(claimCards.toList());
-       return new PlayerState(tickets,SortedBag.of(cards),routes);
+        return new PlayerState(tickets, SortedBag.of(cards), routes);
     }
 
-    private int findMaxId(){
+    private int findMaxId() {
         int max = 0;
-        if(routes.size() == 0){
+        if (routes.size() == 0) {
             return 0;
         }
-        for(Route route : this.routes){
-            for(Station station : route.stations()){
-                if(station.id()>=max){
+        for (Route route : this.routes) {
+            for (Station station : route.stations()) {
+                if (station.id() >= max) {
                     max = station.id();
                 }
             }
@@ -219,18 +223,18 @@ public class PlayerState extends PublicPlayerState {
      *
      * @return (int) : the total number of points that the player has
      */
-   public int ticketPoints(){
-       int  i = 0;
-       StationPartition.Builder builder = new StationPartition.Builder(findMaxId() + 1);
-       for(Route route : this.routes){
-                builder.connect(route.station1(),route.station2());
-       }
-       StationPartition partition = builder.build();
-       for(Ticket ticket : tickets){
-           i+=ticket.points(partition);
-       }
-       return i;
-   }
+    public int ticketPoints() {
+        int i = 0;
+        StationPartition.Builder builder = new StationPartition.Builder(findMaxId() + 1);
+        for (Route route : this.routes) {
+            builder.connect(route.station1(), route.station2());
+        }
+        StationPartition partition = builder.build();
+        for (Ticket ticket : tickets) {
+            i += ticket.points(partition);
+        }
+        return i;
+    }
 
 
     /**
@@ -238,8 +242,8 @@ public class PlayerState extends PublicPlayerState {
      *
      * @return (int) :the final points that the playerState has
      */
-   public  int finalPoints(){
-       return claimPoints() + ticketPoints();
-   }
+    public int finalPoints() {
+        return claimPoints() + ticketPoints();
+    }
 
 }

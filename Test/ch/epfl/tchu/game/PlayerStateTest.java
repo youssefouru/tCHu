@@ -200,16 +200,14 @@ class PlayerStateTest {
     @Test
     void possibleAdditionalCardsTest1()
     {
-        List<Card> playerAdditionalCards = List.of(Card.BLUE, Card.BLUE, Card.BLUE, Card.BLUE, Card.LOCOMOTIVE);
+        List<Card> playerAdditionalCards = List.of(Card.BLUE, Card.BLUE, Card.BLUE, Card.BLUE, Card.LOCOMOTIVE,Card.LOCOMOTIVE,Card.LOCOMOTIVE);
         List<Card> initialCards =  List.of(Card.BLUE, Card.BLUE, Card.BLUE, Card.LOCOMOTIVE, Card.LOCOMOTIVE);
         List<Card> additionalCards = List.of(Card.GREEN, Card.BLUE, Card.LOCOMOTIVE);
         List<Card> possibleAdditionalCards1 = List.of(Card.BLUE);
         List<Card> possibleAdditionalCards2 = List.of(Card.LOCOMOTIVE);
+        PlayerState playerState =player.withAddedCards(SortedBag.of(playerAdditionalCards));
         assertEquals(List.of(SortedBag.of(possibleAdditionalCards1), SortedBag.of(possibleAdditionalCards2)),
-                player.withAddedCards(SortedBag.of(playerAdditionalCards))
-                        .possibleAdditionalCards(1,
-                                SortedBag.of(initialCards),
-                                SortedBag.of(additionalCards)));
+               playerState.possibleAdditionalCards(1, SortedBag.of(initialCards), SortedBag.of(additionalCards)));
     }
 
     @Test
@@ -239,14 +237,14 @@ class PlayerStateTest {
     @Test
     void possibleAdditionalCardsTest2()
     {
-        List<Card> playerAdditionalCards = List.of(Card.RED, Card.LOCOMOTIVE);
+        List<Card> playerAdditionalCards = List.of(Card.RED,Card.RED,Card.LOCOMOTIVE, Card.LOCOMOTIVE,Card.LOCOMOTIVE);
         List<Card> initialCards =  List.of(Card.RED, Card.LOCOMOTIVE, Card.LOCOMOTIVE);
         List<Card> additionalCards = List.of(Card.RED, Card.LOCOMOTIVE, Card.GREEN);
+        PlayerState playerState =  player.withAddedCards(SortedBag.of(playerAdditionalCards));
         List<Card> possibleAdditionalCards1 = List.of(Card.RED, Card.RED);
         List<Card> possibleAdditionalCards2 = List.of(Card.RED, Card.LOCOMOTIVE);
         assertEquals(List.of(SortedBag.of(possibleAdditionalCards1), SortedBag.of(possibleAdditionalCards2)),
-                player.withAddedCards(SortedBag.of(playerAdditionalCards))
-                        .possibleAdditionalCards(2,
+                        playerState.possibleAdditionalCards(2,
                                 SortedBag.of(initialCards),
                                 SortedBag.of(additionalCards)));
     }

@@ -6,7 +6,7 @@ import java.util.List;
  *
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)
- */ad
+ */
 public enum Card {
     BLACK(Color.BLACK),
     VIOLET(Color.VIOLET),

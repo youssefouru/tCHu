@@ -28,6 +28,7 @@ class PlayerStateTest {
         initCards.add(Card.ORANGE);
         initCards.add(Card.RED);
 
+
         player = initial(SortedBag.of(initCards));
     }
 
@@ -247,6 +248,11 @@ class PlayerStateTest {
                         playerState.possibleAdditionalCards(2,
                                 SortedBag.of(initialCards),
                                 SortedBag.of(additionalCards)));
+    }
+
+    @Test
+    void possibleAdditionalCardsTestWithNoCards(){
+
     }
 
 

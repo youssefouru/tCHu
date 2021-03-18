@@ -17,7 +17,12 @@ class PlayerStateTest {
 
     private static PlayerState player;
     private static List<Card> initCards = new ArrayList<>();
-
+    final SortedBag<Card> testCards = SortedBag.of(Card.ALL.subList(0,4));
+    final Station[] stations = new Station[]{ new Station(0, "a"),
+            new Station(1, "b"),
+            new Station(2, "c"),
+            new Station(3, "d"),
+            new Station(4, "e")};
 
 
 
@@ -210,6 +215,28 @@ class PlayerStateTest {
         assertEquals(List.of(SortedBag.of(possibleAdditionalCards1), SortedBag.of(possibleAdditionalCards2)),
                playerState.possibleAdditionalCards(1, SortedBag.of(initialCards), SortedBag.of(additionalCards)));
     }
+
+    @Test
+    void possibleAdditionalCards() {
+        PlayerState ps = new PlayerState(SortedBag.of(new Ticket(stations[0], stations[1], 2)), SortedBag.of(), List.of(new Route("r", stations[0], stations[1], 5, Route.Level.OVERGROUND, null)));
+        SortedBag looser = SortedBag.of(3, Card.GREEN);
+        PlayerState psWithAddedCards = ps.withAddedCards(SortedBag.of(2, Card.LOCOMOTIVE, 8, Card.GREEN));
+        PlayerState psWithLocos = ps.withAddedCards(SortedBag.of(8, Card.LOCOMOTIVE));
+        PlayerState anotherPs = ps.withAddedCards(SortedBag.of(8, Card.LOCOMOTIVE, 1, Card.GREEN));
+
+        assertEquals(1, psWithLocos.possibleAdditionalCards(3, SortedBag.of(5, Card.LOCOMOTIVE), looser).size()); //
+        assertEquals(0, psWithLocos.possibleAdditionalCards(3, SortedBag.of(7, Card.LOCOMOTIVE), looser).size()); // pas assez de locomotives, zut
+        assertEquals(0, psWithLocos.possibleAdditionalCards(2, SortedBag.of(7, Card.LOCOMOTIVE), looser).size()); // pas assez de locomotives, zut
+        assertEquals(1, psWithLocos.possibleAdditionalCards(1, SortedBag.of(7, Card.LOCOMOTIVE), looser).size()); // a 8-7 locomotives, il peut faire 1 choix
+        assertEquals(0, anotherPs.possibleAdditionalCards(1, SortedBag.of(8, Card.LOCOMOTIVE), looser).size()); // doit payer en locomotives
+
+        assertEquals(4, psWithAddedCards.withAddedCard(Card.LOCOMOTIVE).possibleAdditionalCards(3, SortedBag.of(4, Card.GREEN), looser).size());
+        assertEquals(3, psWithAddedCards.possibleAdditionalCards(3, SortedBag.of(4, Card.GREEN), looser).size());
+        assertEquals(3, psWithAddedCards.possibleAdditionalCards(2, SortedBag.of(4, Card.GREEN), looser).size());
+        assertEquals(1, psWithAddedCards.possibleAdditionalCards(2, SortedBag.of(8, Card.GREEN), looser).size());
+        assertEquals(0, psWithAddedCards.possibleAdditionalCards(2, SortedBag.of(8, Card.GREEN, 2, Card.LOCOMOTIVE), looser).size());
+    }
+
 
     @Test
     void possibleAdditionalCardsTest3()

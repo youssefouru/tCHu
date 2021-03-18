@@ -18,7 +18,7 @@ public final class StationPartition implements StationConnectivity {
      * @param tab (int[]) : representations of the links of the
      */
     private StationPartition(int[] tab) {
-        this.links = tab;
+        this.links = tab.clone();
     }
 
 
@@ -31,7 +31,7 @@ public final class StationPartition implements StationConnectivity {
      */
     @Override
     public boolean connected(Station station1, Station station2) {
-        if (station1.id() > links.length || station2.id() > links.length) {
+        if (station1.id() > links.length || station2.id() > links.length){
             return station1.id() == station2.id();
         }
         return links[station1.id()] == links[station2.id()];

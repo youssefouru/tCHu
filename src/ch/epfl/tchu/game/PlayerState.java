@@ -98,7 +98,7 @@ public class PlayerState extends PublicPlayerState {
      * return a new PlayerState with a new card added to it's cards
      *
      * @param card (Card) : the card added to the bag of cards
-     * @return (Playerstate) : new PlayerState with the same attributes except for the cards which we add the new card
+     * @return (PlayerState) : new PlayerState with the same attributes except for the cards which we add the new card
      */
     public PlayerState withAddedCard(Card card) {
         List<Card> cards = this.cards.toList();
@@ -111,7 +111,7 @@ public class PlayerState extends PublicPlayerState {
      *
      * @return (SortedBag < Card >): the attribute cards
      */
-    SortedBag<Card> cards() {
+    public SortedBag<Card> cards() {
         return this.cards;
     }
 
@@ -137,7 +137,7 @@ public class PlayerState extends PublicPlayerState {
      * @param route (Route) : the route claimed
      * @return (List < SortedBag < Card > >): list of all the possible cards that we can use to claim the route
      */
-    List<SortedBag<Card>> possibleClaimCards(Route route) {
+    public List<SortedBag<Card>> possibleClaimCards(Route route) {
         Preconditions.checkArgument(super.carCount() >= route.length());
         List<SortedBag<Card>> myList = new ArrayList<>();
         for (int i = 0; i < route.possibleClaimCards().size(); ++i) {
@@ -154,7 +154,7 @@ public class PlayerState extends PublicPlayerState {
      * @param additionalCardsCount (int) :  the number of additional cards needed
      * @param initialCards         (SortedBag<Card>) : initial cards played to take the route
      * @param drawnCards           (SortedBag<Card>) : drawn cards
-     * @return (SortedBag < Card >) : returns the possible additional cards that can be played to take the route
+     * @return (List<SortedBag<Card>>) : returns the possible additional cards that can be played to take the route
      */
     public List<SortedBag<Card>> possibleAdditionalCards(int additionalCardsCount, SortedBag<Card> initialCards, SortedBag<Card> drawnCards) {
         Preconditions.checkArgument(additionalCardsCount >= 1 && additionalCardsCount <= 3 && !initialCards.isEmpty() && numberOfKinds(initialCards) <= 2 && drawnCards.size() == 3);
@@ -197,9 +197,7 @@ public class PlayerState extends PublicPlayerState {
     public PlayerState withClaimedRoute(Route route, SortedBag<Card> claimCards) {
         List<Route> routes = new ArrayList<>(this.routes);
         routes.add(route);
-        List<Card> cards = this.cards.toList();
-        cards.removeAll(claimCards.toList());
-        return new PlayerState(tickets, SortedBag.of(cards), routes);
+        return new PlayerState(tickets, this.cards.difference(claimCards), routes);
     }
 
     private int findMaxId() {

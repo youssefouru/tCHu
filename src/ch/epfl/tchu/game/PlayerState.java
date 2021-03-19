@@ -12,7 +12,7 @@ import java.util.List;
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)
  */
-public class PlayerState extends PublicPlayerState {
+public final class PlayerState extends PublicPlayerState {
 
     private final SortedBag<Ticket> tickets;
     private final SortedBag<Card> cards;

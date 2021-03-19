@@ -154,7 +154,7 @@ public final class PlayerState extends PublicPlayerState {
      * @param additionalCardsCount (int) :  the number of additional cards needed
      * @param initialCards         (SortedBag<Card>) : initial cards played to take the route
      * @param drawnCards           (SortedBag<Card>) : drawn cards
-     * @return (List<SortedBag<Card>>) : returns the possible additional cards that can be played to take the route
+     * @return (List < SortedBag < Card > >) : returns the possible additional cards that can be played to take the route
      */
     public List<SortedBag<Card>> possibleAdditionalCards(int additionalCardsCount, SortedBag<Card> initialCards, SortedBag<Card> drawnCards) {
         Preconditions.checkArgument(additionalCardsCount >= 1 && additionalCardsCount <= 3 && !initialCards.isEmpty() && numberOfKinds(initialCards) <= 2 && drawnCards.size() == 3);

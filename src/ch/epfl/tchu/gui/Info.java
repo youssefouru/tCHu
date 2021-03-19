@@ -257,7 +257,7 @@ public final class Info {
      * @return (String) : a player got the longest trail bonus, with the longest trail displayed
      */
     public String getsLongestTrailBonus(Trail longestTrail) {
-        String s = String.format("%s%s%s" ,longestTrail.station1(),StringsFr.EN_DASH_SEPARATOR,longestTrail.station2());
+        String s = String.format("%s%s%s", longestTrail.station1(), StringsFr.EN_DASH_SEPARATOR, longestTrail.station2());
         return String.format(StringsFr.GETS_BONUS, player, s);
     }
 

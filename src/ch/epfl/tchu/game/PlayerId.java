@@ -22,6 +22,8 @@ public enum PlayerId {
      * @return the next player
      */
     public PlayerId next(){
-        return this == PLAYER_1?PLAYER_2:PLAYER_1;
+        int  i = ALL.indexOf(this);
+        int newIndex= (i+1)%COUNT;
+        return ALL.get(newIndex);
     }
 }

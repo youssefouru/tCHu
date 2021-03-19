@@ -22,6 +22,6 @@ public enum PlayerId {
      * @return the next player
      */
     public PlayerId next(){
-        return this == PLAYER_1?PLAYER_2:PLAYER_2;
+        return this == PLAYER_1?PLAYER_2:PLAYER_1;
     }
 }

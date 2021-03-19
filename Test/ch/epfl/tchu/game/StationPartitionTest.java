@@ -51,6 +51,11 @@ public class StationPartitionTest {
 
         assertFalse(stationPartition.connected(station1,station10));
 
+        assertFalse(stationPartition.connected(ChMap.stations().get(18),ChMap.stations().get(13)));
+        assertFalse(stationPartition.connected(ChMap.stations().get(13),ChMap.stations().get(18)));
+        assertFalse(stationPartition.connected(ChMap.stations().get(18),ChMap.stations().get(34)));
+        assertTrue(stationPartition.connected(ChMap.stations().get(18),ChMap.stations().get(18)));
+
 
 
     }

@@ -8,7 +8,7 @@ public enum PlayerId {
 
 
     /**
-     * ALL (List<Card>) : contains all the element of this enum type
+     * ALL (List<PLayerId>) : contains all the element of this enum type
      */
     public static List<PlayerId> ALL = List.of(PlayerId.values());
     /**

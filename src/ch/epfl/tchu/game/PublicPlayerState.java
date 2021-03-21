@@ -55,7 +55,7 @@ public class PublicPlayerState {
      * @return the list routes
      */
     public List<Route> routes() {
-        return List.copyOf(routes);
+        return routes;
     }
 
     /**

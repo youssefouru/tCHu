@@ -297,6 +297,14 @@ class PlayerStateTest {
         tickets.add(ChMap.tickets().get(29));//3 pts
         PlayerState playerAfterAddingTickets = player.withAddedTickets(SortedBag.of(tickets));
         assertEquals(-31,playerAfterAddingTickets.ticketPoints());
+        Ticket ticket = new Ticket(stations[0],stations[1],50); //50
+        Ticket ticket2 = new Ticket(stations[1],stations[2],40);//-40
+        Ticket ticket3 = new Ticket(stations[3],stations[4],40);//-40
+        Route route1 = new Route("d",stations[0],stations[1],5, Route.Level.OVERGROUND,Color.BLACK);
+        Route route2 = new Route("d",stations[2],stations[4],5, Route.Level.OVERGROUND,Color.BLACK);
+        PlayerState playerState = new PlayerState(SortedBag.of(List.of(ticket,ticket2,ticket3)),SortedBag.of(),List.of(route1,route2));
+        assertEquals(playerState.ticketPoints(),-30);
+
 
 
     }

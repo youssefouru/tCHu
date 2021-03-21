@@ -37,8 +37,8 @@ public final class CardState extends PublicCardState {
      * @return a card state
      */
     public static CardState of(Deck<Card> deck) {
-        Preconditions.checkArgument(deck.size()>=5);
-        return new CardState(deck.withoutTopCards(5), deck.topCards(5).toList(), SortedBag.of());
+        Preconditions.checkArgument(deck.size()>=Constants.FACE_UP_CARDS_COUNT);
+        return new CardState(deck.withoutTopCards(Constants.FACE_UP_CARDS_COUNT), deck.topCards(Constants.FACE_UP_CARDS_COUNT).toList(), SortedBag.of());
     }
 
     /**
@@ -48,7 +48,7 @@ public final class CardState extends PublicCardState {
      * @return a new CardState with
      */
     public CardState withDrawnFaceUpCard(int slot) {
-        Objects.checkIndex(slot, 5);
+        Objects.checkIndex(slot, Constants.FACE_UP_CARDS_COUNT);
         Preconditions.checkArgument(!deck.isEmpty());
         List<Card> myList = new ArrayList<>(super.faceUpCards());
         myList.set(slot, deck.topCard());

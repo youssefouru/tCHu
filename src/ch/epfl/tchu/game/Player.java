@@ -58,20 +58,24 @@ public interface Player {
     int drawSlot();
 
     /**
-     * @return
+     * this method is called when a player decide or try to claim a route
+     *
+     * @return (Route) : returns the route that the player decided to claim
      */
     Route claimedRoute();
 
     /**
-     * @return
+     * this method is called when decide or try to claim a route
+     *
+     * @return ( SortedBag<Card>) : returns the cards used to claim the route
      */
     SortedBag<Card> initialClaimCards();
 
     /**
-     * this method
+     * this method is called when a player try to claim a route and give the choice of the additional Cards that he can play
      *
-     * @param options (List<SortedBag<Card>>) :
-     * @return
+     * @param options (List<SortedBag<Card>>) : all the additional cards that he can play
+     * @return (SortedBag<Card>) : all the possible cards that the player can use to claim a route
      */
     SortedBag<Card> chooseAdditionalCards(List<SortedBag<Card>> options);
 

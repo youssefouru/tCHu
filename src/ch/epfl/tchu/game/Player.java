@@ -51,6 +51,21 @@ public interface Player {
     SortedBag<Ticket> chooseInitialTickets();
 
     /**
+     * this method is called at the beginning of each tours and tells to the player which action he wants to do
+     *
+     * @return (TurnKind) : the turn kind the player has chosen
+     */
+    TurnKind nextTurn();
+
+    /**
+     * this method is called when a player has to choose tickets from the options
+     *
+     * @param options (SortedBag<Ticket>) : the tickets drawn
+     * @return (SortedBag<Ticket>) : the tickets that the player has chosen
+     */
+    SortedBag<Ticket> chooseTickets(SortedBag<Ticket> options);
+
+    /**
      * this method is called when a player decide to draw a face up card and returns the index of card he want to draw
      *
      * @return (int) : index of the card he want to draw

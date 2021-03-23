@@ -8,7 +8,7 @@ public enum PlayerId {
 
 
     /**
-     * ALL (List<Card>) : contains all the element of this enum type
+     * ALL (List<PLayerId>) : contains all the element of this enum type
      */
     public static List<PlayerId> ALL = List.of(PlayerId.values());
     /**
@@ -22,6 +22,8 @@ public enum PlayerId {
      * @return the next player
      */
     public PlayerId next(){
-        return this == PLAYER_1?PLAYER_2:PLAYER_2;
+        int  i = ALL.indexOf(this);
+        int newIndex= (i+1)%COUNT;
+        return ALL.get(newIndex);
     }
 }

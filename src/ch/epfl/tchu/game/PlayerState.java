@@ -12,11 +12,11 @@ import java.util.List;
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)
  */
-public class PlayerState extends PublicPlayerState {
+public final class PlayerState extends PublicPlayerState {
 
     private final SortedBag<Ticket> tickets;
     private final SortedBag<Card> cards;
-    private final List<Route> routes;
+
 
     /**
      * Constructor of PlayerState
@@ -29,7 +29,6 @@ public class PlayerState extends PublicPlayerState {
         super(tickets.size(), cards.size(), routes);
         this.tickets = tickets;
         this.cards = cards;
-        this.routes = List.copyOf(routes);
     }
 
 
@@ -40,7 +39,7 @@ public class PlayerState extends PublicPlayerState {
      * @return (PlayerState) : the initial state of the player
      */
     public static PlayerState initial(SortedBag<Card> initialCards) {
-        Preconditions.checkArgument(initialCards.size() == 4);
+        Preconditions.checkArgument(initialCards.size() == Constants.INITIAL_CARDS_COUNT);
         return new PlayerState(SortedBag.of(), initialCards, List.of());
     }
 
@@ -81,7 +80,7 @@ public class PlayerState extends PublicPlayerState {
      * @return (PlayerState) : new PlayerState with the same attributes except for the tickets which we add the new tickets
      */
     public PlayerState withAddedTickets(SortedBag<Ticket> newTickets) {
-        return new PlayerState(tickets.union(newTickets), cards, routes);
+        return new PlayerState(tickets.union(newTickets), cards, routes());
     }
 
     /**
@@ -91,19 +90,19 @@ public class PlayerState extends PublicPlayerState {
      * @return (PlayerState) : new PlayerState with the same attributes except for the cards which we add the new cards
      */
     public PlayerState withAddedCards(SortedBag<Card> additionalCards) {
-        return new PlayerState(tickets, this.cards.union(additionalCards), routes);
+        return new PlayerState(tickets, this.cards.union(additionalCards), routes());
     }
 
     /**
      * return a new PlayerState with a new card added to it's cards
      *
      * @param card (Card) : the card added to the bag of cards
-     * @return (Playerstate) : new PlayerState with the same attributes except for the cards which we add the new card
+     * @return (PlayerState) : new PlayerState with the same attributes except for the cards which we add the new card
      */
     public PlayerState withAddedCard(Card card) {
         List<Card> cards = this.cards.toList();
         cards.add(card);
-        return new PlayerState(tickets, SortedBag.of(cards), routes);
+        return new PlayerState(tickets, SortedBag.of(cards), routes());
     }
 
     /**
@@ -111,7 +110,7 @@ public class PlayerState extends PublicPlayerState {
      *
      * @return (SortedBag < Card >): the attribute cards
      */
-    SortedBag<Card> cards() {
+    public SortedBag<Card> cards() {
         return this.cards;
     }
 
@@ -137,7 +136,7 @@ public class PlayerState extends PublicPlayerState {
      * @param route (Route) : the route claimed
      * @return (List < SortedBag < Card > >): list of all the possible cards that we can use to claim the route
      */
-    List<SortedBag<Card>> possibleClaimCards(Route route) {
+    public List<SortedBag<Card>> possibleClaimCards(Route route) {
         Preconditions.checkArgument(super.carCount() >= route.length());
         List<SortedBag<Card>> myList = new ArrayList<>();
         for (int i = 0; i < route.possibleClaimCards().size(); ++i) {
@@ -154,10 +153,10 @@ public class PlayerState extends PublicPlayerState {
      * @param additionalCardsCount (int) :  the number of additional cards needed
      * @param initialCards         (SortedBag<Card>) : initial cards played to take the route
      * @param drawnCards           (SortedBag<Card>) : drawn cards
-     * @return (SortedBag < Card >) : returns the possible additional cards that can be played to take the route
+     * @return (List < SortedBag < Card > >) : returns the possible additional cards that can be played to take the route
      */
     public List<SortedBag<Card>> possibleAdditionalCards(int additionalCardsCount, SortedBag<Card> initialCards, SortedBag<Card> drawnCards) {
-        Preconditions.checkArgument(additionalCardsCount >= 1 && additionalCardsCount <= 3 && !initialCards.isEmpty() && numberOfKinds(initialCards) <= 2 && drawnCards.size() == 3);
+        Preconditions.checkArgument(additionalCardsCount >= 1 && additionalCardsCount <= Constants.ADDITIONAL_TUNNEL_CARDS && !initialCards.isEmpty() && numberOfKinds(initialCards) <= 2 && drawnCards.size() == Constants.ADDITIONAL_TUNNEL_CARDS);
         SortedBag<Card> cards = cards().difference(initialCards);
         List<SortedBag<Card>> myList = new ArrayList<>();
         if (colorOfTheBag(initialCards) == null) {
@@ -195,19 +194,17 @@ public class PlayerState extends PublicPlayerState {
      * @return (PlayerState) : a new PlayerState with the route in parameter added to the routes and we remove the claimCards from the cards
      */
     public PlayerState withClaimedRoute(Route route, SortedBag<Card> claimCards) {
-        List<Route> routes = new ArrayList<>(this.routes);
+        List<Route> routes = new ArrayList<>(routes());
         routes.add(route);
-        List<Card> cards = this.cards.toList();
-        cards.removeAll(claimCards.toList());
-        return new PlayerState(tickets, SortedBag.of(cards), routes);
+        return new PlayerState(tickets, this.cards.difference(claimCards), routes);
     }
 
     private int findMaxId() {
         int max = 0;
-        if (routes.size() == 0) {
+        if (routes().size() == 0) {
             return 0;
         }
-        for (Route route : this.routes) {
+        for (Route route : routes()) {
             for (Station station : route.stations()) {
                 if (station.id() >= max) {
                     max = station.id();
@@ -225,7 +222,7 @@ public class PlayerState extends PublicPlayerState {
     public int ticketPoints() {
         int i = 0;
         StationPartition.Builder builder = new StationPartition.Builder(findMaxId() + 1);
-        for (Route route : this.routes) {
+        for (Route route : routes()) {
             builder.connect(route.station1(), route.station2());
         }
         StationPartition partition = builder.build();

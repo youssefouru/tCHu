@@ -242,7 +242,6 @@ public final class GameState extends PublicGameState {
      * @return (GameState) : new GameState where it's current player is this next player
      */
     public GameState forNextTurn() {
-        PlayerId playerId = currentPlayerId().next();
-        return new GameState(tickets, cardState, playerId, map, lastTurnBegins() ? currentPlayerId() : null);
+        return new GameState(tickets, cardState, currentPlayerId().next(), map, lastTurnBegins() ? currentPlayerId() : lastPlayer());
     }
 }

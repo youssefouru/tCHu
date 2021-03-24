@@ -25,6 +25,7 @@ class GameStateTest {
         GameState initial = GameState.initial(SortedBag.of(new Ticket(new Station(1, "A"), new Station(2, "B"), 2)), new Random(1));
         assertEquals(Constants.INITIAL_CAR_COUNT, initial.playerState(PlayerId.PLAYER_1).carCount());
         assertEquals(Constants.INITIAL_CAR_COUNT, initial.playerState(PlayerId.PLAYER_2).carCount());
+
     }
 
     @Test

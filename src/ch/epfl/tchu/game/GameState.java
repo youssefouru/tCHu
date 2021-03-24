@@ -30,6 +30,7 @@ public final class GameState extends PublicGameState {
         this.map = Map.copyOf(playerState);
         this.tickets = tickets;
         this.cardState = cardState;
+
     }
 
 

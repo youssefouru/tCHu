@@ -166,7 +166,6 @@ public final class PlayerState extends PublicPlayerState {
             }
             return myList;
         }
-
         Card card = Card.of(colorOfTheBag(initialCards));
         for (int i = 0; i <= additionalCardsCount; ++i) {
             if (i != additionalCardsCount) {
@@ -181,8 +180,6 @@ public final class PlayerState extends PublicPlayerState {
                 }
             }
         }
-
-
         return myList;
     }
 

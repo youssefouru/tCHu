@@ -61,7 +61,7 @@ public interface Player {
      * this method is called when a player has to choose tickets from the options
      *
      * @param options (SortedBag<Ticket>) : the tickets drawn
-     * @return (SortedBag<Ticket>) : the tickets that the player has chosen
+     * @return (SortedBag < Ticket >) : the tickets that the player has chosen
      */
     SortedBag<Ticket> chooseTickets(SortedBag<Ticket> options);
 
@@ -82,7 +82,7 @@ public interface Player {
     /**
      * this method is called when decide or try to claim a route
      *
-     * @return ( SortedBag<Card>) : returns the cards used to claim the route
+     * @return (SortedBag < Card >) : returns the cards used to claim the route
      */
     SortedBag<Card> initialClaimCards();
 
@@ -90,7 +90,7 @@ public interface Player {
      * this method is called when a player try to claim a route and give the choice of the additional Cards that he can play
      *
      * @param options (List<SortedBag<Card>>) : all the additional cards that he can play
-     * @return (SortedBag<Card>) : all the possible cards that the player can use to claim a route
+     * @return (SortedBag < Card >) : all the possible cards that the player can use to claim a route
      */
     SortedBag<Card> chooseAdditionalCards(List<SortedBag<Card>> options);
 

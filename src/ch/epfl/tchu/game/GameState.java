@@ -5,6 +5,7 @@ import ch.epfl.tchu.SortedBag;
 
 import java.util.*;
 
+
 /**
  * A GameState
  *
@@ -36,10 +37,7 @@ public final class GameState extends PublicGameState {
 
     private static Map<PlayerId, PublicPlayerState> transform(Map<PlayerId, PlayerState> playerState) {
         Map<PlayerId, PublicPlayerState> map = new HashMap<>();
-        for (Map.Entry<PlayerId, PlayerState> element : playerState.entrySet()) {
-            map.put(element.getKey(), element.getValue());
-        }
-
+        playerState.forEach((playerId, playerState1) -> map.put(playerId,playerState1));
         return map;
     }
 
@@ -60,8 +58,7 @@ public final class GameState extends PublicGameState {
             cardDeck = cardDeck.withoutTopCards(Constants.INITIAL_CARDS_COUNT);
         }
 
-        PlayerId firstPlayer = PlayerId.ALL.
-                get(rng.nextInt(PlayerId.COUNT));
+        PlayerId firstPlayer = PlayerId.ALL.get(rng.nextInt(PlayerId.COUNT));
         return new GameState(Deck.of(tickets, rng), CardState.of(cardDeck), firstPlayer, map, null);
     }
 
@@ -91,7 +88,7 @@ public final class GameState extends PublicGameState {
      */
     @Override
     public PlayerState currentPlayerState() {
-        return map.get(currentPlayerId());
+        return playerState(currentPlayerId());
     }
 
     /**
@@ -167,7 +164,7 @@ public final class GameState extends PublicGameState {
      * @return (GameState) : new GameState with the same attribute of this but the player with the Id in parameter to whom we added the tickets in parameter
      */
     public GameState withInitiallyChosenTickets(PlayerId playerId, SortedBag<Ticket> chosenTickets) {
-        Preconditions.checkArgument(Intersection(map.get(playerId).tickets(), chosenTickets).isEmpty());
+        Preconditions.checkArgument(playerState(playerId).ticketCount() == 0 );
         PlayerState playerState = playerState(playerId).withAddedTickets(chosenTickets);
         Map<PlayerId, PlayerState> map = (new HashMap<>(this.map));
         map.replace(playerId, playerState);
@@ -243,6 +240,5 @@ public final class GameState extends PublicGameState {
      */
     public GameState forNextTurn() {
         return new GameState(tickets, cardState, currentPlayerId().next(), map, lastTurnBegins() ? currentPlayerId() : lastPlayer());
-
     }
 }

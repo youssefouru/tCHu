@@ -24,7 +24,7 @@ public class PublicGameState {
      * @param ticketsCount    (int) : number of tickets
      * @param cardState       (PublicCardState) : the current CardState
      * @param currentPlayerId (PlayerId) : the Id of the current player Id
-     * @param playerState     ( Map<PlayerId, PublicPlayerState>): the map which will give us the player state of each player based on id of the player
+     * @param playerState     (Map<PlayerId, PublicPlayerState>): the map which will give us the player state of each player based on id of the player
      * @param lastPlayer      (PlayerId) : the Id of the last Player
      */
     public PublicGameState(int ticketsCount, PublicCardState cardState, PlayerId currentPlayerId, Map<PlayerId, PublicPlayerState> playerState, PlayerId lastPlayer) {
@@ -89,7 +89,7 @@ public class PublicGameState {
      * @return (PublicPlayerState) : the public player state of the player with the id in parameter
      */
     public PublicPlayerState playerState(PlayerId playerId){
-        return (playerState.get(playerId));
+        return playerState.get(playerId);
     }
 
     /**
@@ -98,7 +98,7 @@ public class PublicGameState {
      * @return (PublicPlayerState) : the public player state of the current player
      */
     public PublicPlayerState currentPlayerState(){
-        return (playerState.get(currentPlayerId));
+        return playerState(currentPlayerId);
     }
 
     /**

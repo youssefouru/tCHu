@@ -59,6 +59,7 @@ class GameStateTest {
         assertEquals(0, initial.withoutTopTickets(2).ticketsCount());
         assertEquals(1, initial.withoutTopTickets(1).ticketsCount());
         assertEquals(2, initial.withoutTopTickets(0).ticketsCount());
+
     }
 
     @Test

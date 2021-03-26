@@ -50,7 +50,7 @@ public final class GameState extends PublicGameState {
      */
     public static GameState initial(SortedBag<Ticket> tickets, Random rng) {
         Deck<Card> cardDeck = Deck.of(Constants.ALL_CARDS, rng);
-        Map<PlayerId, PlayerState> map = new HashMap<>();
+        Map<PlayerId, PlayerState> map = new EnumMap<PlayerId, PlayerState>(PlayerId.class);
         for (PlayerId playerId : PlayerId.ALL) {
             SortedBag<Card> cards = cardDeck.topCards(Constants.INITIAL_CARDS_COUNT);
             PlayerState playerState = PlayerState.initial(cards);
@@ -62,13 +62,6 @@ public final class GameState extends PublicGameState {
         return new GameState(Deck.of(tickets, rng), CardState.of(cardDeck), firstPlayer, map, null);
     }
 
-    private static <C extends Comparable<C>> List<C> Intersection(SortedBag<C> c1, SortedBag<C> c2) {
-        List<C> myList1 = new ArrayList<>(c1.toList());
-        List<C> myList2 = new ArrayList<>(c2.toList());
-        myList1.retainAll(myList2);
-        return myList1;
-
-    }
 
     /**
      * this method returns the playerState of the player with Id in parameter
@@ -225,7 +218,7 @@ public final class GameState extends PublicGameState {
     }
 
     /**
-     * This method returns true if the last turn begins
+     * This method tells  if the last turn begins
      *
      * @return (boolean) : true if the last turn begin
      */

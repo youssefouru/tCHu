@@ -152,9 +152,9 @@ public final class Info {
 
 
     /**
-     * Displays that one of the players can play
+     * Displays that the the players can play
      *
-     * @return (String) that the player can play
+     * @return (String) : that the player can play
      */
     public String canPlay() {
         return String.format(StringsFr.CAN_PLAY, player);

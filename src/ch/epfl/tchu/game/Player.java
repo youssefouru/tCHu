@@ -66,9 +66,9 @@ public interface Player {
     SortedBag<Ticket> chooseTickets(SortedBag<Ticket> options);
 
     /**
-     * this method is called when a player decide to draw a face up card and returns the index of card he want to draw
+     * this method is called when a player decide to draw a face up card and returns the index of the card he wants to draw
      *
-     * @return (int) : index of the card he want to draw
+     * @return (int) : index of the card the player wants to draw
      */
     int drawSlot();
 

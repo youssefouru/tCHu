@@ -61,7 +61,7 @@ public class PublicGameState {
      */
     public boolean canDrawCards(){
         int i = cardState.deckSize() + cardState.discardsSize();
-        return i >=Constants.ADDITIONAL_TUNNEL_CARDS + Constants.DISCARDABLE_TICKETS_COUNT;
+        return i >=Constants.ADDITIONAL_TUNNEL_CARDS + 2;
     }
 
     /**
@@ -109,8 +109,8 @@ public class PublicGameState {
      */
     public List<Route> claimedRoutes(){
         List<Route> routes = new LinkedList<>();
-        for(Map.Entry<PlayerId,PublicPlayerState> playerStates : this.playerState.entrySet()){
-            routes.addAll(playerStates.getValue().routes());
+        for(PlayerId playerId : PlayerId.ALL){
+            routes.addAll(playerState(playerId).routes());
         }
         return routes;
     }

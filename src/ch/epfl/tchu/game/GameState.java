@@ -214,7 +214,7 @@ public final class GameState extends PublicGameState {
     public GameState withClaimedRoute(Route route, SortedBag<Card> cards) {
         Map<PlayerId, PlayerState> map = new HashMap<>(this.map);
         map.replace(currentPlayerId(), currentPlayerState().withClaimedRoute(route, cards));
-        return new GameState(tickets, cardState, currentPlayerId(), map, lastPlayer());
+        return new GameState(tickets, cardState.withMoreDiscardedCards(cards), currentPlayerId(), map, lastPlayer());
     }
 
     /**

@@ -205,7 +205,6 @@ public final class Game {
     private static List<PlayerId> maxPoints(Map<PlayerId, Integer> points) {
         List<PlayerId> winner = new ArrayList<>();
         int max = points.get(PlayerId.PLAYER_1);
-        PlayerId saveId = PlayerId.PLAYER_1;
         for (PlayerId playerId : PlayerId.ALL) {
             if (points.get(playerId) > max) {
                 max = points.get(playerId);

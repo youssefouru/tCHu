@@ -34,7 +34,6 @@ public final class Info {
      */
     public static String cardName(Card card, int count) {
         String color = "";
-        String cardName;
         switch (card) {
             case BLACK:
                 color = StringsFr.BLACK_CARD;
@@ -67,15 +66,12 @@ public final class Info {
         }
 
         color = color + sIfPlural(count);
-        cardName = String.format("%s", color);
-
-
-        return cardName;
+        return color;
     }
 
     private static String sIfPlural(int number) {
         String str = "";
-        if (number > 1 || number == 0) {
+        if (Math.abs(number) !=1) {
             str = "s";
         }
         return str;
@@ -91,20 +87,9 @@ public final class Info {
         for (Card c : cardsCollection.toSet()) {
             int n = cardsCollection.countOf(c);
             if (counter == 0) {
-                if (n > 1) {
                     toBeDisplayed.append(String.format("%s %s", n, cardName(c, n)));
-                } else {
-                    toBeDisplayed.append(String.format("%s %s", n, cardName(c, n)));
-                }
             } else if (counter == cardsCollection.toSet().size() - 1) {
-                if (n > 1) {
                     toBeDisplayed.append(String.format("%s%s %s", StringsFr.AND_SEPARATOR, n, cardName(c, n)));
-                } else {
-                    toBeDisplayed.append(String.format("%s%s %s", StringsFr.AND_SEPARATOR, n, cardName(c, n)));
-                }
-
-            } else if (n > 1) {
-                toBeDisplayed.append(String.format(", %s %s", n, cardName(c, n)));
             } else {
                 toBeDisplayed.append(String.format(", %s %s", n, cardName(c, n)));
             }

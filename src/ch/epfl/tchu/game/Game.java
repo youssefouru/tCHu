@@ -40,17 +40,21 @@ public final class Game {
                             get(gameState.
                             currentPlayerId()).
                             willPlayFirst());
+        
         for (PlayerId playerId : PlayerId.ALL) {
             Player player = players.get(playerId);
             player.setInitialTicketChoice(gameState.topTickets(Constants.INITIAL_TICKETS_COUNT));
             gameState = gameState.withoutTopTickets(Constants.INITIAL_TICKETS_COUNT);
-            updateState(players,gameState);
+        }
+        updateState(players,gameState);
+        for(PlayerId playerId : PlayerId.ALL){
+            Player player = players.get(playerId);
             gameState = gameState.withInitiallyChosenTickets(playerId, player.chooseInitialTickets());
             transmitInfo(players, playersInfos.
-                             get(playerId).
-                             keptTickets(player.
-                             chooseInitialTickets().
-                             size()));
+                    get(playerId).
+                    keptTickets(player.
+                        chooseInitialTickets().
+                        size()));
         }
 
         while (true) {
@@ -69,10 +73,12 @@ public final class Game {
 
                     break;
                 case DRAW_CARDS:
-                    GameState save = gameState;
                     for (int i = 0; i < NUMBER_OF_CARDS_DREW; ++i) {
                         gameState = gameState.withCardsDeckRecreatedIfNeeded(rng);
                         int slot = currentPlayer.drawSlot();
+                        if(i == 1){
+                            updateState(players,gameState);
+                        }
                         if (slot == Constants.DECK_SLOT) {
                             gameState = gameState.withBlindlyDrawnCard();
                             transmitInfo(players, currentPlayerInfo.drewBlindCard());
@@ -123,9 +129,12 @@ public final class Game {
                 int carCount = gameState.currentPlayerState().carCount();
                 transmitInfo(players, currentPlayerInfo.lastTurnBegins(carCount));
             }
-            gameState = gameState.forNextTurn();
             updateState(players, gameState);
+
+            gameState = gameState.forNextTurn();
+
         }
+        updateState(players,gameState);
 
         Map<PlayerId, Integer> mapPoints = new EnumMap<>(PlayerId.class);
 
@@ -209,6 +218,8 @@ public final class Game {
         }
         return winner;
     }
+
+
 
 
 }

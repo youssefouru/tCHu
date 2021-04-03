@@ -142,9 +142,9 @@ public final class Game {
             mapPoints.put(playerId, gameState.playerState(playerId).finalPoints());
         }
 
-        List<PlayerId> playerTheLonguestTrail = getsBonus(gameState);
+        List<PlayerId> playerTheLongestTrails = getsBonus(gameState);
 
-        for(PlayerId playerId : playerTheLonguestTrail) {
+        for(PlayerId playerId : playerTheLongestTrails) {
             mapPoints.put(playerId, mapPoints.get(playerId) + Constants.LONGEST_TRAIL_BONUS_POINTS);
             PlayerState playerStateLongTrail = gameState.playerState(playerId);
             transmitInfo(players, playersInfos.get(playerId).getsLongestTrailBonus(Trail.longest(playerStateLongTrail.routes())));
@@ -181,10 +181,12 @@ public final class Game {
 
     private static List<PlayerId> getsBonus(GameState gameState) {
         Map<PlayerId, Trail> longestTrailList = new HashMap<>();
+        //first we creat a map
         for (PlayerId playerId : PlayerId.ALL) {
             PlayerState playerState = gameState.playerState(playerId);
             longestTrailList.put(playerId, Trail.longest(playerState.routes()));
         }
+
         int maxLength = longestTrailList.get(PlayerId.PLAYER_1).length();
 
         for (PlayerId playerId : PlayerId.ALL) {
@@ -217,6 +219,8 @@ public final class Game {
         }
         return winner;
     }
+
+
 
 
 

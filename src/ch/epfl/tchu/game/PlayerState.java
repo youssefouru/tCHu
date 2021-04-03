@@ -168,16 +168,15 @@ public final class PlayerState extends PublicPlayerState {
         }
         Card card = Card.of(colorOfTheBag(initialCards));
         for (int i = 0; i <= additionalCardsCount; ++i) {
+            SortedBag<Card> bag;
             if (i != additionalCardsCount) {
-                SortedBag<Card> bag = SortedBag.of(i, Card.LOCOMOTIVE, additionalCardsCount - i, card);
-                if (cards.contains(bag)) {
-                    myList.add(bag);
-                }
+                bag = SortedBag.of(i, Card.LOCOMOTIVE, additionalCardsCount - i, card);
+
             } else {
-                SortedBag<Card> bag = SortedBag.of(additionalCardsCount, Card.LOCOMOTIVE);
-                if (cards.contains(bag)) {
-                    myList.add(bag);
-                }
+                 bag = SortedBag.of(additionalCardsCount, Card.LOCOMOTIVE);
+            }
+            if (cards.contains(bag)) {
+                myList.add(bag);
             }
         }
         return myList;

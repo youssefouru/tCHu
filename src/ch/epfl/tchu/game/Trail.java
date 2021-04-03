@@ -125,6 +125,7 @@ public final class Trail {
                             tempTrails.add(addARouteToTheLeft(trail, route));
                             canBeContinued = true;
                         }
+
                     }
                     if (!canBeContinued) {
                         maximalTrail.add(trail);
@@ -139,9 +140,11 @@ public final class Trail {
             List<Route> trivialList = new ArrayList<>();
             Trail trivialTrail = new Trail(trivialList);
             toBeReturned = trivialTrail;
+
         }
 
         return toBeReturned;
+
     }
 
     /**
@@ -161,6 +164,7 @@ public final class Trail {
                 longestTrail = trail;
             }
         }
+
         return longestTrail;
 
     }

@@ -32,7 +32,7 @@ public final class Route {
      * @param color    (Color)   : the Color of the Route
      */
     public Route(String id, Station station1, Station station2, int length, Level level, Color color) {
-        Preconditions.checkArgument(!(station1.equals(station2)) && (length >= Constants.MIN_ROUTE_LENGTH && length <= Constants.MAX_ROUTE_LENGTH));
+        Preconditions.checkArgument((station1.id() != station2.id()) && (length >= Constants.MIN_ROUTE_LENGTH && length <= Constants.MAX_ROUTE_LENGTH));
         this.station1 = Objects.requireNonNull(station1);
         this.station2 = Objects.requireNonNull(station2);
         this.id = Objects.requireNonNull(id);
@@ -186,25 +186,6 @@ public final class Route {
     }
 
 
-    /**
-     * find the common Station between the route 1 and 2
-     *
-     * @param route1 (Route) : the first Route
-     * @param route2 (Route) : the second Route
-     * @return  the common Station of the route 1 and 2
-     */
-    public static Station findCommonStation(Route route1, Route route2) {
-        Station commonStation = null;
-        boolean stationInCommon = true;
-        if (route2.stations().contains(route1.station1)) {
-            commonStation = route1.station1;
-        } else if (route2.stations().contains(route1.station2)) {
-            commonStation = route1.station2;
-        } else {
-            stationInCommon = false;
-        }
-        Preconditions.checkArgument(stationInCommon);
-        return commonStation;
-    }
+
 
 }

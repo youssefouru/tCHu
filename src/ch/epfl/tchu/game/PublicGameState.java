@@ -17,6 +17,7 @@ public class PublicGameState {
     private final PlayerId currentPlayerId;
     private final Map<PlayerId, PublicPlayerState> playerState;
     private final PlayerId lastPlayer;
+    private final static int NUMBER_OF_CARDS_DREW = 2;
 
     /**
      * Constructor of PublicGameState
@@ -32,7 +33,7 @@ public class PublicGameState {
         this.ticketsCount = ticketsCount;
         this.cardState = Objects.requireNonNull(cardState);
         this.currentPlayerId = Objects.requireNonNull(currentPlayerId);
-        this.playerState = Map.copyOf(playerState);
+        this.playerState =Map.copyOf(playerState);
         this.lastPlayer = lastPlayer;
     }
 
@@ -61,7 +62,7 @@ public class PublicGameState {
      */
     public boolean canDrawCards(){
         int i = cardState.deckSize() + cardState.discardsSize();
-        return i >=Constants.ADDITIONAL_TUNNEL_CARDS + 2;
+        return i >=Constants.ADDITIONAL_TUNNEL_CARDS + NUMBER_OF_CARDS_DREW;
     }
 
     /**

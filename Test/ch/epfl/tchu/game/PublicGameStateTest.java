@@ -368,4 +368,5 @@ class PublicGameStateTest {
                 WIN_ZUR_1, WIN_ZUR_2, ZOU_ZUR_1, ZOU_ZUR_2);
         //endregion
     }
+
 }

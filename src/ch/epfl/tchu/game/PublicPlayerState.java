@@ -28,7 +28,7 @@ public class PublicPlayerState {
         this.routes = List.copyOf(routes);
         this.ticketCount = ticketCount;
         this.cardCount = cardCount;
-        this.numberOfWagon = computeWagon();
+        this.numberOfWagon = computeWagon(routes);
     }
 
     /**
@@ -80,12 +80,12 @@ public class PublicPlayerState {
         return i;
     }
 
-    private  int computeWagon(){
+    private  static int computeWagon(List<Route> routes){
         int i = 0;
         for(Route route : routes){
             i+= route.length();
         }
-        return 40- i;
+        return 40-i;
     }
 
 

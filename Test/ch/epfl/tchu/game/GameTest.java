@@ -14,15 +14,9 @@ public class GameTest {
 
     @Test
     void playWorks(){
-
     }
 
-
-
-
-
-    public static class TestRandomPlayer implements Player
-    {
+    public static class TestRandomPlayer implements Player {
 
         private static final int TURN_LIMIT = 1000;
 
@@ -44,8 +38,8 @@ public class GameTest {
         Map<PlayerId, String> playerNames;
 
 
-        public TestRandomPlayer(long randomSeed, List<Route> allRoutes) {
-            this.rng = new Random(randomSeed);
+        public TestRandomPlayer(Random randomSeed, List<Route> allRoutes) {
+            this.rng = randomSeed;
             this.allRoutes = List.copyOf(allRoutes);
             this.turnCounter = 0;
             this.numberOfInfo = 0;
@@ -61,10 +55,7 @@ public class GameTest {
         @Override
         public void receiveInfo(String info) {
             numberOfInfo++;
-            if (turnCounter != numberOfInfo) {
 
-                throw new Error("Trop de tours joués !");
-            }
 
         }
 

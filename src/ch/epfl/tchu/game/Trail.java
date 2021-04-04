@@ -151,48 +151,17 @@ public final class Trail {
     }
 
     /**
-     * Given a list of trails, return the longest trail of them all (by adding the distance of each route)
-     *
-     * @param trails (Trail) : the Trail list we’re going to use
-     * @return Trail the longest trails of them all
-     */
-    private static Trail longestTrailOfAList(List<Trail> trails) {
-        int maxLength = 0;
-        Trail longestTrail = new Trail(new ArrayList<>());
-
-        for (Trail trail : trails) {
-            int length = lengthStatic(trail);
-            if (length > maxLength) {
-                maxLength = length;
-                longestTrail = trail;
-            }
-        }
-
-        return longestTrail;
-
-    }
-
-    /**
-     * Return the length of a given trail (the sum of the distance of its routes) and is static
-     *
-     * @param trail (Trail) :the Trail  we’re going to use
-     * @return length
-     */
-    private static int lengthStatic(Trail trail) {
-        int length = 0;
-        for (Route route : trail.routesOfTheTrail) {
-            length += route.length();
-        }
-        return length;
-    }
-
-    /**
      * Give the length of the trail on which it is use on
      *
      * @return length of the trail
      */
     public int length() {
-        return lengthStatic(this);
+        int length = 0;
+        for (Route route : this.routesOfTheTrail) {
+            length += route.length();
+        }
+        return length;
+
     }
 
     /**
@@ -201,7 +170,7 @@ public final class Trail {
      * @return A station at the end of the trail
      */
     public Station station1() {
-        if (routesOfTheTrail.size() == 0) {
+        if (length() == 0) {
            return null;
         } else {
             return extremeStationOfTheTrail(this).get(0);
@@ -214,7 +183,7 @@ public final class Trail {
      * @return the other extreme Station
      */
     public Station station2() {
-        if (routesOfTheTrail.size() == 0) {
+        if (length() == 0) {
             return null;
         } else {
             return extremeStationOfTheTrail(this).get(1);
@@ -228,9 +197,9 @@ public final class Trail {
      */
     @Override
     public String toString() {
-        int trailLength = lengthStatic(this);
+        int trailLength = this.length();
         String s1,s2;
-        if(routesOfTheTrail.size() == 0){
+        if(length() == 0){
             s1 = "-----";
             s2 = "-----";
         }else{

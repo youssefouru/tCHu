@@ -37,7 +37,7 @@ public final class GameState extends PublicGameState {
 
     private static Map<PlayerId, PublicPlayerState> transform(Map<PlayerId, PlayerState> playerState) {
         Map<PlayerId, PublicPlayerState> map = new HashMap<>();
-        playerState.forEach((playerId, playerState1) -> map.put(playerId,playerState1));
+        playerState.forEach(map::put);
         return map;
     }
 
@@ -50,7 +50,7 @@ public final class GameState extends PublicGameState {
      */
     public static GameState initial(SortedBag<Ticket> tickets, Random rng) {
         Deck<Card> cardDeck = Deck.of(Constants.ALL_CARDS, rng);
-        Map<PlayerId, PlayerState> map = new EnumMap<PlayerId, PlayerState>(PlayerId.class);
+        Map<PlayerId, PlayerState> map = new EnumMap<>(PlayerId.class);
         for (PlayerId playerId : PlayerId.ALL) {
             SortedBag<Card> cards = cardDeck.topCards(Constants.INITIAL_CARDS_COUNT);
             PlayerState playerState = PlayerState.initial(cards);

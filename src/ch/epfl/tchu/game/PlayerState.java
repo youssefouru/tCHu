@@ -123,7 +123,7 @@ public final class PlayerState extends PublicPlayerState {
     public boolean canClaimRoute(Route route) {
         List<SortedBag<Card>> myList = route.possibleClaimCards();
         for (SortedBag<Card> sortedBag : myList) {
-            if (cards.contains(sortedBag) && super.carCount() >= route.length()) {
+            if (cards.contains(sortedBag) && carCount() >= route.length()) {
                 return true;
             }
         }
@@ -230,7 +230,7 @@ public final class PlayerState extends PublicPlayerState {
 
 
     /**
-     * this method returns the final points that the playerState has with adding the ticketpoints to the claimPoints
+     * this method returns the final points that the playerState has with adding the ticketPoints to the claimPoints
      *
      * @return (int) :the final points that the playerState has
      */

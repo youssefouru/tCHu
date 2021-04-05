@@ -74,7 +74,9 @@ public final class Game {
 
                     break;
                 case DRAW_CARDS:
-
+                    if(gameState.cardState().discardsSize() + gameState.cardState().deckSize() <6){
+                        break;
+                    }
                     for (int i = 0; i < NUMBER_OF_CARDS_DREW; ++i) {
                         gameState = gameState.withCardsDeckRecreatedIfNeeded(rng);
                         int slot = currentPlayer.drawSlot();
@@ -85,6 +87,7 @@ public final class Game {
                             gameState = gameState.withBlindlyDrawnCard();
                             transmitInfo(players, currentPlayerInfo.drewBlindCard());
                         } else {
+                            System.out.println(slot);
                             Card drewCard = gameState.cardState().faceUpCard(slot);
                             gameState = gameState.withDrawnFaceUpCard(slot);
                             transmitInfo(players, currentPlayerInfo.drewVisibleCard(drewCard));
@@ -105,10 +108,7 @@ public final class Game {
                         SortedBag<Card> drawnCards = drawnCardsBuilder.build();
                         int additionalCards = claimedRoute.additionalClaimCardsCount(playedCard, drawnCards);
                         transmitInfo(players, currentPlayerInfo.drewAdditionalCards(drawnCards, additionalCards));
-                        if (additionalCards == 0) {
-                            playedCard = SortedBag.of();
-
-                        } else {
+                        if (additionalCards!=0) {
                             gameState = gameState.withMoreDiscardedCards(drawnCards);
                             List<SortedBag<Card>> optionsOfSortedBag = gameState.currentPlayerState().possibleAdditionalCards(additionalCards, playedCard, drawnCards);
                             if (optionsOfSortedBag.isEmpty()) {
@@ -148,12 +148,17 @@ public final class Game {
             mapPoints.put(playerId, gameState.playerState(playerId).finalPoints());
         }
 
-        List<PlayerId> playerTheLongestTrails = getsBonus(gameState);
+        Map<PlayerId,Trail> mapOfTrails = new HashMap<>();
+        for(PlayerId playerId : PlayerId.ALL){
+            PlayerState playerState = gameState.playerState(playerId);
+            mapOfTrails.put(playerId, Trail.longest(playerState.routes()));
+        }
+        List<PlayerId> playerTheLongestTrails = getsBonus(gameState, mapOfTrails);
 
         for (PlayerId playerId : playerTheLongestTrails) {
             mapPoints.put(playerId, mapPoints.get(playerId) + Constants.LONGEST_TRAIL_BONUS_POINTS);
             PlayerState playerStateLongTrail = gameState.playerState(playerId);
-            transmitInfo(players, playersInfos.get(playerId).getsLongestTrailBonus(Trail.longest(playerStateLongTrail.routes())));
+            transmitInfo(players, playersInfos.get(playerId).getsLongestTrailBonus(mapOfTrails.get(playerId)));
         }
 
         List<PlayerId> listOfPlayer = maxPoints(mapPoints);
@@ -185,13 +190,8 @@ public final class Game {
         }
     }
 
-    private static List<PlayerId> getsBonus(GameState gameState) {
-        Map<PlayerId, Trail> longestTrailList = new HashMap<>();
-        //first we creat a map
-        for (PlayerId playerId : PlayerId.ALL) {
-            PlayerState playerState = gameState.playerState(playerId);
-            longestTrailList.put(playerId, Trail.longest(playerState.routes()));
-        }
+    private static List<PlayerId> getsBonus(GameState gameState,Map<PlayerId, Trail> longestTrailList) {
+
 
         int maxLength = longestTrailList.get(PlayerId.PLAYER_1).length();
 

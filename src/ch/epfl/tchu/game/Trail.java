@@ -57,6 +57,7 @@ public final class Trail {
      * @return extremeStation, the list of the two extreme station
      */
     private static List<Station> extremeStationOfTheTrail(Trail trail) {
+
         List<Station> extremeStation = new ArrayList<>();
         if (trail.routesOfTheTrail.size() > 0) {
             if (trail.routesOfTheTrail.size() == 1) {

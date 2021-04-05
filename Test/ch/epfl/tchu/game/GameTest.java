@@ -18,7 +18,7 @@ public class GameTest {
 
     public static class TestRandomPlayer implements Player {
 
-        private static final int TURN_LIMIT = 1000;
+        private static final int TURN_LIMIT = 2000;
 
         private final Random rng;
         // Toutes les routes de la carte

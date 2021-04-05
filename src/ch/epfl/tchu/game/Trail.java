@@ -114,8 +114,10 @@ public final class Trail {
      * @return the longest trail that can be created from those routes
      */
     public static Trail longest(List<Route> routes) {
+        if(routes.isEmpty()){
+            return new Trail(routes);
+        }
         List<Trail> trailsToBeTested = trivialTrailCreation(routes);
-        if (routes.size() != 0) {
             List<Trail> tempTrails = new ArrayList<>();
             Trail saved = new Trail(new ArrayList<>());
             while (!trailsToBeTested.isEmpty()) {
@@ -126,10 +128,11 @@ public final class Trail {
                     List<Route> routesToTest = new ArrayList<>(routes);
                     routesToTest.removeAll(copy);
                     for (Route route : routesToTest) {
-                        if (route.stations().contains(extremeStation.get(1))) {
+                        List<Station> stations = route.stations();
+                        if (stations.contains(extremeStation.get(1))) {
                             tempTrails.add(addARouteToTheRight(trail, route));
                             canBeContinued = true;
-                        }if(route.stations().contains(extremeStation.get(0))){
+                        }if(stations.contains(extremeStation.get(0))){
                             tempTrails.add(addARouteToTheLeft(trail, route));
                             canBeContinued = true;
                         }
@@ -144,10 +147,6 @@ public final class Trail {
                 tempTrails.clear();
             }
             return saved;
-        } else{
-            return new Trail(routes);
-        }
-
     }
 
     /**

@@ -109,7 +109,7 @@ public class GameTest {
 
                 routeToClaim = route;
                 initialClaimCards = cards.get(0);
-                return TurnKind.CLAIM_ROUTES;
+                return TurnKind.CLAIM_ROUTE;
             }
 
 

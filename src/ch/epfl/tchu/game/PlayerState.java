@@ -137,7 +137,7 @@ public final class PlayerState extends PublicPlayerState {
      * @return (List < SortedBag < Card > >): list of all the possible cards that we can use to claim the route
      */
     public List<SortedBag<Card>> possibleClaimCards(Route route) {
-        Preconditions.checkArgument(super.carCount() >= route.length());
+        Preconditions.checkArgument(carCount() >= route.length());
         List<SortedBag<Card>> myList = new ArrayList<>();
         for (int i = 0; i < route.possibleClaimCards().size(); ++i) {
             if (cards.contains(route.possibleClaimCards().get(i))) {

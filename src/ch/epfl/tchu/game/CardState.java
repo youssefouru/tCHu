@@ -50,7 +50,7 @@ public final class CardState extends PublicCardState {
     public CardState withDrawnFaceUpCard(int slot) {
         Objects.checkIndex(slot, Constants.FACE_UP_CARDS_COUNT);
         Preconditions.checkArgument(!deck.isEmpty());
-        List<Card> myList = new ArrayList<>(super.faceUpCards());
+        List<Card> myList = new ArrayList<>(faceUpCards());
         myList.set(slot, deck.topCard());
         return new CardState(deck.withoutTopCard(), myList, discardCards);
 
@@ -75,7 +75,7 @@ public final class CardState extends PublicCardState {
      */
     public CardState withoutTopDeckCard() {
         Preconditions.checkArgument(!deck.isEmpty());
-        return new CardState(deck.withoutTopCard(), super.faceUpCards(), discardCards);
+        return new CardState(deck.withoutTopCard(), faceUpCards(), discardCards);
     }
 
 
@@ -87,7 +87,7 @@ public final class CardState extends PublicCardState {
      */
     public CardState withDeckRecreatedFromDiscards(Random rng) {
         Preconditions.checkArgument(deck.isEmpty());
-        return new CardState(Deck.of(discardCards, rng), super.faceUpCards(), SortedBag.of());
+        return new CardState(Deck.of(discardCards, rng), faceUpCards(), SortedBag.of());
     }
 
 
@@ -98,7 +98,7 @@ public final class CardState extends PublicCardState {
      * @return a CardState with the discard Cards of this CardStat to which we add the additional Discards in parameter
      */
     public CardState withMoreDiscardedCards(SortedBag<Card> additionalDiscards) {
-        return new CardState(this.deck, super.faceUpCards(), discardCards.union(additionalDiscards));
+        return new CardState(this.deck, faceUpCards(), discardCards.union(additionalDiscards));
 
     }
 

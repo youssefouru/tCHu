@@ -103,7 +103,7 @@ public final class GameState extends PublicGameState {
      */
     public GameState withoutTopTickets(int count) {
         Preconditions.checkArgument(count >= 0 && count <= ticketsCount());
-        return new GameState(tickets.withoutTopCards(count), cardState, super.currentPlayerId(), map, lastPlayer());
+        return new GameState(tickets.withoutTopCards(count), cardState, currentPlayerId(), map, lastPlayer());
     }
 
     /**
@@ -133,7 +133,7 @@ public final class GameState extends PublicGameState {
      * @return (GameState) : this GameState but with more discardCards
      */
     public GameState withMoreDiscardedCards(SortedBag<Card> discardedCards) {
-        return new GameState(tickets, cardState.withMoreDiscardedCards(discardedCards), super.currentPlayerId(), map, lastPlayer());
+        return new GameState(tickets, cardState.withMoreDiscardedCards(discardedCards), currentPlayerId(), map, lastPlayer());
     }
 
     /**
@@ -146,7 +146,7 @@ public final class GameState extends PublicGameState {
         if (!cardState.isDeckEmpty()) {
             return this;
         }
-        return new GameState(tickets, cardState.withDeckRecreatedFromDiscards(rng), super.currentPlayerId(), map, lastPlayer());
+        return new GameState(tickets, cardState.withDeckRecreatedFromDiscards(rng), currentPlayerId(), map, lastPlayer());
     }
 
     /**
@@ -198,7 +198,7 @@ public final class GameState extends PublicGameState {
      * @return (GameState) : this  GameState but without the top deck card which has been added to the player's card
      */
     public GameState withBlindlyDrawnCard() {
-        Preconditions.checkArgument(super.canDrawCards());
+        Preconditions.checkArgument(canDrawCards());
         Map<PlayerId, PlayerState> map = new HashMap<>(this.map);
         map.replace(currentPlayerId(), currentPlayerState().withAddedCard(cardState.topDeckCard()));
         return new GameState(tickets, cardState.withoutTopDeckCard(), currentPlayerId(), map, lastPlayer());

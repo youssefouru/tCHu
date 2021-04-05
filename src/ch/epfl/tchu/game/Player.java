@@ -100,7 +100,7 @@ public interface Player {
     enum TurnKind {
         DRAW_TICKETS,
         DRAW_CARDS,
-        CLAIM_ROUTES;
+        CLAIM_ROUTE;
 
 
         /**

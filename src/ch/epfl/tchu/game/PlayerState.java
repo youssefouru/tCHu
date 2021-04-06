@@ -5,6 +5,8 @@ import ch.epfl.tchu.SortedBag;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /**
  * A PlayerState
@@ -121,13 +123,13 @@ public final class PlayerState extends PublicPlayerState {
      * @return (boolean) : if the player can claim the route route in parameter
      */
     public boolean canClaimRoute(Route route) {
-        List<SortedBag<Card>> myList = route.possibleClaimCards();
-        for (SortedBag<Card> sortedBag : myList) {
-            if (cards.contains(sortedBag) && carCount() >= route.length()) {
-                return true;
-            }
+        if(route.length()>carCount()){
+            return false;
         }
-        return false;
+        List<SortedBag<Card>> myList = route.possibleClaimCards();
+        Stream<SortedBag<Card>> myListStream = myList.stream();
+        Predicate<SortedBag<Card>> predicate = cards::contains;
+        return myListStream.anyMatch(predicate);
     }
 
     /**

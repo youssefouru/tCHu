@@ -4,6 +4,7 @@ package ch.epfl.tchu.game;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * A Trail
@@ -13,6 +14,7 @@ import java.util.List;
  */
 public final class Trail {
     private final List<Route> routesOfTheTrail;
+    private int length;
 
     /**
      * Constructor of Trail
@@ -21,6 +23,10 @@ public final class Trail {
      */
     private Trail(List<Route> routesOfTheTrail) {
         this.routesOfTheTrail =List.copyOf(routesOfTheTrail);
+        this.length = 0;
+        for (Route route: routesOfTheTrail) {
+            this.length +=route.length();
+        }
     }
 
 
@@ -57,12 +63,10 @@ public final class Trail {
      * @return extremeStation, the list of the two extreme station
      */
     private static List<Station> extremeStationOfTheTrail(Trail trail) {
-
         List<Station> extremeStation = new ArrayList<>();
-        if (trail.routesOfTheTrail.size() > 0) {
-            if (trail.routesOfTheTrail.size() == 1) {
-                extremeStation = trail.routesOfTheTrail.get(0).stations();
-            } else {
+        if (trail.length() > 0) {
+            if (trail.routesOfTheTrail.size() == 1) return trail.routesOfTheTrail.get(0).stations();
+            else {
                 Route routeBegin = trail.routesOfTheTrail.get(0);
                 Route routeEnd = trail.routesOfTheTrail.get(trail.routesOfTheTrail.size() - 1);
                 Route routeAfterBegin = trail.routesOfTheTrail.get(1);
@@ -118,16 +122,15 @@ public final class Trail {
         if(routes.isEmpty()){
             return new Trail(routes);
         }
+        List<Trail> tempTrails = new ArrayList<>();
         List<Trail> trailsToBeTested = trivialTrailCreation(routes);
-            List<Trail> tempTrails = new ArrayList<>();
-            Trail saved = new Trail(new ArrayList<>());
+        Trail saved = new Trail(new ArrayList<>());
             while (!trailsToBeTested.isEmpty()) {
                 for (Trail trail : trailsToBeTested) {
-                    List<Route> copy = new ArrayList<>(trail.routesOfTheTrail);
                     boolean canBeContinued = false;
                     List<Station> extremeStation = extremeStationOfTheTrail(trail);
                     List<Route> routesToTest = new ArrayList<>(routes);
-                    routesToTest.removeAll(copy);
+                    routesToTest.removeAll(trail.routesOfTheTrail);
                     for (Route route : routesToTest) {
                         List<Station> stations = route.stations();
                         if (stations.contains(extremeStation.get(1))) {
@@ -143,6 +146,7 @@ public final class Trail {
                             saved = trail;
                         }
                     }
+
                 }
                 trailsToBeTested = new ArrayList<>(tempTrails);
                 tempTrails.clear();
@@ -156,12 +160,7 @@ public final class Trail {
      * @return length of the trail
      */
     public int length() {
-        int length = 0;
-        for (Route route : this.routesOfTheTrail) {
-            length += route.length();
-        }
         return length;
-
     }
 
     /**

@@ -3,7 +3,10 @@ package ch.epfl.tchu.game;
 import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 
-import java.util.*;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 
 /**
@@ -157,7 +160,7 @@ public final class GameState extends PublicGameState {
      * @return (GameState) : new GameState with the same attribute of this but the player with the Id in parameter to whom we added the tickets in parameter
      */
     public GameState withInitiallyChosenTickets(PlayerId playerId, SortedBag<Ticket> chosenTickets) {
-        Preconditions.checkArgument(playerState(playerId).ticketCount() == 0 );
+        Preconditions.checkArgument(playerState(playerId).ticketCount() == 0);
         PlayerState playerState = playerState(playerId).withAddedTickets(chosenTickets);
         Map<PlayerId, PlayerState> map = (new HashMap<>(this.map));
         map.replace(playerId, playerState);

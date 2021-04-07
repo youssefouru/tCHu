@@ -6,6 +6,7 @@ import ch.epfl.tchu.gui.Info;
 
 import java.util.*;
 
+
 /**
  * Game
  *
@@ -159,6 +160,7 @@ public final class Game {
         List<PlayerId> playerTheLongestTrails = getsBonus(mapOfTrails);
 
         for (PlayerId playerId : playerTheLongestTrails) {
+
             mapPoints.put(playerId, mapPoints.get(playerId) + Constants.LONGEST_TRAIL_BONUS_POINTS);
             transmitInfo(players, playersInfos.get(playerId).getsLongestTrailBonus(mapOfTrails.get(playerId)));
         }
@@ -188,6 +190,7 @@ public final class Game {
 
     private static void updateAllStates(Map<PlayerId, Player> map, GameState gameState) {
         map.forEach(((playerId, player) -> player.updateState(gameState,gameState.playerState(playerId))));
+
     }
 
     private static List<PlayerId> getsBonus(Map<PlayerId, Trail> longestTrailList) {

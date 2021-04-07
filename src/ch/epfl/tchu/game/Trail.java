@@ -4,7 +4,6 @@ package ch.epfl.tchu.game;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * A Trail
@@ -14,7 +13,8 @@ import java.util.stream.Stream;
  */
 public final class Trail {
     private final List<Route> routesOfTheTrail;
-    private int length;
+    private final int length;
+
 
     /**
      * Constructor of Trail
@@ -22,11 +22,8 @@ public final class Trail {
      * @param routesOfTheTrail (List<Route>) : the route list that we will use
      */
     private Trail(List<Route> routesOfTheTrail) {
-        this.routesOfTheTrail =List.copyOf(routesOfTheTrail);
-        this.length = 0;
-        for (Route route: routesOfTheTrail) {
-            this.length +=route.length();
-        }
+        this.routesOfTheTrail = List.copyOf(routesOfTheTrail);
+        this.length = computeLength(routesOfTheTrail);
     }
 
 
@@ -43,6 +40,14 @@ public final class Trail {
         return new Trail(myRoutes);
     }
 
+    private static int computeLength(List<Route> routes) {
+        int i = 0;
+        for (Route route : routes) {
+            i += route.length();
+        }
+        return i;
+    }
+
     /**
      * add a route to the left of the list of routes of the train
      *
@@ -52,7 +57,7 @@ public final class Trail {
      */
     private static Trail addARouteToTheLeft(Trail trail, Route route) {
         List<Route> myRoutes = new LinkedList<>(trail.routesOfTheTrail);
-        myRoutes.add(0,route);
+        myRoutes.add(0, route);
         return new Trail(myRoutes);
     }
 
@@ -64,13 +69,15 @@ public final class Trail {
      */
     private static List<Station> extremeStationOfTheTrail(Trail trail) {
         List<Station> extremeStation = new ArrayList<>();
+        List<Route> routesList = new ArrayList<>(trail.routesOfTheTrail);
+        int routesSize = routesList.size();
         if (trail.length() > 0) {
-            if (trail.routesOfTheTrail.size() == 1) return trail.routesOfTheTrail.get(0).stations();
+            if (trail.routesOfTheTrail.size() == 1) return routesList.get(0).stations();
             else {
-                Route routeBegin = trail.routesOfTheTrail.get(0);
-                Route routeEnd = trail.routesOfTheTrail.get(trail.routesOfTheTrail.size() - 1);
-                Route routeAfterBegin = trail.routesOfTheTrail.get(1);
-                Route routeBeforeEnd = trail.routesOfTheTrail.get(trail.routesOfTheTrail.size() - 2);
+                Route routeBegin = routesList.get(0);
+                Route routeEnd = routesList.get(routesSize - 1);
+                Route routeAfterBegin = routesList.get(1);
+                Route routeBeforeEnd = routesList.get(routesSize - 2);
 
                 // Now we identify the common station
                 extremeStation.add(routeBegin.stationOpposite(findCommonStation(routeBegin, routeAfterBegin)));
@@ -87,17 +94,18 @@ public final class Trail {
      *
      * @param route1 (Route) : the first Route
      * @param route2 (Route) : the second Route
-     * @return  the common Station of the route 1 and 2
+     * @return the common Station of the route 1 and 2
      */
     private static Station findCommonStation(Route route1, Route route2) {
-        Station commonStation = null;
-        if (route2.stations().contains(route1.station1())) {
-            commonStation = route1.station1();
-        } else if (route2.stations().contains(route1.station2())) {
-            commonStation = route1.station2();
+        List<Station> route2Stations = route2.stations();
+        if (route2Stations.contains(route1.station1())) {
+            return route1.station1();
+        } else if (route2Stations.contains(route1.station2())) {
+            return route1.station2();
         }
-        return commonStation;
+        return null;
     }
+
     /**
      * Creates a List of trail that are only composed of one different route
      *
@@ -119,40 +127,44 @@ public final class Trail {
      * @return the longest trail that can be created from those routes
      */
     public static Trail longest(List<Route> routes) {
-        if(routes.isEmpty()){
-            return new Trail(routes);
-        }
+        if (routes.isEmpty())
+            return new Trail(new ArrayList<>());
+
         List<Trail> tempTrails = new ArrayList<>();
         List<Trail> trailsToBeTested = trivialTrailCreation(routes);
         Trail saved = new Trail(new ArrayList<>());
-            while (!trailsToBeTested.isEmpty()) {
-                for (Trail trail : trailsToBeTested) {
-                    boolean canBeContinued = false;
-                    List<Station> extremeStation = extremeStationOfTheTrail(trail);
-                    List<Route> routesToTest = new ArrayList<>(routes);
-                    routesToTest.removeAll(trail.routesOfTheTrail);
-                    for (Route route : routesToTest) {
-                        List<Station> stations = route.stations();
-                        if (stations.contains(extremeStation.get(1))) {
-                            tempTrails.add(addARouteToTheRight(trail, route));
-                            canBeContinued = true;
-                        }if(stations.contains(extremeStation.get(0))){
-                            tempTrails.add(addARouteToTheLeft(trail, route));
-                            canBeContinued = true;
-                        }
+        while (!trailsToBeTested.isEmpty()) {
+            for (Trail trail : trailsToBeTested) {
+                boolean canBeContinued = false;
+                List<Station> extremeStation = extremeStationOfTheTrail(trail);
+                List<Route> routesToTest = new ArrayList<>(routes);
+                routesToTest.removeAll(trail.routesOfTheTrail);
+                for (Route route : routesToTest) {
+                    if (trail.routesOfTheTrail.contains(route)) {
+                        break;
                     }
-                    if (!canBeContinued) {
-                        if(saved.length() < trail.length()){
-                            saved = trail;
-                        }
+                    List<Station> stations = route.stations();
+                    if (stations.contains(extremeStation.get(1))) {
+                        tempTrails.add(addARouteToTheRight(trail, route));
+                        canBeContinued = true;
+                    } else if (stations.contains(extremeStation.get(0))) {
+                        tempTrails.add(addARouteToTheLeft(trail, route));
+                        canBeContinued = true;
                     }
 
                 }
-                trailsToBeTested = new ArrayList<>(tempTrails);
-                tempTrails.clear();
+                if (!canBeContinued && saved.length() < trail.length()) {
+                    saved = trail;
+                }
+
             }
-            return saved;
+
+            trailsToBeTested = new ArrayList<>(tempTrails);
+            tempTrails.clear();
+        }
+        return saved;
     }
+
 
     /**
      * Give the length of the trail on which it is use on
@@ -170,7 +182,7 @@ public final class Trail {
      */
     public Station station1() {
         if (length() == 0) {
-           return null;
+            return null;
         } else {
             return extremeStationOfTheTrail(this).get(0);
         }
@@ -197,11 +209,11 @@ public final class Trail {
     @Override
     public String toString() {
         int trailLength = this.length();
-        String s1,s2;
-        if(length() == 0){
+        String s1, s2;
+        if (length() == 0) {
             s1 = "-----";
             s2 = "-----";
-        }else{
+        } else {
             s1 = station1().toString();
             s2 = station2().toString();
         }

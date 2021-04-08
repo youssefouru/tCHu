@@ -71,18 +71,19 @@ public final class Trail {
         List<Station> extremeStation = new ArrayList<>();
         List<Route> routesList = new ArrayList<>(trail.routesOfTheTrail);
         int routesSize = routesList.size();
-        if (trail.length() > 0) {
-            if (trail.routesOfTheTrail.size() == 1) return routesList.get(0).stations();
-            else {
-                Route routeBegin = routesList.get(0);
-                Route routeEnd = routesList.get(routesSize - 1);
-                Route routeAfterBegin = routesList.get(1);
-                Route routeBeforeEnd = routesList.get(routesSize - 2);
+        if (trail.length <= 0)
+            return new ArrayList<>();
+        if (trail.routesOfTheTrail.size() == 1)
+            return routesList.get(0).stations();
+        else {
+            Route routeBegin = routesList.get(0);
+            Route routeEnd = routesList.get(routesSize - 1);
+            Route routeAfterBegin = routesList.get(1);
+            Route routeBeforeEnd = routesList.get(routesSize - 2);
 
-                // Now we identify the common station
-                extremeStation.add(routeBegin.stationOpposite(findCommonStation(routeBegin, routeAfterBegin)));
-                extremeStation.add(routeEnd.stationOpposite(findCommonStation(routeEnd, routeBeforeEnd)));
-            }
+            // Now we identify the common station
+            extremeStation.add(routeBegin.stationOpposite(findCommonStation(routeBegin, routeAfterBegin)));
+            extremeStation.add(routeEnd.stationOpposite(findCommonStation(routeEnd, routeBeforeEnd)));
         }
 
         return extremeStation;

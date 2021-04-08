@@ -49,7 +49,7 @@ public final class Game {
             player.setInitialTicketChoice(gameState.topTickets(Constants.INITIAL_TICKETS_COUNT));
             gameState = gameState.withoutTopTickets(Constants.INITIAL_TICKETS_COUNT);
         }
-        updateAllStates(players, gameState);
+        updateStates(players, gameState);
         for (PlayerId playerId : PlayerId.ALL) {
             Player player = players.get(playerId);
             SortedBag<Ticket> chosenTickets = player.chooseInitialTickets();
@@ -62,7 +62,7 @@ public final class Game {
         }
         while (true) {
             Player currentPlayer = players.get(gameState.currentPlayerId());
-            updateAllStates(players, gameState);
+            updateStates(players, gameState);
             Info currentPlayerInfo = playersInfos.get(gameState.currentPlayerId());
             transmitInfo(players, currentPlayerInfo.canPlay());
             switch (currentPlayer.nextTurn()) {
@@ -77,10 +77,9 @@ public final class Game {
 
                     break;
                 case DRAW_CARDS:
-                    int saveSlot = 0;
                     for (int i = 0; i < NUMBER_OF_CARDS_DREW; ++i) {
-                        if (i == 1 && saveSlot!=Constants.DECK_SLOT) {
-                            updateAllStates(players, gameState);
+                        if (i == 1 ) {
+                            updateStates(players, gameState);
                         }
                         gameState = gameState.withCardsDeckRecreatedIfNeeded(rng);
                         int slot = currentPlayer.drawSlot();
@@ -93,7 +92,6 @@ public final class Game {
                             gameState = gameState.withDrawnFaceUpCard(slot);
                             transmitInfo(players, currentPlayerInfo.drewVisibleCard(drewCard));
                         }
-                        saveSlot=slot;
                     }
                     break;
                 case CLAIM_ROUTE:
@@ -110,8 +108,8 @@ public final class Game {
                         SortedBag<Card> drawnCards = drawnCardsBuilder.build();
                         int additionalCards = claimedRoute.additionalClaimCardsCount(playedCard, drawnCards);
                         transmitInfo(players, currentPlayerInfo.drewAdditionalCards(drawnCards, additionalCards));
+                        gameState = gameState.withMoreDiscardedCards(drawnCards);
                         if (additionalCards!=0) {
-                            gameState = gameState.withMoreDiscardedCards(drawnCards);
                             List<SortedBag<Card>> optionsOfSortedBag = gameState.currentPlayerState().possibleAdditionalCards(additionalCards, playedCard, drawnCards);
                             if (optionsOfSortedBag.isEmpty()) {
                                 playedCard = SortedBag.of();
@@ -144,7 +142,7 @@ public final class Game {
             gameState = gameState.forNextTurn();
 
         }
-        updateAllStates(players, gameState);
+        updateStates(players, gameState);
 
 
         Map<PlayerId, Integer> mapPoints = new EnumMap<>(PlayerId.class);
@@ -188,7 +186,7 @@ public final class Game {
         map.forEach(((playerId, player) -> player.receiveInfo(info)));
     }
 
-    private static void updateAllStates(Map<PlayerId, Player> map, GameState gameState) {
+    private static void updateStates(Map<PlayerId, Player> map, GameState gameState) {
         map.forEach(((playerId, player) -> player.updateState(gameState,gameState.playerState(playerId))));
 
     }

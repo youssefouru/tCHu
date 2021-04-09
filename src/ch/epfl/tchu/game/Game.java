@@ -151,18 +151,13 @@ public final class Game {
             mapPoints.put(playerId, gameState.playerState(playerId).finalPoints());
         }
         Map<PlayerId,Trail> mapOfTrails = new HashMap<>();
-        for(PlayerId playerId : PlayerId.ALL){
-            PlayerState playerState = gameState.playerState(playerId);
-            mapOfTrails.put(playerId, Trail.longest(playerState.routes()));
-        }
+        GameState finalGameState = gameState;
+        PlayerId.ALL.forEach((playerId -> {
+            PlayerState playerState = finalGameState.playerState(playerId);
+            mapOfTrails.put(playerId,Trail.longest(playerState.routes()));
+        }));
         List<PlayerId> playerTheLongestTrails = getsBonus(mapOfTrails);
-
-        for (PlayerId playerId : playerTheLongestTrails) {
-
-            mapPoints.put(playerId, mapPoints.get(playerId) + Constants.LONGEST_TRAIL_BONUS_POINTS);
-            transmitInfo(players, playersInfos.get(playerId).getsLongestTrailBonus(mapOfTrails.get(playerId)));
-        }
-
+        playerTheLongestTrails.forEach((playerId -> mapPoints.replace(playerId,mapPoints.get(playerId) + Constants.LONGEST_TRAIL_BONUS_POINTS)));
         List<PlayerId> listOfPlayer = maxPoints(mapPoints);
         if (listOfPlayer.size() == 1) {
             PlayerId winner = listOfPlayer.get(0);
@@ -199,7 +194,7 @@ public final class Game {
                 maxLength = longestTrailList.get(playerId).length();
             }
         }
-        List<PlayerId> playerIdList = new LinkedList<>();
+        List<PlayerId> playerIdList = new ArrayList<>();
         for (PlayerId playerId : PlayerId.ALL) {
             if (longestTrailList.get(playerId).length() == maxLength) {
                 playerIdList.add(playerId);
@@ -218,7 +213,7 @@ public final class Game {
             }
         }
         for (PlayerId playerId : PlayerId.ALL) {
-            if (points.get(playerId) == max && !winner.contains(playerId)) {
+            if (points.get(playerId) == max) {
                 winner.add(playerId);
             }
         }

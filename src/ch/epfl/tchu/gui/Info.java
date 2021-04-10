@@ -6,6 +6,7 @@ import ch.epfl.tchu.game.Route;
 import ch.epfl.tchu.game.Trail;
 
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * Info
@@ -15,6 +16,7 @@ import java.util.List;
  */
 public final class Info {
     private final String player;
+
 
     /**
      * Constructor of Info
@@ -65,17 +67,10 @@ public final class Info {
 
         }
 
-        color = color + sIfPlural(count);
+        color = color + StringsFr.plural(count);
         return color;
     }
 
-    private static String sIfPlural(int number) {
-        String str = "";
-        if (Math.abs(number) !=1) {
-            str = "s";
-        }
-        return str;
-    }
 
     private static String routePrinter(Route route) {
         return String.format("%s%s%s", route.station1(), StringsFr.EN_DASH_SEPARATOR, route.station2());
@@ -108,10 +103,9 @@ public final class Info {
      * @return (String) if there is a draw between two players with the number of points
      */
     public static String draw(List<String> playerNames, int points) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(playerNames.get(0));
-        stringBuilder.append(StringsFr.AND_SEPARATOR);
-        stringBuilder.append(playerNames.get(1));
+        String stringBuilder = playerNames.get(0) +
+                StringsFr.AND_SEPARATOR +
+                playerNames.get(1);
         return String.format(StringsFr.DRAW, stringBuilder, points);
     }
 
@@ -131,7 +125,7 @@ public final class Info {
      * @return (String) : that the player has count ticket
      */
     public String keptTickets(int count) {
-        return String.format(StringsFr.KEPT_N_TICKETS, player, count, sIfPlural(count));
+        return String.format(StringsFr.KEPT_N_TICKETS, player, count, StringsFr.plural(count));
     }
 
 
@@ -151,7 +145,7 @@ public final class Info {
      * @return (String) : that the player drew count ticket
      */
     public String drewTickets(int count) {
-        return String.format(StringsFr.DREW_TICKETS, player, count, sIfPlural(count));
+        return String.format(StringsFr.DREW_TICKETS, player, count, StringsFr.plural(count));
     }
 
 
@@ -207,11 +201,10 @@ public final class Info {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(String.format(StringsFr.ADDITIONAL_CARDS_ARE, cardsCollectionPrinter(drawnCards)));
         if (additionalCost == 0) {
-            stringBuilder.append(String.format(StringsFr.NO_ADDITIONAL_COST));
+            return stringBuilder.append(String.format(StringsFr.NO_ADDITIONAL_COST)).toString();
         } else {
-            stringBuilder.append(String.format(StringsFr.SOME_ADDITIONAL_COST, additionalCost, sIfPlural(additionalCost)));
+            return stringBuilder.append(String.format(StringsFr.SOME_ADDITIONAL_COST, additionalCost, StringsFr.plural(additionalCost))).toString();
         }
-        return stringBuilder.toString();
     }
 
     /**
@@ -231,7 +224,7 @@ public final class Info {
      * @return (String) : the number of wagons left for the player
      */
     public String lastTurnBegins(int carCount) {
-        return String.format(StringsFr.LAST_TURN_BEGINS, player, carCount, sIfPlural(carCount));
+        return String.format(StringsFr.LAST_TURN_BEGINS, player, carCount, StringsFr.plural(carCount));
     }
 
     /**
@@ -253,7 +246,7 @@ public final class Info {
      * @return (String) : a player won, among the number of points of the winner and the number of points of the loser
      */
     public String won(int points, int loserPoints) {
-        return String.format(StringsFr.WINS, player, points, sIfPlural(points), loserPoints, sIfPlural(loserPoints));
+        return String.format(StringsFr.WINS, player, points, StringsFr.plural(points), loserPoints, StringsFr.plural(loserPoints));
     }
 
 

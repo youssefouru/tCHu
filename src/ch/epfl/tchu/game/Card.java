@@ -1,6 +1,7 @@
 package ch.epfl.tchu.game;
 
 import java.util.List;
+
 /**
  * Cards
  *
@@ -31,9 +32,6 @@ public enum Card {
      * CARS (List<Card>) : contains the element of this enum type from BLACK to WHITE
      */
     public final static List<Card> CARS = List.of(BLACK, VIOLET, BLUE, GREEN, YELLOW, ORANGE, RED, WHITE);
-    /**
-     * color (Color) : This represent the color of the enum type
-     */
     private final Color color;
 
     /**
@@ -52,28 +50,11 @@ public enum Card {
      * @return card (Card) : return the card with the color that has been choosen in parameter
      */
     public static Card of(Color color) {
-
-        switch (color) {
-            case BLACK:
-                return Card.BLACK;
-            case VIOLET:
-                return Card.VIOLET;
-            case BLUE:
-                return Card.BLUE;
-            case GREEN:
-                return Card.GREEN;
-            case YELLOW:
-                return Card.YELLOW;
-            case ORANGE:
-                return Card.ORANGE;
-            case RED:
-                return Card.RED;
-            case WHITE:
-                return Card.WHITE;
-            default:
-                return null;
+        for(Card card : ALL){
+            if(card.color.equals(color))
+                return card;
         }
-
+        return null;
     }
 
     /**

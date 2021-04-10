@@ -198,10 +198,11 @@ public final class PlayerState extends PublicPlayerState {
     }
 
     private int findMaxId() {
-        int max = 0;
+
         if (routes().size() == 0) {
             return 0;
         }
+        int max = 0;
         for (Route route : routes()) {
             for (Station station : route.stations()) {
                 if (station.id() >= max) {

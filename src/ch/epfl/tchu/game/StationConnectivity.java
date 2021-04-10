@@ -13,7 +13,7 @@ public interface StationConnectivity {
      *
      * @param station1 (Station) : the first station
      * @param station2 (Station) : the second station
-     * @return aboolean(Boolean) : return true if the two station are connected and false if they are not
+     * @return (boolean) : returns if the two stations are connected
      */
     boolean connected(Station station1, Station station2);
 }

@@ -18,8 +18,8 @@ public final class Preconditions {
      * @param argument (boolean) : the argument wich will be checked
      */
     public static void checkArgument(boolean argument){
-        if(!argument){
+        if(!argument)
             throw new IllegalArgumentException();
-        }
+
     }
 }

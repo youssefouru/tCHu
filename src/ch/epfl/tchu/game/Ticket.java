@@ -3,6 +3,8 @@ package ch.epfl.tchu.game;
 import ch.epfl.tchu.Preconditions;
 
 import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /**
  * A ticket
@@ -23,21 +25,21 @@ public final class Ticket implements Comparable<Ticket> {
      * @param trips (List<Trip>) : the list of Trips linked to this ticket
      */
     public Ticket(List<Trip> trips) {
-        Preconditions.checkArgument(!trips.isEmpty());
-        boolean cond = true;
-        String name = trips.get(0).from().name();
-        for (Trip trip : trips) {
-            if (!(trip.from().name()).equals(name)) {
-                cond = false;
-
-            }
-           
-        }
-        Preconditions.checkArgument(cond);
+        Preconditions.checkArgument(check(trips));
         this.trips = List.copyOf(Objects.requireNonNull(trips));
         text = computeText(this.trips);
     }
 
+    private boolean check(List<Trip> trips){
+        if(trips.isEmpty()){
+            return false;
+        }
+        String name = trips.get(0).from().name();
+        Stream<Trip> checkStream = trips.stream();
+        Predicate<Trip> predicate = (trip -> trip.from().name().equals(name));
+       return checkStream.allMatch(predicate);
+
+    }
     /**
      * Constructor of Ticket
      *
@@ -56,10 +58,9 @@ public final class Ticket implements Comparable<Ticket> {
      * @return text (String)     : the text which has to be written on the ticket corresponding to the trips in parameter
      */
     private static String computeText(List<Trip> trips) {
-        TreeSet<String> destinations = new TreeSet<String>();
+        Set<String> destinations = new TreeSet<>();
         String departureStation = trips.get(0).from().name();
         String finalText;
-
 
         for (Trip trip : trips) {
             String destination = trip.to().name();
@@ -67,14 +68,12 @@ public final class Ticket implements Comparable<Ticket> {
             String dp = String.format("%s (%s)", destination, points);
             destinations.add(dp);
         }
-
         String rightPart = String.join(", ", destinations);
         if (destinations.size() == 1) {
-            finalText = String.format("%s - %s", departureStation, rightPart);
+            return  String.format("%s - %s", departureStation, rightPart);
         } else {
-            finalText = String.format("%s - {%s}", departureStation, rightPart);
+            return String.format("%s - {%s}", departureStation, rightPart);
         }
-        return finalText;
     }
 
     /**
@@ -83,7 +82,7 @@ public final class Ticket implements Comparable<Ticket> {
      * @return text (String) : the attribute text
      */
     public String text() {
-        return this.text;
+        return text;
     }
 
     /**
@@ -128,8 +127,7 @@ public final class Ticket implements Comparable<Ticket> {
      * @return compare (int) : return a number based on the comparison
      */
     public int compareTo(Ticket ticket) {
-        int compare = text.compareTo(ticket.text());
-        return compare;
+        return text.compareTo(ticket.text());
     }
 
     /**

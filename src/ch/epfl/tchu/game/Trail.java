@@ -14,6 +14,8 @@ import java.util.List;
 public final class Trail {
     private final List<Route> routesOfTheTrail;
     private final int length;
+    private final Station station1;
+    private final Station station2;
 
 
     /**
@@ -24,19 +26,14 @@ public final class Trail {
     private Trail(List<Route> routesOfTheTrail) {
         this.routesOfTheTrail = List.copyOf(routesOfTheTrail);
         this.length = computeLength(routesOfTheTrail);
-    }
-
-
-    /**
-     * add a route to the right of the list of routes of the train
-     *
-     * @param route (Route) the route that must be added
-     * @return the trail considered modified, with a route added to the right
-     */
-    private  Trail addARouteToTheRight(Route route) { //for this class to be static, a copy of routesOfTheTrailIsMade
-        List<Route> myRoutes = new ArrayList<>(routesOfTheTrail);
-        myRoutes.add(route);
-        return new Trail(myRoutes);
+        List<Station> extremeStations = extremeStationOfTheTrail(routesOfTheTrail);
+        if (extremeStations.isEmpty()) {
+            station1 = null;
+            station2 = null;
+        } else {
+            station1 = extremeStations.get(0);
+            station2 = extremeStations.get(1);
+        }
     }
 
     private static int computeLength(List<Route> routes) {
@@ -46,42 +43,6 @@ public final class Trail {
         }
         return i;
     }
-
-    /**
-     * add a route to the left of the list of routes of the train
-     *
-     * @param route (Route) the route that must be added
-     * @return the trail considered modified, with a route added to the left
-     */
-    private  Trail addARouteToTheLeft( Route route) {
-        List<Route> myRoutes = new LinkedList<>(routesOfTheTrail);
-        myRoutes.add(0, route);
-        return new Trail(myRoutes);
-    }
-
-    /**
-     * Return the two extreme stations of this trail
-     *
-     * @return extremeStation, the list of the two extreme station
-     */
-    private List<Station> extremeStationOfTheTrail() {
-        int routesSize = routesOfTheTrail.size();
-        if (length == 0)
-            return new ArrayList<>();
-        if (routesOfTheTrail.size() == 1)
-            return routesOfTheTrail.get(0).stations();
-        List<Station> extremeStation = new ArrayList<>();
-        Route routeBegin = routesOfTheTrail.get(0);
-        Route routeEnd = routesOfTheTrail.get(routesSize - 1);
-        Route routeAfterBegin = routesOfTheTrail.get(1);
-        Route routeBeforeEnd = routesOfTheTrail.get(routesSize - 2);
-
-        // Now we identify the common station
-        extremeStation.add(routeBegin.stationOpposite(findCommonStation(routeBegin, routeAfterBegin)));
-        extremeStation.add(routeEnd.stationOpposite(findCommonStation(routeEnd, routeBeforeEnd)));
-        return extremeStation;
-    }
-
 
     /**
      * find the common Station between the route 1 and 2
@@ -128,20 +89,20 @@ public final class Trail {
         Trail saved = new Trail(new ArrayList<>());
         while (!trailsToBeTested.isEmpty()) {
             for (Trail trail : trailsToBeTested) {
+                if (trail.length() == 0)
+                    continue;
                 boolean canBeContinued = false;
-                List<Station> extremeStation = trail.extremeStationOfTheTrail();
                 List<Route> routesToTest = new ArrayList<>(routes);
                 routesToTest.removeAll(trail.routesOfTheTrail);
                 for (Route route : routesToTest) {
                     List<Station> stations = route.stations();
-                    if (stations.contains(extremeStation.get(1))) {
+                    if (stations.contains(trail.station2)) {
                         tempTrails.add(trail.addARouteToTheRight(route));
                         canBeContinued = true;
-                    } else if (stations.contains(extremeStation.get(0))){
+                    } else if (stations.contains(trail.station1)) {
                         tempTrails.add(trail.addARouteToTheLeft(route));
                         canBeContinued = true;
                     }
-
                 }
                 if (!canBeContinued && saved.length() < trail.length()) {
                     saved = trail;
@@ -155,6 +116,53 @@ public final class Trail {
         return saved;
     }
 
+    /**
+     * add a route to the right of the list of routes of the train
+     *
+     * @param route (Route) the route that must be added
+     * @return the trail considered modified, with a route added to the right
+     */
+    private Trail addARouteToTheRight(Route route) { //for this class to be static, a copy of routesOfTheTrailIsMade
+        List<Route> myRoutes = new ArrayList<>(routesOfTheTrail);
+        myRoutes.add(route);
+        return new Trail(myRoutes);
+    }
+
+    /**
+     * add a route to the left of the list of routes of the train
+     *
+     * @param route (Route) the route that must be added
+     * @return the trail considered modified, with a route added to the left
+     */
+    private Trail addARouteToTheLeft(Route route) {
+        List<Route> myRoutes = new LinkedList<>(routesOfTheTrail);
+        myRoutes.add(0, route);
+        return new Trail(myRoutes);
+    }
+
+    /**
+     * Return the two extreme stations of this trail
+     *
+     * @param routes (List<Route>): the list of routes of the trail that we want to determine the extreme stations
+     * @return extremeStation (List<Station>) : the list of the two extreme station
+     */
+    private static List<Station> extremeStationOfTheTrail(List<Route> routes) {
+        int routesSize = routes.size();
+        if (routesSize == 0)
+            return new ArrayList<>();
+        if (routesSize == 1)
+            return routes.get(0).stations();
+        List<Station> extremeStation = new ArrayList<>();
+        Route routeBegin = routes.get(0);
+        Route routeEnd = routes.get(routesSize - 1);
+        Route routeAfterBegin = routes.get(1);
+        Route routeBeforeEnd = routes.get(routesSize - 2);
+
+        // Now we identify the common station
+        extremeStation.add(routeBegin.stationOpposite(findCommonStation(routeBegin, routeAfterBegin)));
+        extremeStation.add(routeEnd.stationOpposite(findCommonStation(routeEnd, routeBeforeEnd)));
+        return extremeStation;
+    }
 
     /**
      * Give the length of the trail on which it is use on
@@ -171,10 +179,7 @@ public final class Trail {
      * @return A station at the end of the trail
      */
     public Station station1() {
-        if(length == 0){
-            return null;
-        }
-            return extremeStationOfTheTrail().get(0);
+        return station1;
     }
 
     /**
@@ -183,10 +188,7 @@ public final class Trail {
      * @return the other extreme Station
      */
     public Station station2() {
-       if(length == 0){
-           return null;
-       }
-            return extremeStationOfTheTrail().get(1);
+        return station2;
 
     }
 
@@ -197,7 +199,6 @@ public final class Trail {
      */
     @Override
     public String toString() {
-        int trailLength = this.length();
         String s1, s2;
         if (length() == 0) {
             s1 = "-----";
@@ -206,7 +207,7 @@ public final class Trail {
             s1 = station1().toString();
             s2 = station2().toString();
         }
-        return String.format("%s - %s (%s)", s1, s2, trailLength);
+        return String.format("%s - %s (%s)", s1, s2, length);
     }
 
 }

@@ -27,11 +27,11 @@ public final class StationPartition implements StationConnectivity {
      *
      * @param station1 (Station) : the first station
      * @param station2 (Station) : the second station
-     * @return if the two station are connected
+     * @return (boolean) : that station 1 and 2 are connected or not
      */
     @Override
     public boolean connected(Station station1, Station station2) {
-        if (station1.id() >= links.length || station2.id() >= links.length){
+        if (station1.id() >= links.length || station2.id() >= links.length) {
             return station1.id() == station2.id();
         }
         return links[station1.id()] == links[station2.id()];
@@ -41,10 +41,7 @@ public final class StationPartition implements StationConnectivity {
      * Inner Class Builder of StationPartition
      */
     public final static class Builder {
-        private final int stationCount;
-
         private final int[] stationSet;
-
 
         /**
          * Constructor of the Builder
@@ -53,7 +50,6 @@ public final class StationPartition implements StationConnectivity {
          */
         public Builder(int stationCount) {
             Preconditions.checkArgument(stationCount >= 0);
-            this.stationCount = stationCount;
             this.stationSet = new int[stationCount];
             for (int i = 0; i < stationCount; ++i) {
                 stationSet[i] = i;
@@ -71,14 +67,14 @@ public final class StationPartition implements StationConnectivity {
         private int representative(int stationID) {
             if (stationID == stationSet[stationID]) {
                 return stationID;
-            } else {
-                return representative(stationSet[stationID]);
             }
+            return representative(stationSet[stationID]);
+
         }
 
 
         /**
-         * this method creates a builder where the two station in parameter are connected
+         * this method returns this builder where we connected the two station in parameter
          *
          * @param station1 (Station) : the first station
          * @param station2 (Station) :  the second station

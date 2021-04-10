@@ -24,17 +24,25 @@ public class PublicPlayerState {
      * @param routes      (List<Route>) : list of routes that the player has
      */
     public PublicPlayerState(int ticketCount, int cardCount, List<Route> routes) {
-        Preconditions.checkArgument(ticketCount >= 0 && cardCount>=0);
+        Preconditions.checkArgument(ticketCount >= 0 && cardCount >= 0);
         this.routes = List.copyOf(routes);
         this.ticketCount = ticketCount;
         this.cardCount = cardCount;
         this.numberOfWagon = computeWagon(routes);
     }
 
+    private static int computeWagon(List<Route> routes) {
+        int i = 0;
+        for (Route route : routes) {
+            i += route.length();
+        }
+        return 40 - i;
+    }
+
     /**
      * this method returns the number of cards of the player
      *
-     * @return the number of tickets of the player
+     * @return (int) : the number of tickets of the player
      */
     public int ticketCount() {
         return ticketCount;
@@ -43,7 +51,7 @@ public class PublicPlayerState {
     /**
      * this method returns the number of cards of the player
      *
-     * @return the number of cards of the player
+     * @return (int) : the number of cards of the player
      */
     public int cardCount() {
         return cardCount;
@@ -52,7 +60,7 @@ public class PublicPlayerState {
     /**
      * this method returns the list of routes that the player has
      *
-     * @return the list routes
+     * @return (int) : the list routes
      */
     public List<Route> routes() {
         return routes;
@@ -61,31 +69,23 @@ public class PublicPlayerState {
     /**
      * this method returns the number of wagon left
      *
-     * @return returns the attribute numberOfWagon
+     * @return (int) : returns the attribute numberOfWagon
      */
-    public int carCount(){
+    public int carCount() {
         return numberOfWagon;
     }
 
     /**
-     * this method returns the number of points claimed
+     * this method compute the total number of points claimed by the player thanks to the routes he has
      *
-     * @return returns the number of points of the player
+     * @return (int) : returns the number of points wins by the player thanks to the routes he has
      */
-    public int claimPoints(){
+    public int claimPoints() {
         int i = 0;
-        for(Route route : routes){
+        for (Route route : routes) {
             i += route.claimPoints();
         }
         return i;
-    }
-
-    private  static int computeWagon(List<Route> routes){
-        int i = 0;
-        for(Route route : routes){
-            i+= route.length();
-        }
-        return 40-i;
     }
 
 

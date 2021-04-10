@@ -60,7 +60,7 @@ public interface Player {
     /**
      * this method is called when a player has to choose tickets from the options
      *
-     * @param options (SortedBag<Ticket>) : the tickets drawn
+     * @param options (SortedBag<Ticket>) : the tickets drawn by the player
      * @return (SortedBag < Ticket >) : the tickets that the player has chosen
      */
     SortedBag<Ticket> chooseTickets(SortedBag<Ticket> options);

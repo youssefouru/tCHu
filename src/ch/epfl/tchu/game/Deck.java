@@ -35,16 +35,16 @@ public final class Deck<C extends Comparable<C>> {
      * @return deck (Deck<C>) : a deck which has the SortedBag cards shuffled as parameter
      */
     public static <C extends Comparable<C>> Deck<C> of(SortedBag<C> cards, Random rng) {
-        List<C> c = cards.toList();
-        Collections.shuffle(c, rng);
-        return new Deck<>(c);
+        List<C> cardsList = cards.toList();
+        Collections.shuffle(cardsList, rng);
+        return new Deck<>(cardsList);
     }
 
 
     /**
      * this method returns the number of cards which are in the deck
      *
-     * @return size (int) : the size of the attributes card
+     * @return (int) : the size of the attributes card
      */
     public int size() {
         return this.cards.size();
@@ -53,7 +53,7 @@ public final class Deck<C extends Comparable<C>> {
     /**
      * this method return true if there is no card in the deck
      *
-     * @return aboolean (boolean) : it returns true iff the size of the attribute cards is 0
+     * @return  (boolean) : it returns true iff the size of the attribute cards is 0
      */
     public boolean isEmpty() {
         return size() == 0;

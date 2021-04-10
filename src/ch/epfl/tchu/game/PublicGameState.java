@@ -61,8 +61,7 @@ public class PublicGameState {
      * @return (boolean) : returns if the player can draw a card or not
      */
     public boolean canDrawCards(){
-        int i = cardState.deckSize() + cardState.discardsSize();
-        return i >=Constants.ADDITIONAL_TUNNEL_CARDS + NUMBER_OF_CARDS_DREW;
+        return  cardState.deckSize() + cardState.discardsSize()>=Constants.ADDITIONAL_TUNNEL_CARDS + NUMBER_OF_CARDS_DREW;
     }
 
     /**
@@ -110,9 +109,7 @@ public class PublicGameState {
      */
     public List<Route> claimedRoutes(){
         List<Route> routes = new ArrayList<>();
-        for(PlayerId playerId : PlayerId.ALL){
-            routes.addAll(playerState(playerId).routes());
-        }
+        PlayerId.ALL.forEach(playerId -> routes.addAll(playerState(playerId).routes()));
         return routes;
     }
 

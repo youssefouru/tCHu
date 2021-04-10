@@ -71,14 +71,7 @@ public class GameTest {
             initialTickets = tickets;
         }
 
-        public void initiationWorks() {
-            if (turnCounter==0){
-                boolean works = true;
-                assert(this.ownState.carCount() == 40);
-                assert(this.ownState.cards().size() == 4);
-            }
 
-        }
         @Override
         public SortedBag<Ticket> chooseInitialTickets() {
             Stream<Ticket> chosenTicketsFloat =  initialTickets.stream().filter(x -> {

@@ -57,7 +57,7 @@ public class PublicCardState {
      * @return the card the slot face Up card
      */
     public Card faceUpCard(int slot) {
-        Objects.checkIndex(slot, 5);
+        Objects.checkIndex(slot, Constants.FACE_UP_CARDS_COUNT);
         return faceUpCards.get(slot);
     }
 

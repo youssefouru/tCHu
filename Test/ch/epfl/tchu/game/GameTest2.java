@@ -19,7 +19,8 @@ public class GameTest2 {
     // the given turn limit and throw and exception.
 
     private static final boolean RANDOMISED_TESTS = true;
-    private static final int RANDOM_TEST_COUNT = 1000;
+    private static final int RANDOM_TEST_COUNT = 100
+            ;
 
     // Private class which generates a testing player. The testing works by testing internally if, according
     // from what the player knows, the game runs correctly.
@@ -115,8 +116,9 @@ public class GameTest2 {
 
             // Turn limit (terminates the game)
             turnCounter += 1;
-            if (turnCounter > TURN_LIMIT)
-                throw new Error("Trop de tours joués !");
+            if (turnCounter > TURN_LIMIT){
+                System.out.println(turnCounter);
+                throw new Error("Trop de tours joués !");}
 
 
             // Current players' ID (assumes that players have different name strings)

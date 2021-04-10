@@ -24,7 +24,7 @@ public final class CardState extends PublicCardState {
      * @param discardCards (SortedBag<Card>): these are the List of cards that are in initially in the discard
      */
     private CardState(Deck<Card> deck, List<Card> faceUpCards, SortedBag<Card> discardCards) {
-        super(List.copyOf(faceUpCards), deck.size(), discardCards.size());
+        super(faceUpCards, deck.size(), discardCards.size());
         this.deck = deck;
         this.discardCards = discardCards;
 

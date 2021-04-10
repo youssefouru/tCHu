@@ -43,7 +43,7 @@ public final class Trip {
      * @return all (List<Trip>) : list of all the trips
      */
     public static List<Trip> all(List<Station> from, List<Station> to, int points) {
-        List<Trip> all = new ArrayList<Trip>();
+        List<Trip> all = new ArrayList<>();
         for (Station station : from) {
             for (Station stationBis : to) {
                 Trip trip = new Trip(station, stationBis, points);
@@ -59,7 +59,7 @@ public final class Trip {
      * @return from (Station) : return the  attribute from
      */
     public Station from() {
-        return this.from;
+        return from;
     }
 
     /**
@@ -68,7 +68,7 @@ public final class Trip {
      * @return to (Station) : return the  attribute to
      */
     public Station to() {
-        return this.to;
+        return to;
     }
 
     /**
@@ -77,7 +77,7 @@ public final class Trip {
      * @return points (int) : return the  attribute points
      */
     public int points() {
-        return this.points;
+        return points;
     }
 
     /**

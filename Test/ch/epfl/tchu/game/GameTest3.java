@@ -54,11 +54,12 @@ public class GameTest3 {
     void moyennePoints() {
 //        Random rng = new Random(82881);
         Random rng = new Random();
-        int BEAUCOUP = 10000;
+        int BEAUCOUP = 100;
         int moyenne = 0;
         int moyenneroutes = 0;
         int maxtours = 0;
         long seed = 1832743;
+
         for (int i = 0; i < BEAUCOUP; i++) {
 //            seed += i * 777;
             rng = new Random();
@@ -76,6 +77,8 @@ public class GameTest3 {
             maxtours = Math.max(maxtours, ((TestPlayer) invPlayers.get(PlayerId.PLAYER_1)).turnCounter);
             moyenneroutes += ((TestPlayer) invPlayers.get(PlayerId.PLAYER_1)).routesnumb();
             moyenneroutes += ((TestPlayer) invPlayers.get(PlayerId.PLAYER_2)).routesnumb();
+
+            System.out.println(i);
         }
         moyenne /= BEAUCOUP;
         moyenneroutes /= BEAUCOUP * 2;

@@ -43,7 +43,7 @@ public final class Game {
                         currentPlayerId()).
                 willPlayFirst());
 
-        Map<PlayerId,String> infosOfTickets = new HashMap<>();
+        Map<PlayerId, String> infosOfTickets = new HashMap<>();
         for (PlayerId playerId : PlayerId.ALL) {
             Player player = players.get(playerId);
             player.setInitialTicketChoice(gameState.topTickets(Constants.INITIAL_TICKETS_COUNT));
@@ -54,11 +54,10 @@ public final class Game {
             Player player = players.get(playerId);
             SortedBag<Ticket> chosenTickets = player.chooseInitialTickets();
             gameState = gameState.withInitiallyChosenTickets(playerId, chosenTickets);
-            infosOfTickets.put(playerId,playersInfos.get(playerId).keptTickets(chosenTickets.size()));
-
+            infosOfTickets.put(playerId, playersInfos.get(playerId).keptTickets(chosenTickets.size()));
         }
-        for(PlayerId playerId : PlayerId.ALL) {
-            transmitInfo(players,infosOfTickets.get(playerId));
+        for (PlayerId playerId : PlayerId.ALL) {
+            transmitInfo(players, infosOfTickets.get(playerId));
         }
         while (true) {
             Player currentPlayer = players.get(gameState.currentPlayerId());
@@ -68,7 +67,7 @@ public final class Game {
             switch (currentPlayer.nextTurn()) {
                 case DRAW_TICKETS:
                     //TODO : supprime le math.min
-                    int numberOfTickets =Math.min(Constants.IN_GAME_TICKETS_COUNT,gameState.ticketsCount());
+                    int numberOfTickets = Math.min(Constants.IN_GAME_TICKETS_COUNT, gameState.ticketsCount());
                     SortedBag<Ticket> drawnTickets = gameState.topTickets(numberOfTickets);
                     transmitInfo(players, currentPlayerInfo.drewTickets(numberOfTickets));
                     SortedBag<Ticket> chosenTickets = currentPlayer.chooseTickets(drawnTickets);
@@ -78,7 +77,7 @@ public final class Game {
                     break;
                 case DRAW_CARDS:
                     for (int i = 0; i < NUMBER_OF_CARDS_DREW; ++i) {
-                        if (i == 1 ) {
+                        if (i == 1) {
                             updateStates(players, gameState);
                         }
                         gameState = gameState.withCardsDeckRecreatedIfNeeded(rng);
@@ -109,7 +108,7 @@ public final class Game {
                         int additionalCards = claimedRoute.additionalClaimCardsCount(playedCard, drawnCards);
                         transmitInfo(players, currentPlayerInfo.drewAdditionalCards(drawnCards, additionalCards));
                         gameState = gameState.withMoreDiscardedCards(drawnCards);
-                        if (additionalCards!=0) {
+                        if (additionalCards != 0) {
                             List<SortedBag<Card>> optionsOfSortedBag = gameState.currentPlayerState().possibleAdditionalCards(additionalCards, playedCard, drawnCards);
                             if (optionsOfSortedBag.isEmpty()) {
                                 playedCard = SortedBag.of();
@@ -145,22 +144,20 @@ public final class Game {
         updateStates(players, gameState);
 
 
-        Map<PlayerId, Integer> mapPoints = new EnumMap<>(PlayerId.class);
-
+        Map<PlayerId, Trail> mapOfTrails = new HashMap<>();
         for (PlayerId playerId : PlayerId.ALL) {
-            mapPoints.put(playerId, gameState.playerState(playerId).finalPoints());
-        }
-        Map<PlayerId,Trail> mapOfTrails = new HashMap<>();
-        for(PlayerId playerId : PlayerId.ALL){
             PlayerState playerState = gameState.playerState(playerId);
             mapOfTrails.put(playerId, Trail.longest(playerState.routes()));
         }
         List<PlayerId> playerTheLongestTrails = getsBonus(mapOfTrails);
+        Map<PlayerId, Integer> mapPoints = new EnumMap<>(PlayerId.class);
 
-        for (PlayerId playerId : playerTheLongestTrails) {
-
-            mapPoints.put(playerId, mapPoints.get(playerId) + Constants.LONGEST_TRAIL_BONUS_POINTS);
-            transmitInfo(players, playersInfos.get(playerId).getsLongestTrailBonus(mapOfTrails.get(playerId)));
+        for (PlayerId playerId : PlayerId.ALL) {
+            int bonus = playerTheLongestTrails.contains(playerId) ? 10 : 0;
+            mapPoints.put(playerId, gameState.playerState(playerId).finalPoints() + bonus);
+            if (bonus == 10) {
+                transmitInfo(players, playersInfos.get(playerId).getsLongestTrailBonus(mapOfTrails.get(playerId)));
+            }
         }
 
         List<PlayerId> listOfPlayer = maxPoints(mapPoints);
@@ -187,7 +184,7 @@ public final class Game {
     }
 
     private static void updateStates(Map<PlayerId, Player> map, GameState gameState) {
-        map.forEach(((playerId, player) -> player.updateState(gameState,gameState.playerState(playerId))));
+        map.forEach(((playerId, player) -> player.updateState(gameState, gameState.playerState(playerId))));
 
     }
 

@@ -126,6 +126,7 @@ public final class Ticket implements Comparable<Ticket> {
      * @param ticket (Ticket) : Ticket that we compare this to
      * @return compare (int) : return a number based on the comparison
      */
+    @Override
     public int compareTo(Ticket ticket) {
         return text.compareTo(ticket.text());
     }

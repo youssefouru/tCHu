@@ -3,18 +3,20 @@ package ch.epfl.tchu.game;
 import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 /**
- * A Deck
+ * A Deck : this class will
  *
+ * @param <C> : the type parameter of the deck
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)
  */
 public final class Deck<C extends Comparable<C>> {
     private final List<C> cards;
-
-
 
 
     /**
@@ -53,7 +55,7 @@ public final class Deck<C extends Comparable<C>> {
     /**
      * this method return true if there is no card in the deck
      *
-     * @return  (boolean) : it returns true iff the size of the attribute cards is 0
+     * @return (boolean) : it returns true iff the size of the attribute cards is 0
      */
     public boolean isEmpty() {
         return size() == 0;
@@ -104,9 +106,8 @@ public final class Deck<C extends Comparable<C>> {
     public Deck<C> withoutTopCards(int count) {
         Preconditions.checkArgument(count >= 0 && count <= size());
 
-        return new Deck<>(cards.subList(count,size()));
+        return new Deck<>(cards.subList(count, size()));
     }
-
 
 
 }

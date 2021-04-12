@@ -67,7 +67,7 @@ public final class Game {
             switch (currentPlayer.nextTurn()) {
                 case DRAW_TICKETS:
                     //TODO : supprime le math.min
-                    int numberOfTickets = Math.min(Constants.IN_GAME_TICKETS_COUNT, gameState.ticketsCount());
+                    int numberOfTickets = Constants.IN_GAME_TICKETS_COUNT;
                     SortedBag<Ticket> drawnTickets = gameState.topTickets(numberOfTickets);
                     transmitInfo(players, currentPlayerInfo.drewTickets(numberOfTickets));
                     SortedBag<Ticket> chosenTickets = currentPlayer.chooseTickets(drawnTickets);

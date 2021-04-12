@@ -22,7 +22,7 @@ public enum PlayerId {
      * @return the next player
      */
     public PlayerId next(){
-        int  i = ALL.indexOf(this);
+        int  i = this.ordinal();
         int newIndex= (i+1)%COUNT;
         return ALL.get(newIndex);
     }

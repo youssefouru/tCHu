@@ -66,7 +66,6 @@ public final class Route {
      * @return station2(Station) :the attribute station2
      */
     public Station station2() {
-
         return this.station2;
     }
 
@@ -154,7 +153,7 @@ public final class Route {
      * @return count(int) : number of additional cards which are needed to take a underground route
      */
     public int additionalClaimCardsCount(SortedBag<Card> claimCards, SortedBag<Card> drawnCards) {
-        Preconditions.checkArgument((this.level() == Level.UNDERGROUND) && (drawnCards.size() == 3));
+        Preconditions.checkArgument((this.level() == Level.UNDERGROUND) && (drawnCards.size() == Constants.ADDITIONAL_TUNNEL_CARDS));
         int count = 0;
         for(Card card : drawnCards){
             if(card == Card.LOCOMOTIVE || claimCards.contains(card)){

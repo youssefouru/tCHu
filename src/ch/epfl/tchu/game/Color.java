@@ -2,7 +2,7 @@ package ch.epfl.tchu.game;
 
 import java.util.List;
 /**
- * Colors
+ * Colors : this enum type represent the colors of the cards of the Game
  *
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)

@@ -6,10 +6,9 @@ import ch.epfl.tchu.game.Route;
 import ch.epfl.tchu.game.Trail;
 
 import java.util.List;
-import java.util.function.Function;
 
 /**
- * Info
+ * Info : this class gathers all the info
  *
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)
@@ -82,9 +81,9 @@ public final class Info {
         for (Card c : cardsCollection.toSet()) {
             int n = cardsCollection.countOf(c);
             if (counter == 0) {
-                    toBeDisplayed.append(String.format("%s %s", n, cardName(c, n)));
+                toBeDisplayed.append(String.format("%s %s", n, cardName(c, n)));
             } else if (counter == cardsCollection.toSet().size() - 1) {
-                    toBeDisplayed.append(String.format("%s%s %s", StringsFr.AND_SEPARATOR, n, cardName(c, n)));
+                toBeDisplayed.append(String.format("%s%s %s", StringsFr.AND_SEPARATOR, n, cardName(c, n)));
             } else {
                 toBeDisplayed.append(String.format(", %s %s", n, cardName(c, n)));
             }

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * A Trip
+ * A Trip :
  *
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)
@@ -37,7 +37,7 @@ public final class Trip {
     /**
      * this method return all the trips from all the stations from the stations of the from list to all the stations of the to list
      *
-     * @param from   (List<Station>) :List of all daparture's stations
+     * @param from   (List<Station>) :List of all departure's stations
      * @param to     (List<Station>) : List of all the arrival's stations
      * @param points (int) : point of all the trips
      * @return all (List<Trip>) : list of all the trips

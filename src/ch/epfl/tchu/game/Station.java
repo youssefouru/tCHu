@@ -3,7 +3,7 @@ package ch.epfl.tchu.game;
 import ch.epfl.tchu.Preconditions;
 
 /**
- * A Station
+ * A Station : this class represent a station in the game
  *
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)

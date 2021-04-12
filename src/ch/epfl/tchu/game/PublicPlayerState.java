@@ -5,7 +5,7 @@ import ch.epfl.tchu.Preconditions;
 import java.util.List;
 
 /**
- * A PublicPlayerState
+ * PublicPlayerState : this class represents the public part of a playerState
  *
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)

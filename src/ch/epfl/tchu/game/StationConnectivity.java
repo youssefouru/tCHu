@@ -1,7 +1,7 @@
 package ch.epfl.tchu.game;
 
 /**
- * StationConnectivity
+ * StationConnectivity : the interface
  *
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)

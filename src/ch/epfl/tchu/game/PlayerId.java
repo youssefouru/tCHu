@@ -2,6 +2,12 @@ package ch.epfl.tchu.game;
 
 import java.util.List;
 
+/**
+ * PlayerId : this enum type represent the playerId of the players in the game
+ *
+ * @author Amine Youssef (324253)
+ * @author Louis Yves André Barinka (329847)
+ */
 public enum PlayerId {
     PLAYER_1,
     PLAYER_2;

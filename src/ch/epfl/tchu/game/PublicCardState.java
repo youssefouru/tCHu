@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * A PublicCardState
+ * PublicCardState : this class represents the public part of a cardState
  *
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)

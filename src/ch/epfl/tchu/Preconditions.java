@@ -1,7 +1,7 @@
 package ch.epfl.tchu;
 
 /**
- * The Preconditions
+ * The Preconditions : this class is used to check some preconditions
  *
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)

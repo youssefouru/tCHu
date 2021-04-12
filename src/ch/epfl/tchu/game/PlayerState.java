@@ -9,7 +9,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 /**
- * A PlayerState
+ * A PlayerState : this class represents the private part of a playerState
  *
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)
@@ -169,16 +169,17 @@ public final class PlayerState extends PublicPlayerState {
             return myList;
         }
         Card card = Card.of(colorOfTheBag(initialCards));
+        //this for loop will add iteratively all the possible bags that the player can play and
         for (int i = 0; i <= additionalCardsCount; ++i) {
-            SortedBag<Card> bag;
+            SortedBag<Card> bagOfCards;
             if (i != additionalCardsCount) {
-                bag = SortedBag.of(i, Card.LOCOMOTIVE, additionalCardsCount - i, card);
+                bagOfCards = SortedBag.of(i, Card.LOCOMOTIVE, additionalCardsCount - i, card);
 
             } else {
-                 bag = SortedBag.of(additionalCardsCount, Card.LOCOMOTIVE);
+                 bagOfCards = SortedBag.of(additionalCardsCount, Card.LOCOMOTIVE);
             }
-            if (cards.contains(bag)) {
-                myList.add(bag);
+            if (cards.contains(bagOfCards)) {
+                myList.add(bagOfCards);
             }
         }
         return myList;

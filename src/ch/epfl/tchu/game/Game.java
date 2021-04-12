@@ -8,7 +8,7 @@ import java.util.*;
 
 
 /**
- * Game
+ * Game : this class have only one method that is used to run the game
  *
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)

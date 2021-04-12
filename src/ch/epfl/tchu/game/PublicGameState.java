@@ -6,7 +6,7 @@ import java.util.*;
 
 
 /**
- * A PublicGameState
+ * A PublicGameState : this class represents the public part of a gameState
  *
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)
@@ -121,4 +121,5 @@ public class PublicGameState {
     public PlayerId lastPlayer(){
         return this.lastPlayer;
     }
+
 }

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A Player
+ * Player : this class is implemented by all the players, it has most of the methods that a player to use during the game
  *
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)

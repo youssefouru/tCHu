@@ -7,7 +7,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 /**
- * A ticket
+ * A Ticket : this class represents a ticket of a list of trips
  *
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)

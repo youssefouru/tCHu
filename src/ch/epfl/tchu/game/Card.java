@@ -3,7 +3,7 @@ package ch.epfl.tchu.game;
 import java.util.List;
 
 /**
- * Cards
+ * Cards : this enum type represent the cards playable in the game
  *
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)
@@ -35,7 +35,7 @@ public enum Card {
     private final Color color;
 
     /**
-     * contructor of the Card enum type
+     * constructor of the Card enum type
      *
      * @param color (Color) : color of the card
      */
@@ -44,10 +44,10 @@ public enum Card {
     }
 
     /**
-     * this method creat a card of a color that you put in paramter
+     * this method creat a card of a color that we have in parameter
      *
      * @param color (Color) : color of the card
-     * @return card (Card) : return the card with the color that has been choosen in parameter
+     * @return card (Card) : return the card with the color that has been chosen in parameter
      */
     public static Card of(Color color) {
         for(Card card : ALL){
@@ -58,7 +58,7 @@ public enum Card {
     }
 
     /**
-     * this methode retrun the color of the card
+     * this methode returns the color of the card
      *
      * @return color (Color) : the color of the card
      */

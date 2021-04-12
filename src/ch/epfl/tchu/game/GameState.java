@@ -10,7 +10,7 @@ import java.util.Random;
 
 
 /**
- * A GameState
+ * GameState : this class represents the private part of a GameState
  *
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)

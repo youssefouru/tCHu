@@ -6,7 +6,7 @@ import ch.epfl.tchu.SortedBag;
 import java.util.*;
 
 /**
- * A CardState
+ * A CardState : this class represent the private part of a CardState
  *
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)

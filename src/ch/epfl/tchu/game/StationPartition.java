@@ -4,7 +4,7 @@ import ch.epfl.tchu.Preconditions;
 
 
 /**
- * A StationPartition
+ * A StationPartition : this class is a representation of the connection between the stations
  *
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)
@@ -38,7 +38,7 @@ public final class StationPartition implements StationConnectivity {
     }
 
     /**
-     * Inner Class Builder of StationPartition
+     * Inner Class Builder of StationPartition : this is a the builder of the StationPartition class that will help us to connect the stations
      */
     public final static class Builder {
         private final int[] stationSet;

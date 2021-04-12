@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * A Deck : this class will
+ * A Deck : this class will store objects of type C
  *
  * @param <C> : the type parameter of the deck
  * @author Amine Youssef (324253)

@@ -3,10 +3,12 @@ package ch.epfl.tchu.game;
 import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
- * A Route
+ * Route : this class represent a route of the game
  *
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)
@@ -18,7 +20,6 @@ public final class Route {
     private final int length;
     private final Level level;
     private final Color color;
-
 
 
     /**
@@ -125,18 +126,18 @@ public final class Route {
     public List<SortedBag<Card>> possibleClaimCards() {
         List<SortedBag<Card>> myList = new ArrayList<>();
         //this list contains all the cards if the color of the route is null or just the of the color of the route if it's not null
-        List<Card> myCards = color() == null ? Card.CARS :List.of(Card.of(color()));
+        List<Card> myCards = color() == null ? Card.CARS : List.of(Card.of(color()));
         //this constant depends on the road level if the road is overground is 0 if the road is underground it is 0
-        int constant = level() == Level.UNDERGROUND ?1 : 0;
+        int constant = level() == Level.UNDERGROUND ? 1 : 0;
         //the constant constant is intended to give us an indication about how much iterations we will have to do
         //if the level is Overground there is no iterations and if it is underground it does length + 1 iteration
-        for(int i = 0; i<=length* constant; ++i) {
-            if(i != length) {
+        for (int i = 0; i <= length * constant; ++i) {
+            if (i != length) {
                 for (Card card : myCards) {
                     SortedBag<Card> bag = SortedBag.of(i, Card.LOCOMOTIVE, length - i, card);
                     myList.add(bag);
                 }
-            }else{
+            } else {
                 SortedBag<Card> bag = SortedBag.of(length, Card.LOCOMOTIVE);
                 myList.add(bag);
             }
@@ -155,8 +156,8 @@ public final class Route {
     public int additionalClaimCardsCount(SortedBag<Card> claimCards, SortedBag<Card> drawnCards) {
         Preconditions.checkArgument((this.level() == Level.UNDERGROUND) && (drawnCards.size() == Constants.ADDITIONAL_TUNNEL_CARDS));
         int count = 0;
-        for(Card card : drawnCards){
-            if(card == Card.LOCOMOTIVE || claimCards.contains(card)){
+        for (Card card : drawnCards) {
+            if (card == Card.LOCOMOTIVE || claimCards.contains(card)) {
                 ++count;
             }
         }
@@ -164,6 +165,14 @@ public final class Route {
         return count;
     }
 
+    /**
+     * Claim points int.
+     *
+     * @return the int
+     */
+    public int claimPoints() {
+        return Constants.ROUTE_CLAIM_POINTS.get(length);
+    }
 
 
     /**
@@ -173,18 +182,6 @@ public final class Route {
         OVERGROUND,
         UNDERGROUND
     }
-
-
-    /**
-     * Claim points int.
-     *
-     * @return the int
-     */
-    public int claimPoints(){
-        return Constants.ROUTE_CLAIM_POINTS.get(length);
-    }
-
-
 
 
 }

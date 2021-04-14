@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A Trail : this
+ * Trail : this class represents a trail
  *
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)
@@ -38,7 +38,6 @@ public final class Trail {
     }
 
 
-
     /**
      * Creates a List of trail that are only composed of one different route
      *
@@ -48,7 +47,7 @@ public final class Trail {
     private static List<Trail> trivialTrailCreation(List<Route> routes) {
         List<Trail> trails = new ArrayList<>();
         for (Route route : routes) {
-            trails.add(new Trail(List.of(route),route.station1(),route.station2()));
+            trails.add(new Trail(List.of(route), route.station1(), route.station2()));
         }
         return trails;
     }
@@ -61,10 +60,10 @@ public final class Trail {
      */
     public static Trail longest(List<Route> routes) {
         if (routes.isEmpty())
-            return new Trail(new ArrayList<>(),null,null);
+            return new Trail(new ArrayList<>(), null, null);
         List<Trail> tempTrails = new ArrayList<>();
         List<Trail> trailsToBeTested = trivialTrailCreation(routes);
-        Trail saved = new Trail(new ArrayList<>(),null,null);
+        Trail saved = new Trail(new ArrayList<>(), null, null);
         while (!trailsToBeTested.isEmpty()) {
             for (Trail trail : trailsToBeTested) {
                 if (trail.length() == 0)
@@ -76,10 +75,10 @@ public final class Trail {
                 for (Route route : routesToTest) {
                     List<Station> stations = route.stations();
                     if (stations.contains(trail.station2)) {
-                        tempTrails.add(trail.addARouteToTheRight(route,trail.station2));
+                        tempTrails.add(trail.addARouteToTheRight(route, trail.station2));
                         canBeContinued = true;
                     } else if (stations.contains(trail.station1)) {
-                        tempTrails.add(trail.addARouteToTheLeft(route,trail.station1));
+                        tempTrails.add(trail.addARouteToTheLeft(route, trail.station1));
                         canBeContinued = true;
                     }
                 }
@@ -102,10 +101,10 @@ public final class Trail {
      * @param route (Route) the route that must be added
      * @return the trail considered modified, with a route added to the right
      */
-    private Trail addARouteToTheRight(Route route,Station commonStation) { //for this class to be static, a copy of routesOfTheTrailIsMade
+    private Trail addARouteToTheRight(Route route, Station commonStation) { //for this class to be static, a copy of routesOfTheTrailIsMade
         List<Route> myRoutes = new ArrayList<>(routesOfTheTrail);
         myRoutes.add(route);
-        return new Trail(myRoutes,this.station1,route.stationOpposite(commonStation));
+        return new Trail(myRoutes, this.station1, route.stationOpposite(commonStation));
     }
 
     /**
@@ -114,10 +113,10 @@ public final class Trail {
      * @param route (Route) the route that must be added
      * @return the trail considered modified, with a route added to the left
      */
-    private Trail addARouteToTheLeft(Route route,Station commonStation) {
+    private Trail addARouteToTheLeft(Route route, Station commonStation) {
         List<Route> myRoutes = new ArrayList<>(routesOfTheTrail);
         myRoutes.add(route);
-        return new Trail(myRoutes,route.stationOpposite(commonStation),this.station2);
+        return new Trail(myRoutes, route.stationOpposite(commonStation), this.station2);
     }
 
     /**

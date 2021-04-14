@@ -8,7 +8,7 @@ import ch.epfl.tchu.game.Trail;
 import java.util.List;
 
 /**
- * Info : this class gathers all the info
+ * Info : this class gathers all the info needed in the game
  *
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)

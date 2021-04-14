@@ -226,7 +226,7 @@ public final class GameState extends PublicGameState {
      * @return (boolean) : true if the last turn begin
      */
     public boolean lastTurnBegins() {
-        return lastPlayer() == null && currentPlayerState().carCount() <= 2;
+        return lastPlayer() == null && currentPlayerState().carCount() <=2;
     }
 
     /**

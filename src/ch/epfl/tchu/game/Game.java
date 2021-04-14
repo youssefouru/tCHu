@@ -5,6 +5,7 @@ import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.gui.Info;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -66,16 +67,15 @@ public final class Game {
             transmitInfo(players, currentPlayerInfo.canPlay());
             switch (currentPlayer.nextTurn()) {
                 case DRAW_TICKETS:
-                    //TODO : supprime le math.min
-                    int numberOfTickets = Constants.IN_GAME_TICKETS_COUNT;
-                    SortedBag<Ticket> drawnTickets = gameState.topTickets(numberOfTickets);
-                    transmitInfo(players, currentPlayerInfo.drewTickets(numberOfTickets));
+                    SortedBag<Ticket> drawnTickets = gameState.topTickets(Constants.IN_GAME_TICKETS_COUNT);
+                    transmitInfo(players, currentPlayerInfo.drewTickets(Constants.IN_GAME_TICKETS_COUNT));
                     SortedBag<Ticket> chosenTickets = currentPlayer.chooseTickets(drawnTickets);
                     gameState = gameState.withChosenAdditionalTickets(drawnTickets, chosenTickets);
                     transmitInfo(players, currentPlayerInfo.keptTickets(chosenTickets.size()));
 
                     break;
                 case DRAW_CARDS:
+
                     for (int i = 0; i < NUMBER_OF_CARDS_DREW; ++i) {
                         if (i == 1) {
                             updateStates(players, gameState);
@@ -153,9 +153,10 @@ public final class Game {
         Map<PlayerId, Integer> mapPoints = new EnumMap<>(PlayerId.class);
 
         for (PlayerId playerId : PlayerId.ALL) {
-            int bonus = playerTheLongestTrails.contains(playerId) ? 10 : 0;
+            //we verify if the player is among the player who has the longest trail and if he is among them he can have the bonus
+            int bonus = playerTheLongestTrails.contains(playerId) ? Constants.LONGEST_TRAIL_BONUS_POINTS : 0;
             mapPoints.put(playerId, gameState.playerState(playerId).finalPoints() + bonus);
-            if (bonus == 10) {
+            if (bonus == Constants.LONGEST_TRAIL_BONUS_POINTS) {
                 transmitInfo(players, playersInfos.get(playerId).getsLongestTrailBonus(mapOfTrails.get(playerId)));
             }
         }
@@ -168,10 +169,9 @@ public final class Game {
             transmitInfo(players, playersInfos.get(listOfPlayer.get(0)).won(winnerPoint, looserPoint));
         } else {
             int points = mapPoints.get(listOfPlayer.get(0));
-            List<String> names = new ArrayList<>();
-            for (PlayerId playerId : listOfPlayer) {
-                names.add(playerNames.get(playerId));
-            }
+            List<String> names = listOfPlayer.stream().
+                    map(playerNames::get).
+                    collect(Collectors.toList());
             transmitInfo(players, Info.draw(names, points));
         }
 
@@ -196,7 +196,7 @@ public final class Game {
                 maxLength = longestTrailList.get(playerId).length();
             }
         }
-        List<PlayerId> playerIdList = new LinkedList<>();
+        List<PlayerId> playerIdList = new ArrayList<>();
         for (PlayerId playerId : PlayerId.ALL) {
             if (longestTrailList.get(playerId).length() == maxLength) {
                 playerIdList.add(playerId);

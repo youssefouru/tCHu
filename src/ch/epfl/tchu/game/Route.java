@@ -126,8 +126,8 @@ public final class Route {
      */
     public List<SortedBag<Card>> possibleClaimCards() {
         List<SortedBag<Card>> myList = new ArrayList<>();
-        //this list contains all the cards if the color of the route is null or just the of the color of the route if it's not null
-        List<Card> myCards = color() == null ? Card.CARS : List.of(Card.of(color()));
+        //this list contains all the cards if the color of the route is null or just a card of the color of the route if it's not null
+        List<Card> myCards = color() == null ? Card.CARS : List.of(Card.of(color));
         //this constant depends on the road level if the road is overground is 0 if the road is underground it is 0
         int constant = level() == Level.UNDERGROUND ? 1 : 0;
         //the constant constant is intended to give us an indication about how much iterations we will have to do

@@ -2,7 +2,9 @@ package ch.epfl.tchu.game;
 
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Trail : this class represents a trail
@@ -37,21 +39,14 @@ public final class Trail {
         return i;
     }
 
-
-    /**
-     * Creates a List of trail that are only composed of one different route
-     *
-     * @param routes (List<Route>) : the basic routes that serve the trivialTrailCreation
-     * @return trails (Trail) : A list of trail that are only composed of one road
-     */
-    private static List<Trail> trivialTrailCreation(List<Route> routes) {
+    private static List<Trail> trailCreation(List<Route> routes){
         List<Trail> trails = new ArrayList<>();
-        for (Route route : routes) {
-            trails.add(new Trail(List.of(route), route.station1(), route.station2()));
+        for (Route route: routes) {
+            trails.add(new Trail(List.of(route),route.station1(),route.station2()));
+            trails.add(new Trail(List.of(route),route.station2(),route.station1()));
         }
         return trails;
     }
-
     /**
      * Return the longest that can be created from a given list of routes
      *
@@ -62,27 +57,22 @@ public final class Trail {
         if (routes.isEmpty())
             return new Trail(new ArrayList<>(), null, null);
         List<Trail> tempTrails = new ArrayList<>();
-        List<Trail> trailsToBeTested = trivialTrailCreation(routes);
+        //we create a list of trails composed of each route that we want to check what is the is the longest trail
+        List<Trail> trailsToBeTested = trailCreation(routes);
         Trail saved = new Trail(new ArrayList<>(), null, null);
         while (!trailsToBeTested.isEmpty()) {
             for (Trail trail : trailsToBeTested) {
                 if (trail.length() == 0)
                     continue;
-                //this boolean will determine if the trail can be continued or not that will help us when we want to take the maximum trail between the ones that only can not be continued
-                boolean canBeContinued = false;
                 List<Route> routesToTest = new ArrayList<>(routes);
                 routesToTest.removeAll(trail.routesOfTheTrail);
                 for (Route route : routesToTest) {
                     List<Station> stations = route.stations();
                     if (stations.contains(trail.station2)) {
                         tempTrails.add(trail.addARouteToTheRight(route, trail.station2));
-                        canBeContinued = true;
-                    } else if (stations.contains(trail.station1)) {
-                        tempTrails.add(trail.addARouteToTheLeft(route, trail.station1));
-                        canBeContinued = true;
                     }
                 }
-                if (!canBeContinued && saved.length() < trail.length()) {
+                if ( saved.length() < trail.length()) {
                     saved = trail;
                 }
 
@@ -105,18 +95,6 @@ public final class Trail {
         List<Route> myRoutes = new ArrayList<>(routesOfTheTrail);
         myRoutes.add(route);
         return new Trail(myRoutes, this.station1, route.stationOpposite(commonStation));
-    }
-
-    /**
-     * add a route to the left of the list of routes of the train
-     *
-     * @param route (Route) the route that must be added
-     * @return the trail considered modified, with a route added to the left
-     */
-    private Trail addARouteToTheLeft(Route route, Station commonStation) {
-        List<Route> myRoutes = new ArrayList<>(routesOfTheTrail);
-        myRoutes.add(route);
-        return new Trail(myRoutes, route.stationOpposite(commonStation), this.station2);
     }
 
     /**

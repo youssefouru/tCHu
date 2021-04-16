@@ -89,7 +89,7 @@ public final class StationPartition implements StationConnectivity {
         /**
          * this methods builds a StationPartition
          *
-         * @return  (StationPartition) : a new StationPartition
+         * @return (StationPartition) : a new StationPartition
          */
         public StationPartition build() {
             for (int i = 0; i < stationSet.length; ++i) {

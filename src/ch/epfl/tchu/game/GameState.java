@@ -16,10 +16,10 @@ import java.util.Random;
  * @author Louis Yves André Barinka (329847)
  */
 public final class GameState extends PublicGameState {
+    private final static int LAST_TURN_CARS = 2;
     private final Deck<Ticket> tickets;
     private final CardState cardState;
     private final Map<PlayerId, PlayerState> playerState;
-    private final static int LAST_TURN_CARS = 2;
 
     /**
      * Constructor of GameState
@@ -227,7 +227,7 @@ public final class GameState extends PublicGameState {
      * @return (boolean) : true if the last turn begin
      */
     public boolean lastTurnBegins() {
-        return lastPlayer() == null && currentPlayerState().carCount() <=LAST_TURN_CARS;
+        return lastPlayer() == null && currentPlayerState().carCount() <= LAST_TURN_CARS;
     }
 
     /**

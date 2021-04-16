@@ -122,7 +122,7 @@ public final class Route {
     /**
      * this method returns a list of all the possible claim card that we need to take this route
      *
-     * @return (List<SortedBag<Card>>) :  a list of card's sorted bag that we need to take this route
+     * @return (List < SortedBag < Card > >) :  a list of card's sorted bag that we need to take this route
      */
     public List<SortedBag<Card>> possibleClaimCards() {
         List<SortedBag<Card>> possibleClaimCard = new ArrayList<>();

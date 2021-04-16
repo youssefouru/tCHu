@@ -47,11 +47,11 @@ public enum Card {
      * this method creat a card of a color that we have in parameter
      *
      * @param color (Color) : color of the card
-     * @return card (Card) : return the card with the color that has been chosen in parameter
+     * @return (Card) : return the card with the color that has been chosen in parameter
      */
     public static Card of(Color color) {
-        for(Card card : ALL){
-            if(card.color.equals(color))
+        for (Card card : ALL) {
+            if (card.color.equals(color))
                 return card;
         }
         return null;
@@ -60,7 +60,7 @@ public enum Card {
     /**
      * this methode returns the color of the card
      *
-     * @return color (Color) : the color of the card
+     * @return (Color) : the color of the card
      */
     public Color color() {
         return this.color;

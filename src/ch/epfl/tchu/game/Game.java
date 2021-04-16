@@ -41,7 +41,7 @@ public final class Game {
         }
         transmitInfo(players, playersInfos.
                 get(gameState.
-                        currentPlayerId()).
+                currentPlayerId()).
                 willPlayFirst());
 
         Map<PlayerId, String> infosOfTickets = new HashMap<>();
@@ -50,6 +50,7 @@ public final class Game {
             player.setInitialTicketChoice(gameState.topTickets(Constants.INITIAL_TICKETS_COUNT));
             gameState = gameState.withoutTopTickets(Constants.INITIAL_TICKETS_COUNT);
         }
+
         updateStates(players, gameState);
         for (PlayerId playerId : PlayerId.ALL) {
             Player player = players.get(playerId);
@@ -57,9 +58,11 @@ public final class Game {
             gameState = gameState.withInitiallyChosenTickets(playerId, chosenTickets);
             infosOfTickets.put(playerId, playersInfos.get(playerId).keptTickets(chosenTickets.size()));
         }
+
         for (PlayerId playerId : PlayerId.ALL) {
             transmitInfo(players, infosOfTickets.get(playerId));
         }
+
         while (true) {
             Player currentPlayer = players.get(gameState.currentPlayerId());
             updateStates(players, gameState);
@@ -75,7 +78,6 @@ public final class Game {
 
                     break;
                 case DRAW_CARDS:
-
                     for (int i = 0; i < NUMBER_OF_CARDS_DREW; ++i) {
                         if (i == 1) {
                             updateStates(players, gameState);
@@ -118,6 +120,7 @@ public final class Game {
                             }
                         }
                     }
+
                     if (playedCard.isEmpty()) {
                         transmitInfo(players, currentPlayerInfo.didNotClaimRoute(claimedRoute));
                         break;
@@ -141,6 +144,8 @@ public final class Game {
             gameState = gameState.forNextTurn();
 
         }
+
+
         updateStates(players, gameState);
 
 
@@ -149,9 +154,9 @@ public final class Game {
             PlayerState playerState = gameState.playerState(playerId);
             mapOfTrails.put(playerId, Trail.longest(playerState.routes()));
         }
+
         List<PlayerId> playerTheLongestTrails = getsBonus(mapOfTrails);
         Map<PlayerId, Integer> mapPoints = new EnumMap<>(PlayerId.class);
-
         for (PlayerId playerId : PlayerId.ALL) {
             //we verify if the player is among the player who has the longest trail and if he is among them he can have the bonus
             int bonus = playerTheLongestTrails.contains(playerId) ? Constants.LONGEST_TRAIL_BONUS_POINTS : 0;

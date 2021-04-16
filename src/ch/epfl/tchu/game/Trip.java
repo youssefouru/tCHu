@@ -14,11 +14,11 @@ import java.util.Objects;
  */
 public final class Trip {
 
-     private final Station from;
+    private final Station from;
 
-     private final Station to;
+    private final Station to;
 
-     private final int points;
+    private final int points;
 
     /**
      * constructor of Trip
@@ -87,7 +87,7 @@ public final class Trip {
      * @return (int) : it returns the points based on the connectivity of the from's station and the to's station
      */
     public int points(StationConnectivity connectivity) {
-        return (connectivity.connected(from, to) ? points : points*(-1));
+        return (connectivity.connected(from, to) ? points : points * (-1));
     }
 }
 

@@ -26,7 +26,7 @@ public class PublicCardState {
      * @param discardsSize (int)       : the number of cards in the discard
      */
     public PublicCardState(List<Card> faceUpCards, int deckSize, int discardsSize) {
-        Preconditions.checkArgument(faceUpCards.size() == Constants.FACE_UP_CARDS_COUNT && (discardsSize >= 0 && deckSize>=0) );
+        Preconditions.checkArgument(faceUpCards.size() == Constants.FACE_UP_CARDS_COUNT && (discardsSize >= 0 && deckSize >= 0));
         this.faceUpCards = List.copyOf(faceUpCards);
         this.deckSize = deckSize;
         this.discardsSize = discardsSize;
@@ -44,7 +44,7 @@ public class PublicCardState {
     /**
      * return the faceUpCards
      *
-     * @return (List<Card>) : the attribute faceUpCards
+     * @return (List < Card >) : the attribute faceUpCards
      */
     public List<Card> faceUpCards() {
         return faceUpCards;

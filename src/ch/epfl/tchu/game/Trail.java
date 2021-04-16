@@ -2,9 +2,7 @@ package ch.epfl.tchu.game;
 
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Trail : this class represents a trail
@@ -22,8 +20,8 @@ public final class Trail {
      * Constructor of Trail
      *
      * @param routesOfTheTrail (List<Route>) : the route list of each
-     * @param  s1 (Station) : the first station of the trail
-     * @param  s2 (Station) : the second station of the trail
+     * @param s1               (Station) : the first station of the trail
+     * @param s2               (Station) : the second station of the trail
      */
     private Trail(List<Route> routesOfTheTrail, Station s1, Station s2) {
         this.routesOfTheTrail = List.copyOf(routesOfTheTrail);
@@ -41,19 +39,20 @@ public final class Trail {
         return i;
     }
 
-    private static List<Trail> trailCreation(List<Route> routes){
+    private static List<Trail> trailCreation(List<Route> routes) {
         List<Trail> trails = new ArrayList<>();
-        for (Route route: routes) {
-            trails.add(new Trail(List.of(route),route.station1(),route.station2()));
-            trails.add(new Trail(List.of(route),route.station2(),route.station1()));
+        for (Route route : routes) {
+            trails.add(new Trail(List.of(route), route.station1(), route.station2()));
+            trails.add(new Trail(List.of(route), route.station2(), route.station1()));
         }
         return trails;
     }
+
     /**
      * Return the longest that can be created from a given list of routes
      *
      * @param routes (List<Route>) : the route list we’re going to use
-     * @return  (Trail) : the longest trail that can be created from those routes
+     * @return (Trail) : the longest trail that can be created from those routes
      */
     public static Trail longest(List<Route> routes) {
         if (routes.isEmpty())
@@ -74,7 +73,7 @@ public final class Trail {
                         tempTrails.add(trail.addARouteToTheRight(route, trail.station2));
                     }
                 }
-                if ( saved.length() < trail.length()) {
+                if (saved.length() < trail.length()) {
                     saved = trail;
                 }
 
@@ -120,7 +119,7 @@ public final class Trail {
     /**
      * the complementary extreme location to station1
      *
-     * @return  (Station) : the other extreme Station
+     * @return (Station) : the other extreme Station
      */
     public Station station2() {
         return station2;
@@ -129,7 +128,7 @@ public final class Trail {
     /**
      * this method returns a textual representation of the trail
      *
-     * @return  (String) : the textual representation of the trail
+     * @return (String) : the textual representation of the trail
      */
     @Override
     public String toString() {

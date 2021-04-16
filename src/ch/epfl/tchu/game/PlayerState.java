@@ -5,7 +5,6 @@ import ch.epfl.tchu.SortedBag;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * A PlayerState : this class represents the private part of a playerState
@@ -122,7 +121,7 @@ public final class PlayerState extends PublicPlayerState {
      * @return (boolean) : if the player can claim the route route in parameter
      */
     public boolean canClaimRoute(Route route) {
-        return route.length()<=carCount() && !possibleClaimCards(route).isEmpty()  ;
+        return route.length() <= carCount() && !possibleClaimCards(route).isEmpty();
     }
 
     /**
@@ -169,7 +168,7 @@ public final class PlayerState extends PublicPlayerState {
                 bagOfCards = SortedBag.of(i, Card.LOCOMOTIVE, additionalCardsCount - i, card);
 
             } else {
-                 bagOfCards = SortedBag.of(additionalCardsCount, Card.LOCOMOTIVE);
+                bagOfCards = SortedBag.of(additionalCardsCount, Card.LOCOMOTIVE);
             }
             if (cards.contains(bagOfCards)) {
                 myList.add(bagOfCards);

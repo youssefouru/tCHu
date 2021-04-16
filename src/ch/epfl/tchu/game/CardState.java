@@ -3,7 +3,10 @@ package ch.epfl.tchu.game;
 import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
 
 /**
  * A CardState : this class represent the private part of a CardState
@@ -37,7 +40,7 @@ public final class CardState extends PublicCardState {
      * @return (CardState) : a card state with the deck in parameter as a deck
      */
     public static CardState of(Deck<Card> deck) {
-        Preconditions.checkArgument(deck.size()>=Constants.FACE_UP_CARDS_COUNT);
+        Preconditions.checkArgument(deck.size() >= Constants.FACE_UP_CARDS_COUNT);
         return new CardState(deck.withoutTopCards(Constants.FACE_UP_CARDS_COUNT), deck.topCards(Constants.FACE_UP_CARDS_COUNT).toList(), SortedBag.of());
     }
 

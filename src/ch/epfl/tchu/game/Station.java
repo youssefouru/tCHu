@@ -17,7 +17,7 @@ public final class Station {
     /**
      * Constructor of Station
      *
-     * @param id (int) : the id of the station
+     * @param id   (int) : the id of the station
      * @param name (String) : the name of the station
      */
     public Station(int id, String name) {

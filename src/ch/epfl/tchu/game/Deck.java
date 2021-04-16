@@ -76,7 +76,7 @@ public final class Deck<C extends Comparable<C>> {
      * this methode returns a multiset of the count topCards
      *
      * @param count (int) : number of the top cards that we want from the top of the deck
-     * @return (SortedBag<C>) : sorted bag of count topCards from this deck
+     * @return (SortedBag < C >) : sorted bag of count topCards from this deck
      */
     public SortedBag<C> topCards(int count) {
         Preconditions.checkArgument(count >= 0 && count <= size());
@@ -88,7 +88,7 @@ public final class Deck<C extends Comparable<C>> {
     /**
      * return a new deck without the top card
      *
-     * @return (Deck<C>):  a new Deck composed with the same cards without the top Card
+     * @return (Deck < C >):  a new Deck composed with the same cards without the top Card
      */
     public Deck<C> withoutTopCard() {
         Preconditions.checkArgument(!isEmpty());
@@ -101,7 +101,7 @@ public final class Deck<C extends Comparable<C>> {
      * this method return a new deck without the count topCards
      *
      * @param count (int) : number of top cards that we remove from deck
-     * @return (Deck<C>) : a new deck composed of the cards of this deck without the count first cards
+     * @return (Deck < C >) : a new deck composed of the cards of this deck without the count first cards
      */
     public Deck<C> withoutTopCards(int count) {
         Preconditions.checkArgument(count >= 0 && count <= size());

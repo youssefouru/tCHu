@@ -2,9 +2,10 @@ package ch.epfl.tchu.game;
 
 import ch.epfl.tchu.Preconditions;
 
-import java.util.*;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * A Ticket : this class represents a ticket of a list of trips
@@ -30,14 +31,6 @@ public final class Ticket implements Comparable<Ticket> {
         text = computeText(this.trips);
     }
 
-    private boolean check(List<Trip> trips){
-        if(trips.isEmpty()){
-            return false;
-        }
-        String name = trips.get(0).from().name();
-       return trips.stream().allMatch((trip -> trip.from().name().equals(name)));
-
-    }
     /**
      * Constructor of Ticket
      *
@@ -53,7 +46,7 @@ public final class Ticket implements Comparable<Ticket> {
      * this method compute and return the text which has been to be written on the ticket based on the trips in parameter
      *
      * @param trips (List<Trip>) : Set of the trips whose ticket we want to print
-     * @return  (String)     : the text which has to be written on the ticket corresponding to the trips in parameter
+     * @return (String)     : the text which has to be written on the ticket corresponding to the trips in parameter
      */
     private static String computeText(List<Trip> trips) {
         Set<String> destinations = new TreeSet<>();
@@ -68,16 +61,25 @@ public final class Ticket implements Comparable<Ticket> {
         }
         String rightPart = String.join(", ", destinations);
         if (destinations.size() == 1) {
-            return  String.format("%s - %s", departureStation, rightPart);
+            return String.format("%s - %s", departureStation, rightPart);
         } else {
             return String.format("%s - {%s}", departureStation, rightPart);
         }
     }
 
+    private boolean check(List<Trip> trips) {
+        if (trips.isEmpty()) {
+            return false;
+        }
+        String name = trips.get(0).from().name();
+        return trips.stream().allMatch((trip -> trip.from().name().equals(name)));
+
+    }
+
     /**
      * return the text written on the ticket
      *
-     * @return  (String) : the attribute text
+     * @return (String) : the attribute text
      */
     public String text() {
         return text;
@@ -87,7 +89,7 @@ public final class Ticket implements Comparable<Ticket> {
      * this method the number of points the ticket is worth knowing that the connectivity in parameter is that of the player owning the ticket
      *
      * @param connectivity (StationConnectivity) : represent network to which we want to check the connection of the two stations from and to
-     * @return  (int) : it returns the points based on the connectivity of the from's station and the to's station
+     * @return (int) : it returns the points based on the connectivity of the from's station and the to's station
      */
     public int points(StationConnectivity connectivity) {
         int maxPointsEarned = 0;
@@ -122,7 +124,7 @@ public final class Ticket implements Comparable<Ticket> {
      * this method compare this (Ticket) to that (That) based on the alphabetic order
      *
      * @param ticket (Ticket) : Ticket that we compare this to
-     * @return  (int) : return a number based on the comparison
+     * @return (int) : return a number based on the comparison
      */
     @Override
     public int compareTo(Ticket ticket) {
@@ -132,7 +134,7 @@ public final class Ticket implements Comparable<Ticket> {
     /**
      * this method returns the text written on this ticket
      *
-     * @return  (Text) : return the same return of the text() method
+     * @return (Text) : return the same return of the text() method
      */
     @Override
     public String toString() {

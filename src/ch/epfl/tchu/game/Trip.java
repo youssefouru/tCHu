@@ -56,7 +56,7 @@ public final class Trip {
     /**
      * this method return the departure Station of the Trip
      *
-     * @return from (Station) : return the  attribute from
+     * @return (Station) : return the  attribute from
      */
     public Station from() {
         return from;
@@ -65,7 +65,7 @@ public final class Trip {
     /**
      * this method return the arrival Station of the Trip
      *
-     * @return to (Station) : return the  attribute to
+     * @return (Station) : return the  attribute to
      */
     public Station to() {
         return to;
@@ -74,7 +74,7 @@ public final class Trip {
     /**
      * this method return the points of the trip
      *
-     * @return points (int) : return the  attribute points
+     * @return (int) : return the  attribute points
      */
     public int points() {
         return points;
@@ -84,7 +84,7 @@ public final class Trip {
      * this method check if the from and to station based on their connectivity
      *
      * @param connectivity (StationConnectivity) : represent network to which we want to check the connection of the two stations from and to
-     * @return points (int) : it returns the points based on the connectivity of the from's station and the to's station
+     * @return (int) : it returns the points based on the connectivity of the from's station and the to's station
      */
     public int points(StationConnectivity connectivity) {
         return (connectivity.connected(from, to) ? points : points*(-1));

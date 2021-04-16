@@ -55,7 +55,7 @@ public final class Deck<C extends Comparable<C>> {
     /**
      * this method return true if there is no card in the deck
      *
-     * @return (boolean) : it returns true iff the size of the attribute cards is 0
+     * @return (boolean) : it returns true iff the cardSize is equal to 0
      */
     public boolean isEmpty() {
         return size() == 0;
@@ -64,7 +64,7 @@ public final class Deck<C extends Comparable<C>> {
     /**
      * this method returns the card in the top of the deck without deleting it from the deck
      *
-     * @return card (C) : the last element of the attribute card
+     * @return (C) : the last element of the attribute card
      */
     public C topCard() {
         Preconditions.checkArgument(!isEmpty());
@@ -76,7 +76,7 @@ public final class Deck<C extends Comparable<C>> {
      * this methode returns a multiset of the count topCards
      *
      * @param count (int) : number of the top cards that we want from the top of the deck
-     * @return sortedBag (SortedBag<C>) : sorted bag of count topCards from this deck
+     * @return (SortedBag<C>) : sorted bag of count topCards from this deck
      */
     public SortedBag<C> topCards(int count) {
         Preconditions.checkArgument(count >= 0 && count <= size());
@@ -88,7 +88,7 @@ public final class Deck<C extends Comparable<C>> {
     /**
      * return a new deck without the top card
      *
-     * @return deck (Deck<C>):  a new Deck composed with the same cards without the top Card
+     * @return (Deck<C>):  a new Deck composed with the same cards without the top Card
      */
     public Deck<C> withoutTopCard() {
         Preconditions.checkArgument(!isEmpty());
@@ -101,7 +101,7 @@ public final class Deck<C extends Comparable<C>> {
      * this method return a new deck without the count topCards
      *
      * @param count (int) : number of top cards that we remove from deck
-     * @return deck (Deck<C>) : a new deck composed of the cards of this deck without the count first cards
+     * @return (Deck<C>) : a new deck composed of the cards of this deck without the count first cards
      */
     public Deck<C> withoutTopCards(int count) {
         Preconditions.checkArgument(count >= 0 && count <= size());

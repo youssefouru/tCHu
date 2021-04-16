@@ -30,7 +30,7 @@ public final class Station {
     /**
      * return the identification number of the station
      *
-     * @return  (int) : the attribute id
+     * @return (int) : the attribute id
      */
     public int id() {
         return id;
@@ -48,7 +48,7 @@ public final class Station {
     /**
      * return the name of the Station
      *
-     * @return (String): return the the return of the function name()
+     * @return (String): the name of the station
      */
     @Override
     public String toString() {

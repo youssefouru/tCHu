@@ -55,7 +55,7 @@ public final class Ticket implements Comparable<Ticket> {
      * this method compute and return the text which has been to be written on the ticket based on the trips in parameter
      *
      * @param trips (List<Trip>) : Set of the trips whose ticket we want to print
-     * @return text (String)     : the text which has to be written on the ticket corresponding to the trips in parameter
+     * @return  (String)     : the text which has to be written on the ticket corresponding to the trips in parameter
      */
     private static String computeText(List<Trip> trips) {
         Set<String> destinations = new TreeSet<>();
@@ -79,7 +79,7 @@ public final class Ticket implements Comparable<Ticket> {
     /**
      * return the text written on the ticket
      *
-     * @return text (String) : the attribute text
+     * @return  (String) : the attribute text
      */
     public String text() {
         return text;
@@ -89,7 +89,7 @@ public final class Ticket implements Comparable<Ticket> {
      * this method the number of points the ticket is worth knowing that the connectivity in parameter is that of the player owning the ticket
      *
      * @param connectivity (StationConnectivity) : represent network to which we want to check the connection of the two stations from and to
-     * @return points (int) : it returns the points based on the connectivity of the from's station and the to's station
+     * @return  (int) : it returns the points based on the connectivity of the from's station and the to's station
      */
     public int points(StationConnectivity connectivity) {
         int maxPointsEarned = 0;
@@ -124,7 +124,7 @@ public final class Ticket implements Comparable<Ticket> {
      * this method compare this (Ticket) to that (That) based on the alphabetic order
      *
      * @param ticket (Ticket) : Ticket that we compare this to
-     * @return compare (int) : return a number based on the comparison
+     * @return  (int) : return a number based on the comparison
      */
     @Override
     public int compareTo(Ticket ticket) {
@@ -134,7 +134,7 @@ public final class Ticket implements Comparable<Ticket> {
     /**
      * this method returns the text written on this ticket
      *
-     * @return text (Text) : return the same return of the text() method
+     * @return  (Text) : return the same return of the text() method
      */
     @Override
     public String toString() {

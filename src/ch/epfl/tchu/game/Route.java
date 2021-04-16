@@ -47,7 +47,7 @@ public final class Route {
     /**
      * this method return the id of the Route
      *
-     * @return id (int) : the attribute id
+     * @return (String) : the attribute id
      */
     public String id() {
         return this.id;
@@ -56,7 +56,7 @@ public final class Route {
     /**
      * this method return the station1 of the Route
      *
-     * @return station1(Station) :the attribute station1
+     * @return (Station) :the attribute station1
      */
     public Station station1() {
         return this.station1;
@@ -65,7 +65,7 @@ public final class Route {
     /**
      * this method return the station2 of the Route
      *
-     * @return station2(Station) :the attribute station2
+     * @return (Station) :the attribute station2
      */
     public Station station2() {
         return this.station2;
@@ -74,16 +74,16 @@ public final class Route {
     /**
      * this method return the length of the Route
      *
-     * @return length(int) :the attribute length
+     * @return (int) :the attribute length
      */
     public int length() {
         return this.length;
     }
 
     /**
-     * this method return the length of the Route
+     * this method return the level of the Route
      *
-     * @return length(int) :the attribute length
+     * @return (Level) :the attribute level
      */
     public Level level() {
         return this.level;
@@ -92,7 +92,7 @@ public final class Route {
     /**
      * this method return the color of the Route
      *
-     * @return color(Color) :the attribute color
+     * @return (Color) :the attribute color
      */
     public Color color() {
         return this.color;
@@ -101,7 +101,7 @@ public final class Route {
     /**
      * this method return the List of the stations of the Route
      *
-     * @return stations(List < Station >) :a list of the two Stations
+     * @return (List < Station >) :a list of the two Stations
      */
     public List<Station> stations() {
         return List.of(station1, station2);
@@ -111,7 +111,7 @@ public final class Route {
      * this method returns the opposite station to the one in parameter or throw the IllegalArgumentException if the station in parameter isn't the station1 nor the station2
      *
      * @param station (Station)  : the station that we want the opposite
-     * @return station (Station) : the opposite station to the station in parameter
+     * @return (Station) : the opposite station of the route to the station in parameter
      */
     public Station stationOpposite(Station station) {
         Preconditions.checkArgument(stations().contains(station));
@@ -122,7 +122,7 @@ public final class Route {
     /**
      * this method returns a list of all the possible claim card that we need to take this route
      *
-     * @return a list (List<SortedBag<Card>>) :  a list of card's sorted bag that we need to take this route
+     * @return (List<SortedBag<Card>>) :  a list of card's sorted bag that we need to take this route
      */
     public List<SortedBag<Card>> possibleClaimCards() {
         List<SortedBag<Card>> myList = new ArrayList<>();
@@ -152,7 +152,7 @@ public final class Route {
      *
      * @param claimCards (SortedBag<Card>) : the claim cards
      * @param drawnCards (SortedBag<Card>) : the drawn cards
-     * @return count(int) : number of additional cards which are needed to take a underground route
+     * @return (int) : number of additional cards which are needed to take a underground route
      */
     public int additionalClaimCardsCount(SortedBag<Card> claimCards, SortedBag<Card> drawnCards) {
         Preconditions.checkArgument((this.level() == Level.UNDERGROUND) && (drawnCards.size() == Constants.ADDITIONAL_TUNNEL_CARDS));
@@ -167,9 +167,9 @@ public final class Route {
     }
 
     /**
-     * Claim points int.
+     * this method returns the claim points of a route
      *
-     * @return the int
+     * @return (int) : the claim point of a route
      */
     public int claimPoints() {
         return Constants.ROUTE_CLAIM_POINTS.get(length);

@@ -35,7 +35,7 @@ public class PublicCardState {
     /**
      * this method returns the total number of cards that are not in the hand of the player
      *
-     * @return the total number of cards
+     * @return (int) : the total number of cards of the cardState
      */
     public int totalSize() {
         return faceUpCards.size() + deckSize + discardsSize;
@@ -44,7 +44,7 @@ public class PublicCardState {
     /**
      * return the faceUpCards
      *
-     * @return the attribute faceUpCards
+     * @return (List<Card>) : the attribute faceUpCards
      */
     public List<Card> faceUpCards() {
         return faceUpCards;
@@ -54,7 +54,7 @@ public class PublicCardState {
      * this method returns the slot faceUpCard
      *
      * @param slot (int) : this parameter is the index of card that we want
-     * @return the card the slot face Up card
+     * @return (Card) : the slot faceUpCard
      */
     public Card faceUpCard(int slot) {
         Objects.checkIndex(slot, Constants.FACE_UP_CARDS_COUNT);
@@ -64,7 +64,7 @@ public class PublicCardState {
     /**
      * return the size of the deck
      *
-     * @return the attribute deckSize
+     * @return (int) : the attribute deckSize
      */
     public int deckSize() {
         return deckSize;
@@ -73,7 +73,7 @@ public class PublicCardState {
     /**
      * this method check if the Deck is Empty
      *
-     * @return a boolean which is true if the DeckSize is equals to 0
+     * @return (boolean) : a boolean which is true if the DeckSize is equals to 0
      */
     public boolean isDeckEmpty() {
         return deckSize == 0;
@@ -82,7 +82,7 @@ public class PublicCardState {
     /**
      * returns the discardsSize
      *
-     * @return the attribute discardsSize
+     * @return (int) : the attribute discardsSize
      */
     public int discardsSize() {
         return discardsSize;

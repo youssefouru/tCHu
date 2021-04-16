@@ -23,7 +23,7 @@ public final class Game {
 
 
     /**
-     * this method is the methode that run the game
+     * this method represents the game
      *
      * @param players     (Map<PlayerId, Player>) : map that associate each playerId to the player he refers to
      * @param playerNames (Map<PlayerId, String>) : map that associate each playerId to his name

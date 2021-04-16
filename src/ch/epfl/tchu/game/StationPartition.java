@@ -62,7 +62,7 @@ public final class StationPartition implements StationConnectivity {
          * this method returns the representative of a set of stations
          *
          * @param stationID (int): the id of the station
-         * @return returns the representative of a set of stations
+         * @return (int) : returns the representative of a set of stations
          */
         private int representative(int stationID) {
             if (stationID == stationSet[stationID]) {
@@ -78,7 +78,7 @@ public final class StationPartition implements StationConnectivity {
          *
          * @param station1 (Station) : the first station
          * @param station2 (Station) :  the second station
-         * @return the builder with the two stations connected
+         * @return (Builder) : the builder with the two stations connected
          */
         public Builder connect(Station station1, Station station2) {
             stationSet[representative(station1.id())] = stationSet[representative(station2.id())];
@@ -89,7 +89,7 @@ public final class StationPartition implements StationConnectivity {
         /**
          * this methods builds a StationPartition
          *
-         * @return a new StationPartition
+         * @return  (StationPartition) : a new StationPartition
          */
         public StationPartition build() {
             for (int i = 0; i < stationSet.length; ++i) {

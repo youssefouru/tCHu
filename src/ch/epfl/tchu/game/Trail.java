@@ -22,6 +22,8 @@ public final class Trail {
      * Constructor of Trail
      *
      * @param routesOfTheTrail (List<Route>) : the route list of each
+     * @param  s1 (Station) : the first station of the trail
+     * @param  s2 (Station) : the second station of the trail
      */
     private Trail(List<Route> routesOfTheTrail, Station s1, Station s2) {
         this.routesOfTheTrail = List.copyOf(routesOfTheTrail);
@@ -51,7 +53,7 @@ public final class Trail {
      * Return the longest that can be created from a given list of routes
      *
      * @param routes (List<Route>) : the route list we’re going to use
-     * @return the longest trail that can be created from those routes
+     * @return  (Trail) : the longest trail that can be created from those routes
      */
     public static Trail longest(List<Route> routes) {
         if (routes.isEmpty())
@@ -89,7 +91,7 @@ public final class Trail {
      * add a route to the right of the list of routes of the train
      *
      * @param route (Route) the route that must be added
-     * @return the trail considered modified, with a route added to the right
+     * @return (Trail) the trail considered modified, with a route added to the right
      */
     private Trail addARouteToTheRight(Route route, Station commonStation) { //for this class to be static, a copy of routesOfTheTrailIsMade
         List<Route> myRoutes = new ArrayList<>(routesOfTheTrail);
@@ -100,7 +102,7 @@ public final class Trail {
     /**
      * Give the length of the trail on which it is use on
      *
-     * @return length of the trail
+     * @return (int) : length of the trail
      */
     public int length() {
         return length;
@@ -109,7 +111,7 @@ public final class Trail {
     /**
      * Return the first station from a given trail ( the departure or not, what matters is that it's not the same extreme location than station2
      *
-     * @return A station at the end of the trail
+     * @return (Station) : A station at the end of the trail
      */
     public Station station1() {
         return station1;
@@ -118,7 +120,7 @@ public final class Trail {
     /**
      * the complementary extreme location to station1
      *
-     * @return the other extreme Station
+     * @return  (Station) : the other extreme Station
      */
     public Station station2() {
         return station2;
@@ -127,7 +129,7 @@ public final class Trail {
     /**
      * this method returns a textual representation of the trail
      *
-     * @return the textual representation of the trail
+     * @return  (String) : the textual representation of the trail
      */
     @Override
     public String toString() {

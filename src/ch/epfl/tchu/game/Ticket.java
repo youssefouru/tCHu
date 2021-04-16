@@ -35,9 +35,7 @@ public final class Ticket implements Comparable<Ticket> {
             return false;
         }
         String name = trips.get(0).from().name();
-        Stream<Trip> checkStream = trips.stream();
-        Predicate<Trip> predicate = (trip -> trip.from().name().equals(name));
-       return checkStream.allMatch(predicate);
+       return trips.stream().allMatch((trip -> trip.from().name().equals(name)));
 
     }
     /**

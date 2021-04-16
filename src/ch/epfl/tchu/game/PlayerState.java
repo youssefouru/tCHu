@@ -122,7 +122,7 @@ public final class PlayerState extends PublicPlayerState {
      * @return (boolean) : if the player can claim the route route in parameter
      */
     public boolean canClaimRoute(Route route) {
-        return route.length()>carCount() && !possibleClaimCards(route).isEmpty()  ;
+        return route.length()<=carCount() && !possibleClaimCards(route).isEmpty()  ;
     }
 
     /**

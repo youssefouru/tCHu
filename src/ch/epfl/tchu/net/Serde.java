@@ -46,9 +46,8 @@ public interface Serde<T> {
      * @return (Serde < C >) : returns a serde that can serialize and deserialize an element of the list in parameter
      */
     static <C> Serde<C> oneOf(List<C> list) {
-        Function<C, String> serFunction =(c) -> c == null ?"null":Integer.toString(list.indexOf(c));
-        Function<String, C> deFunction = (s) ->  s.equals("null")?null:list.get(Integer.parseInt(s));
-        return of(serFunction, deFunction);
+        return of(c -> c == null ?"":Integer.toString(list.indexOf(c)),
+                  s ->  s.equals("")?null:list.get(Integer.parseInt(s)));
     }
 
     /**

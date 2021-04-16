@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
  * @author Louis Yves André Barinka (329847)
  */
 public interface Serde<T> {
+
     /**
      * this method returns a serde that use the serFunction to serialize the objects of C and the deFunction to deserialize the String into an object
      *

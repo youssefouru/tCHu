@@ -80,8 +80,8 @@ public final class Deck<C extends Comparable<C>> {
      */
     public SortedBag<C> topCards(int count) {
         Preconditions.checkArgument(count >= 0 && count <= size());
-        List<C> myList = new ArrayList<>(cards.subList(0, count));
-        return SortedBag.of(myList);
+        List<C> topCards = new ArrayList<>(cards.subList(0, count));
+        return SortedBag.of(topCards);
     }
 
 
@@ -92,9 +92,9 @@ public final class Deck<C extends Comparable<C>> {
      */
     public Deck<C> withoutTopCard() {
         Preconditions.checkArgument(!isEmpty());
-        List<C> myList = new ArrayList<>(cards);
-        myList.remove(0);
-        return new Deck<>(myList);
+        List<C> cards = new ArrayList<>(this.cards);
+        cards.remove(0);
+        return new Deck<>(cards);
     }
 
     /**

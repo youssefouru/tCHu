@@ -92,17 +92,17 @@ public interface Serde<T> {
      * @return (Serde<List<C>>) : a serde that can serialize and deserialize a SortedBag of Cs with a Cs serde
      */
     static <C extends Comparable<C>> Serde<SortedBag<C>> bagOf(Serde<C> serde,char character){
+        Serde<List<C>> listSerde = Serde.listOf(serde,character);
+
         return new Serde<>() {
             @Override
             public String serialize(SortedBag<C> bag) {
-                return Serde.listOf(serde,character).
-                                    serialize(bag.toList());
+                return listSerde.serialize(bag.toList());
             }
 
             @Override
             public SortedBag<C> deserialize(String name) {
-                return SortedBag.of(Serde.listOf(serde,character).
-                                    deserialize(name));
+                return SortedBag.of(listSerde.deserialize(name));
             }
         };
     }

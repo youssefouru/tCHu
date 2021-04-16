@@ -50,9 +50,9 @@ public final class CardState extends PublicCardState {
     public CardState withDrawnFaceUpCard(int slot) {
         Objects.checkIndex(slot, Constants.FACE_UP_CARDS_COUNT);
         Preconditions.checkArgument(!deck.isEmpty());
-        List<Card> myList = new ArrayList<>(faceUpCards());
-        myList.set(slot, deck.topCard());
-        return new CardState(deck.withoutTopCard(), myList, discardCards);
+        List<Card> faceUpCards = new ArrayList<>(faceUpCards());
+        faceUpCards.set(slot, deck.topCard());
+        return new CardState(deck.withoutTopCard(), faceUpCards, discardCards);
 
     }
 

@@ -125,26 +125,22 @@ public final class Route {
      * @return (List<SortedBag<Card>>) :  a list of card's sorted bag that we need to take this route
      */
     public List<SortedBag<Card>> possibleClaimCards() {
-        List<SortedBag<Card>> myList = new ArrayList<>();
-        //this list contains all the cards if the color of the route is null or just a card of the color of the route if it's not null
+        List<SortedBag<Card>> possibleClaimCard = new ArrayList<>();
         List<Card> myCards = color() == null ? Card.CARS : List.of(Card.of(color));
-        //this constant depends on the road level if the road is overground is 0 if the road is underground it is 0
-        int constant = level() == Level.UNDERGROUND ? 1 : 0;
-        //the constant constant is intended to give us an indication about how much iterations we will have to do
-        //if the level is Overground there is no iterations and if it is underground it does length + 1 iteration
-        for (int i = 0; i <= length * constant; ++i) {
+        int constant = level() == Level.UNDERGROUND ? length : 0;
+        for (int i = 0; i <= constant; ++i) {
             if (i != length) {
                 for (Card card : myCards) {
                     SortedBag<Card> bag = SortedBag.of(i, Card.LOCOMOTIVE, length - i, card);
-                    myList.add(bag);
+                    possibleClaimCard.add(bag);
                 }
             } else {
                 SortedBag<Card> bag = SortedBag.of(length, Card.LOCOMOTIVE);
-                myList.add(bag);
+                possibleClaimCard.add(bag);
             }
         }
 
-        return myList;
+        return possibleClaimCard;
     }
 
     /**

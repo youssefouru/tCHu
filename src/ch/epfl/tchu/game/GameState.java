@@ -162,9 +162,8 @@ public final class GameState extends PublicGameState {
      */
     public GameState withInitiallyChosenTickets(PlayerId playerId, SortedBag<Ticket> chosenTickets) {
         Preconditions.checkArgument(playerState(playerId).ticketCount() == 0);
-        PlayerState playerState = playerState(playerId).withAddedTickets(chosenTickets);
         Map<PlayerId, PlayerState> map = (new HashMap<>(this.playerState));
-        map.put(playerId, playerState);
+        map.put(playerId,playerState(playerId).withAddedTickets(chosenTickets));
         return new GameState(tickets, cardState, currentPlayerId(), map, lastPlayer());
     }
 

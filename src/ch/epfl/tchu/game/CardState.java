@@ -52,7 +52,7 @@ public final class CardState extends PublicCardState {
      */
     public CardState withDrawnFaceUpCard(int slot) {
         Objects.checkIndex(slot, Constants.FACE_UP_CARDS_COUNT);
-        Preconditions.checkArgument(!deck.isEmpty());
+        Preconditions.checkArgument(!isDeckEmpty());
         List<Card> faceUpCards = new ArrayList<>(faceUpCards());
         faceUpCards.set(slot, deck.topCard());
         return new CardState(deck.withoutTopCard(), faceUpCards, discardCards);
@@ -66,7 +66,7 @@ public final class CardState extends PublicCardState {
      * @return (Card) : the deck's top card
      */
     public Card topDeckCard() {
-        Preconditions.checkArgument(!deck.isEmpty());
+        Preconditions.checkArgument(!isDeckEmpty());
         return deck.topCard();
     }
 
@@ -77,7 +77,7 @@ public final class CardState extends PublicCardState {
      * @return (CardState) : a new CardState created using the deck of this CardState without the top Card
      */
     public CardState withoutTopDeckCard() {
-        Preconditions.checkArgument(!deck.isEmpty());
+        Preconditions.checkArgument(!isDeckEmpty());
         return new CardState(deck.withoutTopCard(), faceUpCards(), discardCards);
     }
 
@@ -89,7 +89,7 @@ public final class CardState extends PublicCardState {
      * @return (CardState) : a deck recreated from the discard and shuffled
      */
     public CardState withDeckRecreatedFromDiscards(Random rng) {
-        Preconditions.checkArgument(deck.isEmpty());
+        Preconditions.checkArgument(isDeckEmpty());
         return new CardState(Deck.of(discardCards, rng), faceUpCards(), SortedBag.of());
     }
 

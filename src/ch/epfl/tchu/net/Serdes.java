@@ -14,6 +14,10 @@ import java.util.regex.Pattern;
  * @author Louis Yves André Barinka (329847)
  */
 public final class Serdes {
+
+    private  static final char listAndBagSeparator = ',';
+    private static final char compositeSeparator = ';';
+    private static final char gameStateSeparator = ':';
     /**
      * (Serde<Integer>) :this attribute is the serde that will help us to serialize and deserialize an integer
      */
@@ -23,7 +27,7 @@ public final class Serdes {
      * (Serde<String>) : this attribute is the serde that will help us to serialize and deserialize a string
      */
     public final static Serde<String> STRING_SERDE = Serde.of((string -> Base64.getEncoder().encodeToString(string.getBytes(StandardCharsets.UTF_8))),
-                                                              (s2 -> new String(Base64.getDecoder().decode(s2.getBytes(StandardCharsets.UTF_8)))));
+                                                             (string -> new String(Base64.getDecoder().decode(string.getBytes(StandardCharsets.UTF_8)))));
 
     /**
      * (Serde<PlayerId>) : this is the serde used to serialize and deserialize the enums of PlayerId
@@ -53,32 +57,32 @@ public final class Serdes {
     /**
      * (Serde<List<String>>) : this is the serde use to serialize and deserialize a list of strings
      */
-    public final static Serde<List<String>> STRING_LIST_SERDE = Serde.listOf(STRING_SERDE, ',');
+    public final static Serde<List<String>> STRING_LIST_SERDE = Serde.listOf(STRING_SERDE, listAndBagSeparator);
 
     /**
      * (Serde<List<Card>>) : this is the serde use to serialize and deserialize a list of cards
      */
-    public final static Serde<List<Card>> CARD_LIST_SERDE = Serde.listOf(CARD_SERDE, ',');
+    public final static Serde<List<Card>> CARD_LIST_SERDE = Serde.listOf(CARD_SERDE, listAndBagSeparator);
 
     /**
      * (Serde<List<Route>>) : this is the serde use to serialize and deserialize a list of routes
      */
-    public final static Serde<List<Route>> ROUTE_LIST_SERDE = Serde.listOf(ROUTE_SERDE, ',');
+    public final static Serde<List<Route>> ROUTE_LIST_SERDE = Serde.listOf(ROUTE_SERDE, listAndBagSeparator);
 
     /**
      * (Serde<SortedBag<Card>>) : this is the serde use to serialize and deserialize a bag of cards
      */
-    public final static Serde<SortedBag<Card>> CARD_BAG_SERDE = Serde.bagOf(CARD_SERDE, ',');
+    public final static Serde<SortedBag<Card>> CARD_BAG_SERDE = Serde.bagOf(CARD_SERDE, listAndBagSeparator);
 
     /**
      * (Serde<SortedBag<Ticket>>) : this is the serde use to serialize and deserialize a bag of tickets
      */
-    public final static Serde<SortedBag<Ticket>> TICKET_BAG_SERDE = Serde.bagOf(TICKET_SERDE, ',');
+    public final static Serde<SortedBag<Ticket>> TICKET_BAG_SERDE = Serde.bagOf(TICKET_SERDE, listAndBagSeparator);
 
     /**
      * (Serde<SortedBag<Route>>) : this is the serde use to serialize and deserialize a list of bags of cards
      */
-    public final static Serde<List<SortedBag<Card>>> CARD_BAG_LIST_SERDE = Serde.listOf(CARD_BAG_SERDE, ';');
+    public final static Serde<List<SortedBag<Card>>> CARD_BAG_LIST_SERDE = Serde.listOf(CARD_BAG_SERDE, compositeSeparator);
 
     /**
      * (Serde<PublicCardState>) : this is the serde used to serialize and deserialize a PublicCardState
@@ -87,19 +91,19 @@ public final class Serdes {
 
         @Override
         public String serialize(PublicCardState publicCardState) {
-            List<String> list = List.of(CARD_LIST_SERDE.serialize(publicCardState.faceUpCards()),
+            return String.join(String.valueOf(compositeSeparator),
+                                List.of(CARD_LIST_SERDE.serialize(publicCardState.faceUpCards()),
                                         INTEGER_SERDE.serialize(publicCardState.deckSize()),
-                                        INTEGER_SERDE.serialize(publicCardState.discardsSize()));
-            return String.join(";", list);
+                                        INTEGER_SERDE.serialize(publicCardState.discardsSize())) );
         }
 
         @Override
         public PublicCardState deserialize(String name) {
-            String[] stringTab = name.split(Pattern.quote(";"), -1);
+            String[] stringTab = name.split(Pattern.quote(String.valueOf(compositeSeparator)), -1);
             int i = 0;
             return new PublicCardState(CARD_LIST_SERDE.deserialize(stringTab[i++]),
-                                      INTEGER_SERDE.deserialize(stringTab[i++]),
-                                      INTEGER_SERDE.deserialize(stringTab[i]));
+                    INTEGER_SERDE.deserialize(stringTab[i++]),
+                    INTEGER_SERDE.deserialize(stringTab[i]));
         }
     };
 
@@ -109,19 +113,19 @@ public final class Serdes {
     public final static Serde<PublicPlayerState> PUBLIC_PLAYER_STATE_SERDE = new Serde<>() {
         @Override
         public String serialize(PublicPlayerState state) {
-            List<String> list = List.of(INTEGER_SERDE.serialize(state.ticketCount()),
+            return String.join(String.valueOf(compositeSeparator),
+                                List.of(INTEGER_SERDE.serialize(state.ticketCount()),
                                         INTEGER_SERDE.serialize(state.cardCount()),
-                                        ROUTE_LIST_SERDE.serialize(state.routes()));
-            return String.join(";", list);
+                                        ROUTE_LIST_SERDE.serialize(state.routes())) );
         }
 
         @Override
         public PublicPlayerState deserialize(String name) {
-            String[] stringTab = name.split(Pattern.quote(";"), -1);
+            String[] stringTab = name.split(Pattern.quote(String.valueOf(compositeSeparator)), -1);
             int i = 0;
             return new PublicPlayerState(INTEGER_SERDE.deserialize(stringTab[i++]),
-                                         INTEGER_SERDE.deserialize(stringTab[i++]),
-                                         ROUTE_LIST_SERDE.deserialize(stringTab[i]));
+                    INTEGER_SERDE.deserialize(stringTab[i++]),
+                    ROUTE_LIST_SERDE.deserialize(stringTab[i]));
         }
     };
 
@@ -130,20 +134,20 @@ public final class Serdes {
      */
     public final static Serde<PlayerState> PLAYER_STATE_SERDE = new Serde<>() {
         @Override
-        public String serialize(PlayerState playerState) {
-            List<String> stringList = List.of(TICKET_BAG_SERDE.serialize(playerState.tickets()),
-                                              CARD_BAG_SERDE.serialize(playerState.cards()),
-                                              ROUTE_LIST_SERDE.serialize(playerState.routes()));
-            return String.join(";", stringList);
+        public String serialize(PlayerState playerState){
+            return String.join(String.valueOf(compositeSeparator),
+                                List.of(TICKET_BAG_SERDE.serialize(playerState.tickets()),
+                                        CARD_BAG_SERDE.serialize(playerState.cards()),
+                                        ROUTE_LIST_SERDE.serialize(playerState.routes())));
         }
 
         @Override
         public PlayerState deserialize(String name) {
-            String[] stringTab = name.split(Pattern.quote(";"), -1);
+            String[] stringTab = name.split(Pattern.quote(String.valueOf(compositeSeparator)), -1);
             int i = 0;
             return new PlayerState(TICKET_BAG_SERDE.deserialize(stringTab[i++]),
-                                   CARD_BAG_SERDE.deserialize(stringTab[i++]),
-                                   ROUTE_LIST_SERDE.deserialize(stringTab[i]));
+                    CARD_BAG_SERDE.deserialize(stringTab[i++]),
+                    ROUTE_LIST_SERDE.deserialize(stringTab[i]));
         }
     };
 
@@ -153,21 +157,22 @@ public final class Serdes {
     public final static Serde<PublicGameState> PUBLIC_GAME_STATE_SERDE = new Serde<>() {
         @Override
         public String serialize(PublicGameState publicGameState) {
+            //we add gradually the attributes serialized because we want to extend our game for more that two player
             List<String> stringList = new ArrayList<>();
             stringList.add(INTEGER_SERDE.serialize(publicGameState.ticketsCount()));
             stringList.add(PUBLIC_CARD_STATE_SERDE.serialize(publicGameState.cardState()));
             stringList.add(PLAYER_ID_SERDE.serialize(publicGameState.currentPlayerId()));
             PlayerId.ALL.forEach(playerId -> stringList.
-                                            add(PUBLIC_PLAYER_STATE_SERDE.
-                                            serialize(publicGameState.
-                                            playerState(playerId))));
+                                             add(PUBLIC_PLAYER_STATE_SERDE.
+                                                 serialize(publicGameState.
+                                                 playerState(playerId))));
             stringList.add(PLAYER_ID_SERDE.serialize(publicGameState.lastPlayer()));
-            return String.join(":", stringList);
+            return String.join(String.valueOf(gameStateSeparator), stringList);
         }
 
         @Override
         public PublicGameState deserialize(String name) {
-            String[] stringsTab = name.split(Pattern.quote(":"), -1);
+            String[] stringsTab = name.split(Pattern.quote(String.valueOf(gameStateSeparator)), -1);
             //we create this variable to iterate over every attribute needed to create a publicGameState
             int i = 0;
             Map<PlayerId, PublicPlayerState> map = new HashMap<>();

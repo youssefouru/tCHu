@@ -49,7 +49,7 @@ public final class Deck<C extends Comparable<C>> {
      * @return (int) : the size of the attributes card
      */
     public int size() {
-        return this.cards.size();
+        return cards.size();
     }
 
     /**
@@ -92,9 +92,7 @@ public final class Deck<C extends Comparable<C>> {
      */
     public Deck<C> withoutTopCard() {
         Preconditions.checkArgument(!isEmpty());
-        List<C> cards = new ArrayList<>(this.cards);
-        cards.remove(0);
-        return new Deck<>(cards);
+        return withoutTopCards(1);
     }
 
     /**
@@ -105,7 +103,6 @@ public final class Deck<C extends Comparable<C>> {
      */
     public Deck<C> withoutTopCards(int count) {
         Preconditions.checkArgument(count >= 0 && count <= size());
-
         return new Deck<>(cards.subList(count, size()));
     }
 

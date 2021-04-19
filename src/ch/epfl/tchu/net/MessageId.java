@@ -27,7 +27,7 @@ public enum MessageId {
     public static int COUNT = values().length;
 
     /**
-     *  ALL (List<MessageId>) : contains all the element of this enum type
+     * ALL (List<MessageId>) : contains all the element of this enum type
      */
     public static List<MessageId> ALL = List.of(values());
 

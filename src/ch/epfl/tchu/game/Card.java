@@ -54,7 +54,7 @@ public enum Card {
             if (card.color.equals(color))
                 return card;
         }
-        return null;
+        throw new IllegalArgumentException();
     }
 
     /**

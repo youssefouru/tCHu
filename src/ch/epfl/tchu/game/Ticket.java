@@ -27,7 +27,7 @@ public final class Ticket implements Comparable<Ticket> {
      */
     public Ticket(List<Trip> trips) {
         Preconditions.checkArgument(check(trips));
-        this.trips = List.copyOf(Objects.requireNonNull(trips));
+        this.trips = List.copyOf(trips);
         text = computeText(this.trips);
     }
 

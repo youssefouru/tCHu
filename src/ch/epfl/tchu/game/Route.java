@@ -41,7 +41,6 @@ public final class Route {
         this.length = length;
         this.level = Objects.requireNonNull(level);
         this.color = color;
-
     }
 
     /**
@@ -50,7 +49,7 @@ public final class Route {
      * @return (String) : the attribute id
      */
     public String id() {
-        return this.id;
+        return id;
     }
 
     /**
@@ -59,7 +58,7 @@ public final class Route {
      * @return (Station) :the attribute station1
      */
     public Station station1() {
-        return this.station1;
+        return station1;
     }
 
     /**
@@ -68,7 +67,7 @@ public final class Route {
      * @return (Station) :the attribute station2
      */
     public Station station2() {
-        return this.station2;
+        return station2;
     }
 
     /**
@@ -77,7 +76,7 @@ public final class Route {
      * @return (int) :the attribute length
      */
     public int length() {
-        return this.length;
+        return length;
     }
 
     /**
@@ -86,7 +85,7 @@ public final class Route {
      * @return (Level) :the attribute level
      */
     public Level level() {
-        return this.level;
+        return level;
     }
 
     /**
@@ -95,7 +94,7 @@ public final class Route {
      * @return (Color) :the attribute color
      */
     public Color color() {
-        return this.color;
+        return color;
     }
 
     /**

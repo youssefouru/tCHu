@@ -102,10 +102,15 @@ public final class Info {
      * @return (String) if there is a draw between two players with the number of points
      */
     public static String draw(List<String> playerNames, int points) {
-        String stringBuilder = playerNames.get(0) +
-                StringsFr.AND_SEPARATOR +
-                playerNames.get(1);
-        return String.format(StringsFr.DRAW, stringBuilder, points);
+        StringBuilder builder = new StringBuilder();
+        for(int i = 0 ; i<playerNames.size();++i){
+            String separator = i == playerNames.size()-2 ? StringsFr.AND_SEPARATOR:",";
+            separator = i == playerNames.size() -1 ?"":separator;
+            builder.append(playerNames.get(i));
+            builder.append(separator);
+        }
+
+        return String.format(StringsFr.DRAW, builder, points);
     }
 
     /**

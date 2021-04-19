@@ -5,6 +5,7 @@ import ch.epfl.tchu.SortedBag;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -63,22 +64,19 @@ public interface Serde<T> {
         return new Serde<>() {
             @Override
             public String serialize(List<C> list) {
-                List<String> result = list.stream().
-                                      map(serde::serialize).
-                                      collect(Collectors.toList());
-
-                return String.join(String.valueOf(character),result);
+                return list.stream().
+                        map(serde::serialize).
+                        collect(Collectors.
+                                joining(String.valueOf(character)));
             }
 
             @Override
             public List<C> deserialize(String name) {
                 if(name.isEmpty())
                     return new ArrayList<>();
-                String[] strings = name.
-                                        split(Pattern.quote(String.valueOf(character)),-1);
-                return Arrays.stream(strings).
-                       map(serde::deserialize).
-                       collect(Collectors.toList());
+                return Arrays.stream(name.split(Pattern.quote(String.valueOf(character)),-1)).
+                                     map(serde::deserialize).
+                                     collect(Collectors.toList());
             }
         };
     }
@@ -92,7 +90,7 @@ public interface Serde<T> {
      * @return (Serde<List<C>>) : a serde that can serialize and deserialize a SortedBag of Cs with a Cs serde
      */
     static <C extends Comparable<C>> Serde<SortedBag<C>> bagOf(Serde<C> serde,char character){
-        Serde<List<C>> listSerde = Serde.listOf(serde,character);
+        Serde<List<C>> listSerde = Serde.listOf(Objects.requireNonNull(serde),character);
 
         return new Serde<>() {
             @Override
@@ -106,6 +104,7 @@ public interface Serde<T> {
             }
         };
     }
+
 
 
     /**

@@ -15,8 +15,8 @@ public interface Player {
     /**
      * this method communicate to the player his own ID and the name of the other player
      *
-     * @param ownId       (PlayerId) :
-     * @param playerNames (Map<PlayerId, String>) :
+     * @param ownId       (PlayerId) : id of the player
+     * @param playerNames (Map<PlayerId, String>) : the names of the players of the game
      */
     void initPlayers(PlayerId ownId, Map<PlayerId, String> playerNames);
 

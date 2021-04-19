@@ -220,7 +220,7 @@ public final class Game {
             }
         }
         for (PlayerId playerId : PlayerId.ALL) {
-            if (points.get(playerId) == max && !winner.contains(playerId)) {
+            if (points.get(playerId) == max ) {
                 winner.add(playerId);
             }
         }

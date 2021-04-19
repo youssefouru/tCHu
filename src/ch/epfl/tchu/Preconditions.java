@@ -15,7 +15,7 @@ public final class Preconditions {
     /**
      * Verify if the argument is true else it throws IllegalArgumentException exception
      *
-     * @param argument (boolean) : the argument wich will be checked
+     * @param argument (boolean) : the argument which will be checked
      */
     public static void checkArgument(boolean argument){
         if(!argument)

@@ -13,21 +13,20 @@ import java.util.List;
 public final class Trail {
     private final List<Route> routesOfTheTrail;
     private final int length;
-    private final Station station1;
-    private final Station station2;
-
+    private final Station station1,station2;
+    private final static Trail emptyTrail = new Trail(new ArrayList<>(),null,null);
     /**
      * Constructor of Trail
      *
      * @param routesOfTheTrail (List<Route>) : the route list of each
-     * @param s1               (Station) : the first station of the trail
-     * @param s2               (Station) : the second station of the trail
+     * @param station1               (Station) : the first station of the trail
+     * @param station2               (Station) : the second station of the trail
      */
-    private Trail(List<Route> routesOfTheTrail, Station s1, Station s2) {
+    private Trail(List<Route> routesOfTheTrail, Station station1, Station station2) {
         this.routesOfTheTrail = List.copyOf(routesOfTheTrail);
         this.length = computeLength(routesOfTheTrail);
-        station1 = s1;
-        station2 = s2;
+        this.station1 = station1;
+        this.station2 = station2;
 
     }
 
@@ -56,7 +55,7 @@ public final class Trail {
      */
     public static Trail longest(List<Route> routes) {
         if (routes.isEmpty())
-            return new Trail(new ArrayList<>(), null, null);
+            return emptyTrail;
         List<Trail> tempTrails = new ArrayList<>();
         //we create a list of trails composed of each route that we want to check what is the is the longest trail
         List<Trail> trailsToBeTested = trailCreation(routes);

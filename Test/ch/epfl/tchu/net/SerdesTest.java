@@ -17,12 +17,47 @@ public class SerdesTest {
         String encoded = Serdes.STRING_SERDE.serialize(s);
         assertEquals(s,Serdes.STRING_SERDE.deserialize(encoded));
     }
+
     @Test
     void integerSerdesWorksWell(){
         Random testRandomizer = TestRandomizer.newRandom();
         int i = testRandomizer.nextInt();
         String valueSerialized = Serdes.INTEGER_SERDE.serialize(i);
         assertEquals(Serdes.INTEGER_SERDE.deserialize(valueSerialized),i);
+    }
+
+    @Test
+    void TurnKindWorksWell(){
+        int i = TestRandomizer.newRandom().nextInt(Player.TurnKind.ALL.size());
+        Player.TurnKind turnKind =Player.TurnKind.ALL.get(i);
+        String serialExpected = String.valueOf(turnKind.ordinal());
+        assertEquals(serialExpected,Serdes.TURN_KIND_SERDE.serialize(turnKind));
+        assertEquals(turnKind,Serdes.TURN_KIND_SERDE.deserialize(serialExpected));
+    }
+
+    @Test
+    void StringListGotSerialized(){
+    List<String> stringList = List.of("tatata","coucocucou","ropgjfghjdfojgdfiojg","gopfhiujtohjhj");
+    String serialized = Serdes.STRING_LIST_SERDE.serialize(stringList);
+    assertEquals(stringList,Serdes.STRING_LIST_SERDE.deserialize(serialized));
+    }
+
+    @Test
+    void routeListSerdeWorksOnAList(){
+        List<Route> routes = ChMap.routes().subList(0,6);
+        String serialExcepted = "0,1,2,3,4,5";
+        String actualSerial =Serdes.ROUTE_LIST_SERDE.serialize(routes);
+        assertEquals(serialExcepted,actualSerial);
+        List<Route> routesDeserialized = Serdes.ROUTE_LIST_SERDE.deserialize(actualSerial);
+        assertEquals(routes,routesDeserialized);
+    }
+
+    @Test
+    void cardBagListSerialize(){
+        List<SortedBag<Card>> sortedBagCardList = List.of(SortedBag.of(4,Card.BLACK),SortedBag.of(5,Card.BLUE),SortedBag.of(4,Card.WHITE));
+        String serialExcepted = "0,0,0,0;2,2,2,2,2;7,7,7,7";
+        assertEquals(serialExcepted,Serdes.CARD_BAG_LIST_SERDE.serialize(sortedBagCardList));
+        assertEquals(sortedBagCardList,Serdes.CARD_BAG_LIST_SERDE.deserialize(serialExcepted));
     }
 
     @Test
@@ -38,6 +73,7 @@ public class SerdesTest {
         assertTrue(equalsPublicPlayerState(playerState1,playerState));
 
     }
+
     @Test
     void publicCardStateHasBeenSerializedWell(){
         List<Card> list = SortedBag.of(5,Card.BLACK).toList();
@@ -49,6 +85,7 @@ public class SerdesTest {
         assertEquals(serial,cardStateSerialized);
         assertTrue(equalsCardState(publicCardState,Serdes.PUBLIC_CARD_STATE_SERDE.deserialize(cardStateSerialized)));
     }
+
     @Test
     void publicGameStateGotSerialized(){
         Random testRandomizer = TestRandomizer.newRandom();
@@ -82,6 +119,7 @@ public class SerdesTest {
         assertEquals(serial,actualSerial);
         assertEquals(routes,Serdes.ROUTE_LIST_SERDE.deserialize(actualSerial));
     }
+
     @Test
     void playerStateGotSerialized(){
         SortedBag<Ticket> tickets = SortedBag.of(ChMap.tickets().subList(0,6));
@@ -94,25 +132,24 @@ public class SerdesTest {
         assertTrue(equalsPlayerState(playerState,Serdes.PLAYER_STATE_SERDE.deserialize(serialPlayer)));
     }
 
-@Test
-void sortedBagGotSerializedWellWithEmpty(){
+    @Test
+    void sortedBagGotSerializedWellWithEmpty(){
     SortedBag<Card> routes = SortedBag.of();
     String serial = "";
     String actualSerial = Serdes.CARD_BAG_SERDE.serialize(routes);
     assertEquals(serial,actualSerial);
     assertEquals(routes,Serdes.CARD_BAG_SERDE.deserialize(actualSerial));
 }
+
     private boolean equalsCardState(PublicCardState cardState1,PublicCardState cardState2){
         return cardState1.faceUpCards().equals(cardState2.faceUpCards()) && cardState1.deckSize() == cardState2.deckSize() && cardState1.discardsSize() == cardState2.discardsSize();
     }
-
     private boolean equalsPublicPlayerState(PublicPlayerState playerState1, PublicPlayerState playerState2){
         return playerState1.routes().equals(playerState2.routes()) && playerState1.ticketCount() == playerState2.ticketCount() && playerState1.cardCount() == playerState2.cardCount();
     }
     private boolean equalsPlayerState(PlayerState playerState, PlayerState playerState2){
         return playerState.cards().equals(playerState2.cards()) &&playerState.tickets().equals(playerState2.tickets())  && playerState.routes().equals(playerState2.routes());
     }
-
     private boolean equalsPublicGameState(PublicGameState gameState1,PublicGameState gameState2){
         return equalsCardState(gameState1.cardState(),gameState2.cardState()) && gameState1.currentPlayerId() == gameState2.currentPlayerId() && mapEqualizer(gameState1,gameState2) && gameState1.ticketsCount() == gameState2.ticketsCount() && gameState1.lastPlayer() == gameState2.lastPlayer();
     }

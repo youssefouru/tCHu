@@ -100,9 +100,7 @@ public final class PlayerState extends PublicPlayerState {
      * @return (PlayerState) : new PlayerState with the same attributes except for the cards which we add the new card
      */
     public PlayerState withAddedCard(Card card) {
-        List<Card> cards = this.cards.toList();
-        cards.add(card);
-        return new PlayerState(tickets, SortedBag.of(cards), routes());
+        return withAddedCards(SortedBag.of(card));
     }
 
     /**

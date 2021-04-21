@@ -91,7 +91,6 @@ public interface Serde<T> {
      */
     static <C extends Comparable<C>> Serde<SortedBag<C>> bagOf(Serde<C> serde,char character){
         Serde<List<C>> listSerde = Serde.listOf(Objects.requireNonNull(serde),character);
-
         return new Serde<>() {
             @Override
             public String serialize(SortedBag<C> bag) {

@@ -6,6 +6,7 @@ import ch.epfl.tchu.game.Route;
 import ch.epfl.tchu.game.Trail;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Info : this class gathers all the info needed in the game
@@ -63,6 +64,8 @@ public final class Info {
             case LOCOMOTIVE:
                 color = StringsFr.LOCOMOTIVE_CARD;
                 break;
+            default:
+                throw new Error();
 
         }
 

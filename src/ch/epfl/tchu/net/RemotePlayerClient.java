@@ -57,7 +57,8 @@ public class RemotePlayerClient {
                     List<String> namesList = Serdes.STRING_LIST_SERDE.deserialize(stringTab[i]);
                     Map<PlayerId,String> playerNames = new HashMap<>();
                     for(int j = 0; j<PlayerId.ALL.size();++j){
-                        playerNames.put(PlayerId.ALL.get(j),namesList.get(j));
+                        playerNames.put(PlayerId.ALL.get(j),
+                                        namesList.get(j));
                     }
                     player.initPlayers(playerId,playerNames);
                     break;

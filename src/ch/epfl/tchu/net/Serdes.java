@@ -175,10 +175,11 @@ public final class Serdes {
             String[] stringsTab = name.split(Pattern.quote(String.valueOf(gameStateSeparator)), -1);
             //we create this variable to iterate over every attribute needed to create a publicGameState
             int i = 0;
-            Map<PlayerId, PublicPlayerState> map = new HashMap<>();
+
             int ticketsCount = INTEGER_SERDE.deserialize(stringsTab[i++]);
             PublicCardState cardState = PUBLIC_CARD_STATE_SERDE.deserialize(stringsTab[i++]);
             PlayerId currentPlayerId = PLAYER_ID_SERDE.deserialize(stringsTab[i++]);
+            Map<PlayerId, PublicPlayerState> map = new HashMap<>();
             for (PlayerId playerId : PlayerId.ALL) {
                 map.put(playerId, PUBLIC_PLAYER_STATE_SERDE.deserialize(stringsTab[i++]));
             }

@@ -23,10 +23,10 @@ public interface Serde<T> {
     /**
      * this method returns a serde that use the serFunction to serialize the objects of C and the deFunction to deserialize the String into an object
      *
-     * @param serFunction (Function<C, String>) : the function used to serialize the object
-     * @param deFunction (Function<String, C>) : the function used to deserialize the string
-     * @param <C> : the type parameter of the serde
-     * @return (Serde<C>) : a serde that serialize an object
+     * @param serFunction (Function< C, String >) : the function used to serialize the object
+     * @param deFunction  (Function< String, C >) : the function used to deserialize the string
+     * @param <C>         : the type parameter of the serde
+     * @return (Serde < C >) : a serde that serialize an object
      */
     static <C> Serde<C> of(Function<C, String> serFunction, Function<String, C> deFunction) {
         return new Serde<>() {
@@ -43,42 +43,32 @@ public interface Serde<T> {
     }
 
     /**
-     * @param list (List<C>) : the list of type C values
+     * @param list (List< C >) : the list of type C values
      * @param <C>  : the type parameter of the serde
      * @return (Serde < C >) : returns a serde that can serialize and deserialize an element of the list in parameter
      */
     static <C> Serde<C> oneOf(List<C> list) {
-        return of(c -> c == null ?"":Integer.toString(list.indexOf(c)),
-                  s ->  s.equals("")?null:list.get(Integer.parseInt(s)));
+        return of(c -> c == null ? "" : Serdes.INTEGER_SERDE.serialize(list.indexOf(c)),
+                s -> s.equals("") ? null : list.get(Serdes.INTEGER_SERDE.deserialize(s)));
     }
 
     /**
      * This method returns a serde that can serialize and deserialize a list of Cs
      *
-     * @param serde     (Serde<C>) : the serde used to serialize each object a list
+     * @param serde     (Serde< C >) : the serde used to serialize each object a list
      * @param character (char) : the separation character we will use to separate the elements of a list
      * @param <C>       : the type parameter of the serde
-     * @return (Serde<List<C>>) : a serde that can serialize and deserialize a list of Cs with a Cs serde
+     * @return (Serde < List < C > >) : a serde that can serialize and deserialize a list of Cs with a Cs serde
      */
     static <C> Serde<List<C>> listOf(Serde<C> serde, char character) {
-        return new Serde<>() {
-            @Override
-            public String serialize(List<C> list) {
-                return list.stream().
+        return of(list -> list.stream().
                         map(serde::serialize).
-                        collect(Collectors.
-                                joining(String.valueOf(character)));
-            }
-
-            @Override
-            public List<C> deserialize(String name) {
-                if(name.isEmpty())
-                    return new ArrayList<>();
-                return Arrays.stream(name.split(Pattern.quote(String.valueOf(character)),-1)).
-                                     map(serde::deserialize).
-                                     collect(Collectors.toList());
-            }
-        };
+                        collect(Collectors.joining(String.valueOf(character))),
+                string -> string.isEmpty() ?
+                        new ArrayList<>() :
+                        Arrays.stream(string.split(Pattern.quote(String.valueOf(character)), -1)).
+                                map(serde::deserialize).
+                                collect(Collectors.toList()));
     }
 
     /**
@@ -87,23 +77,13 @@ public interface Serde<T> {
      * @param serde     (Serde<C>) : the serde used to serialize each object a SortedBag
      * @param character (char) : the separation character we will use to separate the elements of a list
      * @param <C>       : the type parameter of the serde
-     * @return (Serde<List<C>>) : a serde that can serialize and deserialize a SortedBag of Cs with a Cs serde
+     * @return (Serde < List < C > >) : a serde that can serialize and deserialize a SortedBag of Cs with a Cs serde
      */
-    static <C extends Comparable<C>> Serde<SortedBag<C>> bagOf(Serde<C> serde,char character){
-        Serde<List<C>> listSerde = Serde.listOf(Objects.requireNonNull(serde),character);
-        return new Serde<>() {
-            @Override
-            public String serialize(SortedBag<C> bag) {
-                return listSerde.serialize(bag.toList());
-            }
-
-            @Override
-            public SortedBag<C> deserialize(String name) {
-                return SortedBag.of(listSerde.deserialize(name));
-            }
-        };
+    static <C extends Comparable<C>> Serde<SortedBag<C>> bagOf(Serde<C> serde, char character) {
+        Serde<List<C>> listSerde = Serde.listOf(serde, character);
+        return of(bag -> listSerde.serialize(bag.toList()),
+                string -> SortedBag.of(listSerde.deserialize(string)));
     }
-
 
 
     /**

@@ -50,7 +50,6 @@ public class RemotePlayerClient {
             writer.write(message);
             writer.write("\n");
             writer.flush();
-
         } catch (IOException ioException) {
             throw new UncheckedIOException(ioException);
         }

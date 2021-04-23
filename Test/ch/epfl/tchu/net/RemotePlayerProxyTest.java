@@ -9,6 +9,7 @@ import java.net.Socket;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Scanner;
 
 import static ch.epfl.tchu.game.PlayerId.PLAYER_1;
 import static ch.epfl.tchu.game.PlayerId.PLAYER_2;
@@ -31,9 +32,6 @@ public class RemotePlayerProxyTest{
              playerProxy.chooseInitialTickets();
              playerProxy.claimedRoute();
              playerProxy.initialClaimCards();
-
-
-
         }
 
         System.out.println("Server done!");

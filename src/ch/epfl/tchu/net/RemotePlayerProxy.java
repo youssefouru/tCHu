@@ -16,7 +16,7 @@ import static java.nio.charset.StandardCharsets.US_ASCII;
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)
  */
-public class RemotePlayerProxy implements Player {
+public final class RemotePlayerProxy implements Player {
     private final BufferedReader reader;
     private final BufferedWriter writer;
 
@@ -24,7 +24,7 @@ public class RemotePlayerProxy implements Player {
      * Instantiates a new Remote player proxy.
      *
      * @param socket (Socket) : the socket we will use to write and read the data in the server
-     * @throws IOException :
+     * @throws IOException : if the socket throws exdeption
      */
     public RemotePlayerProxy(Socket socket) throws IOException {
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), US_ASCII));

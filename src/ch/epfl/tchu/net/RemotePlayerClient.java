@@ -21,7 +21,7 @@ import static java.nio.charset.StandardCharsets.US_ASCII;
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)
  */
-public class RemotePlayerClient {
+public final class RemotePlayerClient {
 
     private final Player player;
     private final BufferedWriter writer;

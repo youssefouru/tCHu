@@ -130,15 +130,14 @@ public class RemotePlayerClient {
                 default:
                     throw new Error();
             }
-            try{
-                reader.close();
-                writer.close();
-            }catch (IOException ioException){
-                throw new UncheckedIOException(ioException);
-            }
 
         }
-
+        try{
+            reader.close();
+            writer.close();
+        }catch (IOException ioException){
+            throw new UncheckedIOException(ioException);
+        }
     }
 
 

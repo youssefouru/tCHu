@@ -23,7 +23,7 @@ public final class PlayerState extends PublicPlayerState {
      *
      * @param tickets (SortedBag<Ticket>) : the list of tickets that the player has
      * @param cards   (SortedBag<Card>) : the cards that the player has
-     * @param routes  (List<Route>) : list of routes that the player has
+     * @param routes  (List<Route>) : list of routeOwner that the player has
      */
     public PlayerState(SortedBag<Ticket> tickets, SortedBag<Card> cards, List<Route> routes) {
         super(tickets.size(), cards.size(), routes);
@@ -109,7 +109,7 @@ public final class PlayerState extends PublicPlayerState {
      * @return (SortedBag < Card >): the attribute cards
      */
     public SortedBag<Card> cards() {
-        return this.cards;
+        return cards;
     }
 
     /**
@@ -176,11 +176,11 @@ public final class PlayerState extends PublicPlayerState {
     }
 
     /**
-     * this method returns a new PlayerState with the route in parameter added to the routes and we remove the claimCards from the cards
+     * this method returns a new PlayerState with the route in parameter added to the routeOwner and we remove the claimCards from the cards
      *
      * @param route      (Route) : the route claimed with the claimCards
      * @param claimCards (SortedBag<Card>) : claimCard used to claim the route
-     * @return (PlayerState) : a new PlayerState with the route in parameter added to the routes and we remove the claimCards from the cards
+     * @return (PlayerState) : a new PlayerState with the route in parameter added to the routeOwner and we remove the claimCards from the cards
      */
     public PlayerState withClaimedRoute(Route route, SortedBag<Card> claimCards) {
         List<Route> routes = new ArrayList<>(routes());

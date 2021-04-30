@@ -83,9 +83,9 @@ public final class Constants {
     public static final int ADDITIONAL_TUNNEL_CARDS = 3;
 
     /**
-     * Nombre de points obtenus pour la construction de routes de longueur 1 à 6.
+     * Nombre de points obtenus pour la construction de routeOwner de longueur 1 à 6.
      * (L'élément à l'index i correspond à une longueur de route i. Une valeur
-     * invalide est placée à l'index 0, car les routes de longueur 0 n'existent pas).
+     * invalide est placée à l'index 0, car les routeOwner de longueur 0 n'existent pas).
      */
     public static final List<Integer> ROUTE_CLAIM_POINTS =
             List.of(Integer.MIN_VALUE, 1, 2, 4, 7, 10, 15);

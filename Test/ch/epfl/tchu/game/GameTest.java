@@ -433,7 +433,7 @@ class GameTest {
         }
     }
 
-    // Simplified Swiss map (only single routes)
+    // Simplified Swiss map (only single routeOwner)
     private static final class ChMap {
         private ChMap() {
         }
@@ -499,7 +499,7 @@ class GameTest {
         private static final List<Station> IT = List.of(IT1, IT2, IT3, IT4, IT5);
         private static final List<Station> FR = List.of(FR1, FR2, FR3, FR4);
 
-        // Routes (without double routes!)
+        // Routes (without double routeOwner!)
         private static final List<Route> ALL_ROUTES = List.of(
                 new Route("AT1_STG_1", AT1, STG, 4, Route.Level.UNDERGROUND, null),
                 new Route("AT2_VAD_1", AT2, VAD, 1, Route.Level.UNDERGROUND, Color.RED),

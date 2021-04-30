@@ -2,6 +2,7 @@ package ch.epfl.tchu.net;
 
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
+import ch.epfl.tchu.gui.MapViewCreator;
 import ch.epfl.test.TestRandomizer;
 import org.junit.jupiter.api.Test;
 import ch.epfl.tchu.net.RemotePlayerClient;
@@ -39,7 +40,7 @@ public class RemotePlayerTest {
         private static final int TURN_LIMIT = 1000;
 
         private final Random rng;
-        // Toutes les routes de la carte
+        // Toutes les routeOwner de la carte
         private final List<Route> allRoutes;
         private int pointsFin;
         private boolean winner;
@@ -186,7 +187,7 @@ public class RemotePlayerTest {
         private void debug() {
             System.out.print("tickets : " + ownState.tickets().size());
             System.out.print(" ; cards : " + ownState.cards().size());
-            System.out.print(" ; routes : " + ownState.routes().size());
+            System.out.print(" ; routeOwner : " + ownState.routes().size());
             System.out.println(" ; cars : " + ownState.carCount());
 
 

@@ -106,9 +106,9 @@ public class PublicGameState {
     }
 
     /**
-     * returns all the routes that has been claimed by one of the two players
+     * returns all the routeOwner that has been claimed by one of the two players
      *
-     * @return (List < Route >) : the list of the routes that has been claimed
+     * @return (List < Route >) : the list of the routeOwner that has been claimed
      */
     public List<Route> claimedRoutes() {
         List<Route> routes = new ArrayList<>();

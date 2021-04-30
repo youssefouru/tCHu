@@ -45,7 +45,7 @@ public final class Serdes {
     public final static Serde<Card> CARD_SERDE = Serde.oneOf(Card.ALL);
 
     /**
-     * (Serde<Route>) : this is the serde used to serialize and deserialize a routes
+     * (Serde<Route>) : this is the serde used to serialize and deserialize a routeOwner
      */
     public final static Serde<Route> ROUTE_SERDE = Serde.oneOf(ChMap.routes());
 
@@ -65,7 +65,7 @@ public final class Serdes {
     public final static Serde<List<Card>> CARD_LIST_SERDE = Serde.listOf(CARD_SERDE, listAndBagSeparator);
 
     /**
-     * (Serde<List<Route>>) : this is the serde use to serialize and deserialize a list of routes
+     * (Serde<List<Route>>) : this is the serde use to serialize and deserialize a list of routeOwner
      */
     public final static Serde<List<Route>> ROUTE_LIST_SERDE = Serde.listOf(ROUTE_SERDE, listAndBagSeparator);
 

@@ -21,7 +21,7 @@ public class PublicPlayerState {
      *
      * @param ticketCount (int) : number of tickets that the player has
      * @param cardCount   (int) : number of card that the player has
-     * @param routes      (List<Route>) : list of routes that the player has
+     * @param routes      (List<Route>) : list of routeOwner that the player has
      */
     public PublicPlayerState(int ticketCount, int cardCount, List<Route> routes) {
         Preconditions.checkArgument(ticketCount >= 0 && cardCount >= 0);
@@ -58,9 +58,9 @@ public class PublicPlayerState {
     }
 
     /**
-     * this method returns the list of routes that the player has
+     * this method returns the list of routeOwner that the player has
      *
-     * @return (int) : the list routes
+     * @return (int) : the list routeOwner
      */
     public List<Route> routes() {
         return routes;
@@ -76,9 +76,9 @@ public class PublicPlayerState {
     }
 
     /**
-     * this method compute the total number of points claimed by the player thanks to the routes he has
+     * this method compute the total number of points claimed by the player thanks to the routeOwner he has
      *
-     * @return (int) : returns the number of points wins by the player thanks to the routes he has
+     * @return (int) : returns the number of points wins by the player thanks to the routeOwner he has
      */
     public int claimPoints() {
         int i = 0;

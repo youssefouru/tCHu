@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import static java.nio.charset.StandardCharsets.US_ASCII;
 
 /**
- * RemotePlayerProxy :
+ * RemotePlayerProxy : this class represents the proxy
  *
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)
@@ -21,14 +21,17 @@ public final class RemotePlayerProxy implements Player {
     private final BufferedWriter writer;
 
     /**
-     * Instantiates a new Remote player proxy.
+     * Constructor of RemotePlayerProxy
      *
      * @param socket (Socket) : the socket we will use to write and read the data in the server
-     * @throws IOException : if the socket throws exdeption
      */
-    public RemotePlayerProxy(Socket socket) throws IOException {
+    public RemotePlayerProxy(Socket socket) {
+        try{
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), US_ASCII));
             writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(),US_ASCII));
+        } catch (IOException ioException){
+            throw new UncheckedIOException(ioException);
+        }
     }
 
     private void send(MessageId messageId, String... strings)  {
@@ -63,8 +66,8 @@ public final class RemotePlayerProxy implements Player {
         send(MessageId.INIT_PLAYERS,
              Serdes.PLAYER_ID_SERDE.serialize(ownId),
              Serdes.STRING_LIST_SERDE.serialize((PlayerId.ALL.stream().
-                                                             map(playerNames::get)).
-                                                             collect(Collectors.toList())));
+                                                              map(playerNames::get)).
+                                                              collect(Collectors.toList())));
     }
 
 

@@ -48,10 +48,10 @@ public final class Trail {
     }
 
     /**
-     * Return the longest that can be created from a given list of routes
+     * Return the longest that can be created from a given list of routeOwner
      *
      * @param routes (List<Route>) : the route list we’re going to use
-     * @return (Trail) : the longest trail that can be created from those routes
+     * @return (Trail) : the longest trail that can be created from those routeOwner
      */
     public static Trail longest(List<Route> routes) {
         if (routes.isEmpty())
@@ -86,7 +86,7 @@ public final class Trail {
 
 
     /**
-     * add a route to the right of the list of routes of the train
+     * add a route to the right of the list of routeOwner of the train
      *
      * @param route (Route) the route that must be added
      * @return (Trail) the trail considered modified, with a route added to the right

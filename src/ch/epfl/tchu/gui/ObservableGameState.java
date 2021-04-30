@@ -4,13 +4,15 @@ import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
 import javafx.beans.property.*;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static javafx.collections.FXCollections.observableArrayList;
+import static javafx.collections.FXCollections.unmodifiableObservableList;
 
 public final class ObservableGameState {
     private final PlayerId playerId;
@@ -22,7 +24,7 @@ public final class ObservableGameState {
     private final IntegerProperty cardCount = new SimpleIntegerProperty();
     private final IntegerProperty carCount = new SimpleIntegerProperty();
     private final IntegerProperty claimPoints = new SimpleIntegerProperty();
-    private final ObservableList<Ticket> playerTickets = FXCollections.observableArrayList();
+    private final ObservableList<Ticket> playerTickets = observableArrayList();
     private final List<IntegerProperty> cardsTypeNumber = createsNumberOfCard();
     private final Map<Route, BooleanProperty> routeClaimable = new HashMap<>();
     private PlayerState playerState;
@@ -146,7 +148,7 @@ public final class ObservableGameState {
      * @return (ObservableList < Ticket >) : the readOnly part of the attribute playerTickets
      */
     public ObservableList<Ticket> playerTickets() {
-        return FXCollections.unmodifiableObservableList(playerTickets);
+        return unmodifiableObservableList(playerTickets);
     }
 
     /**
@@ -222,7 +224,7 @@ public final class ObservableGameState {
     private List<ObjectProperty<Card>> createFaceUpCardProperty() {
         List<ObjectProperty<Card>> cards = new ArrayList<>();
         for (int i = 0; i < Constants.FACE_UP_CARDS_COUNT; i++) {
-            cards.add(null);
+            cards.add(new SimpleObjectProperty<>());
         }
         return cards;
     }

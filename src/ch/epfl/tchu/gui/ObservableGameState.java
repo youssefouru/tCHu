@@ -53,8 +53,8 @@ public final class ObservableGameState {
     public void setState(PublicGameState publicGameState, PlayerState playerState) {
         gameState = publicGameState;
         this.playerState = playerState;
-        ticketPercentage.set((gameState.ticketsCount() / ChMap.tickets().size()) * 100);
-        cardPercentage.set((gameState.cardState().deckSize() / Constants.ALL_CARDS.size()) * 100);
+        ticketPercentage.set((gameState.ticketsCount() * 100 / ChMap.tickets().size()));
+        cardPercentage.set((gameState.cardState().deckSize() * 100 / Constants.ALL_CARDS.size()));
         for (int slot : Constants.FACE_UP_CARD_SLOTS) {
             faceUpCards.get(slot).set(gameState.cardState().faceUpCard(slot));
         }
@@ -208,15 +208,13 @@ public final class ObservableGameState {
             boolean routeClaimed = !gameState.claimedRoutes().contains(route);
             if (routeClaimed) {
                 for (Route gameStateRoute : gameState.claimedRoutes()) {
-                    if (!gameStateRoute.stations().containsAll(route.stations())) {
+                    if (gameStateRoute.stations().containsAll(route.stations())) {
                         routeClaimed = false;
                         break;
                     }
                 }
             }
-            BooleanProperty booleanProperty = new SimpleBooleanProperty();
-            booleanProperty.set(gameState.currentPlayerId() == playerId && playerState.canClaimRoute(route) && routeClaimed);
-            routeClaimable.put(route, booleanProperty);
+            routeClaimable.put(route,  new SimpleBooleanProperty(gameState.currentPlayerId() == playerId && playerState.canClaimRoute(route) && routeClaimed));
         }
 
     }

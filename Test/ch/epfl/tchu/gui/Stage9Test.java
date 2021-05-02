@@ -22,7 +22,6 @@ public final class Stage9Test extends Application {
     @Override
     public void start(Stage primaryStage) {
         ObservableGameState gameState = new ObservableGameState(PLAYER_1);
-
         ObjectProperty<ActionHandlers.ClaimRouteHandler> claimRoute =
                 new SimpleObjectProperty<>(Stage9Test::claimRoute);
         ObjectProperty<ActionHandlers.DrawTicketsHandler> drawTickets =

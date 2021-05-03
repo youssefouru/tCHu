@@ -5,9 +5,16 @@ import ch.epfl.tchu.game.Card;
 import ch.epfl.tchu.game.Route;
 import ch.epfl.tchu.game.Ticket;
 
+/**
+ * ActionHandlers : this interface is composed of different handlers
+ *
+ * @author Amine Youssef (324253)
+ * @author Louis Yves André Barinka (329847)
+ */
 public interface ActionHandlers {
 
 
+    
     @FunctionalInterface
     interface DrawTicketsHandler{
         /**

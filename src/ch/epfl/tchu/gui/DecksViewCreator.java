@@ -18,23 +18,31 @@ import javafx.scene.text.Text;
 
 import java.util.List;
 
+/**
+ * DecksViewCreator : this class creates the view of the deck
+ *
+ * @author Amine Youssef (324253)
+ * @author Louis Yves André Barinka (329847)
+ */
 public final class DecksViewCreator {
     private DecksViewCreator() {
     }
 
 
     /**
-     * @param gameState     (ObservableGameState)
-     * @param ticketsHP     (ObjectProperty< ActionHandlers.DrawTicketsHandler > ) :
-     * @param drawCardsHP (ObjectProperty< ActionHandlers.DrawCardHandler >) :
-     * @return (Node) :
+     * this method creates the view of the cards
+     *
+     * @param gameState   (ObservableGameState) : the observer of the gameState
+     * @param ticketsHP   (ObjectProperty< ActionHandlers.DrawTicketsHandler > ) : the handler of the tickets
+     * @param drawCardsHP (ObjectProperty< ActionHandlers.DrawCardHandler >) : the handler of the cards
+     * @return (Node) : the view of the cards
      */
     public static Node createCardsView(ObservableGameState gameState, ObjectProperty<ActionHandlers.DrawTicketsHandler> ticketsHP, ObjectProperty<ActionHandlers.DrawCardHandler> drawCardsHP) {
         VBox cardPaneBox = new VBox();
         cardPaneBox.getStylesheets().addAll("decks.css", "colors.css");
         cardPaneBox.setId("card-pane");
-        Button ticketButton = createButtons(gameState.ticketPercentage(),"Billets");
-        Button cardButton = createButtons(gameState.cardPercentage(),"Cartes");
+        Button ticketButton = createButtons(gameState.ticketPercentage(), "Billets");
+        Button cardButton = createButtons(gameState.cardPercentage(), "Cartes");
         ticketButton.setOnMouseClicked(event -> ticketsHP.get().onDrawTickets());
         cardButton.setOnMouseClicked((event -> drawCardsHP.get().onDrawCard(-1)));
         cardPaneBox.getChildren().add(ticketButton);
@@ -54,14 +62,14 @@ public final class DecksViewCreator {
     }
 
 
-    private static Button createButtons(ReadOnlyIntegerProperty pctProperty,String text) {
+    private static Button createButtons(ReadOnlyIntegerProperty pctProperty, String text) {
         Button mainButton = new Button();
         mainButton.getStyleClass().add("gauged");
         mainButton.setText(text);
         Group graphicGroup = new Group();
         Rectangle backgroundRectangle = new Rectangle(50, 5);
         backgroundRectangle.getStyleClass().add("background");
-        Rectangle foregroundRectangle = new Rectangle(50,5);
+        Rectangle foregroundRectangle = new Rectangle(50, 5);
         foregroundRectangle.widthProperty().bind(pctProperty.multiply(50).divide(100));
         foregroundRectangle.getStyleClass().add("foreground");
         graphicGroup.getChildren().addAll(backgroundRectangle, foregroundRectangle);
@@ -81,10 +89,10 @@ public final class DecksViewCreator {
     }
 
     /**
-     * this method creates the handView of
+     * this method creates the view of the hand of the player
      *
-     * @param gameState (ObservableGameState) :
-     * @return (Node) :
+     * @param gameState (ObservableGameState) : the observer of the gameState
+     * @return (Node) : the view of the hand of the player
      */
     public static Node createHandView(ObservableGameState gameState) {
         HBox deckBox = new HBox();
@@ -98,7 +106,7 @@ public final class DecksViewCreator {
             StackPane cardPane = new StackPane();
             cardPane.visibleProperty().bind(Bindings.greaterThan(count, 0));
             cardPane.getStyleClass().addAll(card == Card.LOCOMOTIVE ? "NEUTRAL" : card.name(),
-                                            "card");
+                    "card");
             Text countText = new Text();
             countText.getStyleClass().add("count");
             countText.visibleProperty().bind(Bindings.greaterThan(count, 1));

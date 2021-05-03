@@ -6,26 +6,29 @@ import ch.epfl.tchu.game.*;
 import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static javafx.collections.FXCollections.observableArrayList;
 import static javafx.collections.FXCollections.unmodifiableObservableList;
 
+/**
+ * ObservableGameState : this class creates the observer of the gameState
+ *
+ * @author Amine Youssef (324253)
+ * @author Louis Yves André Barinka (329847)
+ */
 public final class ObservableGameState {
     private final PlayerId playerId;
     private final IntegerProperty ticketPercentage = new SimpleIntegerProperty();
     private final IntegerProperty cardPercentage = new SimpleIntegerProperty();
     private final List<ObjectProperty<Card>> faceUpCards = createFaceUpCardProperty();
-    private final Map<Route, ObjectProperty<PlayerId>> routeMap = new HashMap<>();
-    private final IntegerProperty ticketCount = new SimpleIntegerProperty();
-    private final IntegerProperty cardCount = new SimpleIntegerProperty();
-    private final IntegerProperty carCount = new SimpleIntegerProperty();
-    private final IntegerProperty claimPoints = new SimpleIntegerProperty();
+    private final Map<Route, ObjectProperty<PlayerId>> routeMap = creatMap();
+    private final Map<PlayerId, IntegerProperty> ticketCount = new HashMap<>();
+    private final Map<PlayerId, IntegerProperty> cardCount = createPlayerIdMap();
+    private final Map<PlayerId, IntegerProperty> carCount = createPlayerIdMap();
+    private final Map<PlayerId, IntegerProperty> claimPoints = createPlayerIdMap();
     private final ObservableList<Ticket> playerTickets = observableArrayList();
-    private final List<IntegerProperty> cardsTypeNumber = createsNumberOfCard();
+    private final Map<Card, IntegerProperty> cardsTypeNumber = createsNumberOfCard();
     private final Map<Route, BooleanProperty> routeClaimable = new HashMap<>();
     private PlayerState playerState;
     private PublicGameState gameState;
@@ -43,6 +46,21 @@ public final class ObservableGameState {
 
     }
 
+    private static Map<Route, ObjectProperty<PlayerId>> creatMap() {
+        Map<Route, ObjectProperty<PlayerId>> mapRoute = new HashMap<>();
+        for (Route route : ChMap.routes()) {
+            mapRoute.put(route, new SimpleObjectProperty<>(null));
+        }
+        return mapRoute;
+    }
+
+    private static Map<PlayerId, IntegerProperty> createPlayerIdMap() {
+        Map<PlayerId, IntegerProperty> map = new EnumMap<>(PlayerId.class);
+        for (PlayerId playerId : PlayerId.ALL) {
+            map.put(playerId, new SimpleIntegerProperty(0));
+        }
+        return map;
+    }
 
     /**
      * this method refresh the states of the game
@@ -59,21 +77,21 @@ public final class ObservableGameState {
             faceUpCards.get(slot).set(gameState.cardState().faceUpCard(slot));
         }
         updateRoutes();
-        ticketCount.set(playerState.ticketCount());
-        cardCount.set(playerState.cardCount());
-        carCount.set(playerState.carCount());
-        claimPoints.set(playerState.claimPoints());
-        playerTickets.setAll(playerState.tickets().toList());
-        for (int i = 0; i < Card.COUNT; i++) {
-            cardsTypeNumber.get(i).set(playerState
-                    .cards()
-                    .countOf(Card.ALL.get(i)));
+        for (PlayerId playerId : PlayerId.ALL) {
+            PublicPlayerState idState = gameState.playerState(playerId);
+            ticketCount.get(playerId).set(idState.ticketCount());
+            cardCount.get(playerId).set(idState.cardCount());
+            carCount.get(playerId).set(idState.carCount());
+            claimPoints.get(playerId).set(idState.claimPoints());
+
         }
-
-
+        playerTickets.setAll(playerState.tickets().toList());
+        for (Card card : Card.ALL) {
+            cardsTypeNumber.get(card).set(playerState
+                    .cards()
+                    .countOf(card));
+        }
         updateClaimableRoute();
-
-
     }
 
     /**
@@ -118,28 +136,41 @@ public final class ObservableGameState {
     /**
      * this method returns the readOnly part of the the ticketCount of the playerState
      *
-     * @return (ReadOnlyIntegerProperty) : the readOnly part of the attribute ticketCount
+     * @param playerId (PlayerId) :  the player we want to know the the tickets count
+     * @return (ReadOnlyIntegerProperty) : the readOnly part of the ticket count of the player with the id in parameter in his identity
      */
-    public ReadOnlyIntegerProperty ticketCount() {
-        return ticketCount;
+    public ReadOnlyIntegerProperty ticketCount(PlayerId playerId) {
+        return ticketCount.get(playerId);
     }
 
     /**
      * this method returns the readOnly part of the the cardCount of the playerState
      *
-     * @return (ReadOnlyIntegerProperty) : the readOnly part of the attribute cardCount
+     * @param playerId (PlayerId) : the player we want to know the the card Count
+     * @return (ReadOnlyIntegerProperty) : the readOnly part of the card Count of the player with the id in parameter in his identity
      */
-    public ReadOnlyIntegerProperty cardCount() {
-        return cardCount;
+    public ReadOnlyIntegerProperty cardCount(PlayerId playerId) {
+        return cardCount.get(playerId);
+    }
+
+    /**
+     * this method returns the readOnly part of the the carCount of the playerState
+     *
+     * @param playerId (PlayerId) : the player we want to know the the car Count
+     * @return (ReadOnlyIntegerProperty) : the readOnly part of the car Count of the player with the id in parameter in his identity
+     */
+    public ReadOnlyIntegerProperty carCount(PlayerId playerId) {
+        return carCount.get(playerId);
     }
 
     /**
      * this method returns the readOnly part of the the claimPoints of the playerState
      *
-     * @return (ReadOnlyIntegerProperty) : the readOnly part of the attribute claimPoints
+     * @param playerId (PlayerId) : the player we want to know the the claimPoints
+     * @return (ReadOnlyIntegerProperty) : the readOnly part of the clainPoints of the player with the id in parameter in his identity
      */
-    public ReadOnlyIntegerProperty claimPoints() {
-        return claimPoints;
+    public ReadOnlyIntegerProperty claimPoints(PlayerId playerId) {
+        return claimPoints.get(playerId);
     }
 
     /**
@@ -158,8 +189,7 @@ public final class ObservableGameState {
      * @return (IntegerProperty) : the property of the number of the card in parameter
      */
     public ReadOnlyIntegerProperty cardsTypeNumber(Card card) {
-
-        return cardsTypeNumber.get(card.ordinal());
+        return cardsTypeNumber.get(card);
     }
 
     /**
@@ -190,7 +220,6 @@ public final class ObservableGameState {
         return gameState.canDrawTickets();
     }
 
-
     /**
      * this method returns a property of all the cards that the player can play to claim the cards
      *
@@ -200,7 +229,6 @@ public final class ObservableGameState {
     public List<SortedBag<Card>> possibleClaimCards(Route route) {
         return playerState.possibleClaimCards(route);
     }
-
 
     private void updateClaimableRoute() {
         if (gameState == null) return;
@@ -214,7 +242,7 @@ public final class ObservableGameState {
                     }
                 }
             }
-            routeClaimable.put(route,  new SimpleBooleanProperty(gameState.currentPlayerId() == playerId && playerState.canClaimRoute(route) && routeClaimed));
+            routeClaimable.put(route, new SimpleBooleanProperty(gameState.currentPlayerId() == playerId && playerState.canClaimRoute(route) && routeClaimed));
         }
 
     }
@@ -227,27 +255,22 @@ public final class ObservableGameState {
         return cards;
     }
 
-    private List<IntegerProperty> createsNumberOfCard() {
-        List<IntegerProperty> listOfNumberOfCards = new ArrayList<>();
-        for (int i = 0; i < Card.COUNT; i++) {
-            IntegerProperty cardProperty = new SimpleIntegerProperty();
-            cardProperty.set(0);
-            listOfNumberOfCards.add(cardProperty);
+    private Map<Card, IntegerProperty> createsNumberOfCard() {
+        Map<Card, IntegerProperty> listOfNumberOfCards = new EnumMap<>(Card.class);
+        for (Card card : Card.ALL) {
+            listOfNumberOfCards.put(card, new SimpleIntegerProperty(0));
         }
         return listOfNumberOfCards;
     }
 
     private void updateRoutes() {
         for (Route route : ChMap.routes()) {
-            ObjectProperty<PlayerId> routeOwnerId = new SimpleObjectProperty<>();
-            routeOwnerId.set(null);
             for (PlayerId playerId : PlayerId.ALL) {
                 if (gameState.playerState(playerId).routes().contains(route)) {
-                    routeOwnerId.set(playerId);
+                    routeMap.get(route).set(playerId);
                     break;
                 }
             }
-            routeMap.put(route, routeOwnerId);
         }
 
     }

@@ -3,7 +3,6 @@ package ch.epfl.tchu.gui;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.Card;
 import ch.epfl.tchu.game.ChMap;
-import ch.epfl.tchu.game.PlayerId;
 import ch.epfl.tchu.game.Route;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.Group;
@@ -22,9 +21,11 @@ import java.util.List;
  * @author Louis Yves André Barinka (329847)
  */
 public final class MapViewCreator {
-    private final static int circleRadius = 3;
-    private final static int rectangleWidth = 36;
-    private final static int rectangleHeight = 12;
+    private final static int CIRCLE_RADIUS = 3;
+    private final static int RECTANGLE_WIDTH = 36;
+    private final static int RECTANGLE_HEIGHT = 12;
+    private final static int CIRCLE_X_POS = 12;
+    private final static int CIRCLE_Y_POS = 6;
 
     /**
      * this method create the view of the map
@@ -51,9 +52,9 @@ public final class MapViewCreator {
             routeGroup.setOnMouseClicked((e) -> {
                 List<SortedBag<Card>> possibleClaimCards = gameState.possibleClaimCards(route);
                 ActionHandlers.ClaimRouteHandler claimRouteH = claimRouteHP.get();
-                if(possibleClaimCards.size() == 1){
-                    claimRouteH.onClaimRoute(route,possibleClaimCards.get(0));
-                }else {
+                if (possibleClaimCards.size() == 1) {
+                    claimRouteH.onClaimRoute(route, possibleClaimCards.get(0));
+                } else {
                     ActionHandlers.ChooseCardsHandler chooseCardsH = chosenCards -> claimRouteH.onClaimRoute(route, chosenCards);
                     cardChooser.chooseCards(possibleClaimCards, chooseCardsH);
                 }
@@ -63,22 +64,18 @@ public final class MapViewCreator {
             routeGroup.getStyleClass().addAll("route",
                     route.level().name(),
                     route.color() == null ? "NEUTRAL" : route.color().name());
-            if(gameState.routeOwner(route).get() != null){
-                routeGroup.getStyleClass().add(gameState.routeOwner(route).get().name());
-            }
-            gameState.routeOwner(route).addListener((o,oV,nV)-> {
-                    routeGroup.getStyleClass().add(nV.name());
-            });
+
+            gameState.routeOwner(route).addListener((o, oV, nV) -> routeGroup.getStyleClass().add(nV.name()));
 
 
             for (int i = 1; i <= route.length(); i++) {
-                Rectangle wayRectangle = new Rectangle(rectangleWidth, rectangleHeight);
+                Rectangle wayRectangle = new Rectangle(RECTANGLE_WIDTH, RECTANGLE_HEIGHT);
                 wayRectangle.getStyleClass().addAll("track", "filled");
-                Rectangle carRectangle = new Rectangle(rectangleWidth, rectangleHeight);
+                Rectangle carRectangle = new Rectangle(RECTANGLE_WIDTH, RECTANGLE_HEIGHT);
                 carRectangle.getStyleClass().add("filled");
-                Group carGroup = new Group(carRectangle,new Circle(12, 6, circleRadius), new Circle(24, 6, circleRadius));
+                Group carGroup = new Group(carRectangle, new Circle(CIRCLE_X_POS, CIRCLE_Y_POS, CIRCLE_RADIUS), new Circle(2*CIRCLE_X_POS, CIRCLE_Y_POS, CIRCLE_RADIUS));
                 carGroup.getStyleClass().add("car");
-                Group caseGroup = new Group(wayRectangle,carGroup);
+                Group caseGroup = new Group(wayRectangle, carGroup);
                 caseGroup.setId(route.id() + "_" + i);
                 routeGroup.getChildren().add(caseGroup);
             }

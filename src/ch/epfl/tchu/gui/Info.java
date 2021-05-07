@@ -6,7 +6,8 @@ import ch.epfl.tchu.game.Route;
 import ch.epfl.tchu.game.Trail;
 
 import java.util.List;
-import java.util.Objects;
+
+
 
 /**
  * Info : this class gathers all the info needed in the game
@@ -16,6 +17,7 @@ import java.util.Objects;
  */
 public final class Info {
     private final String player;
+    private final CardBagStringConverter cardBagStringConverter;
 
 
     /**
@@ -25,6 +27,7 @@ public final class Info {
      */
     public Info(String player) {
         this.player = player;
+        cardBagStringConverter = new CardBagStringConverter();
     }
 
     /**
@@ -35,7 +38,7 @@ public final class Info {
      * @return (String) the String described
      */
     public static String cardName(Card card, int count) {
-        String color = "";
+        String color;
         switch (card) {
             case BLACK:
                 color = StringsFr.BLACK_CARD;
@@ -78,24 +81,6 @@ public final class Info {
         return String.format("%s%s%s", route.station1(), StringsFr.EN_DASH_SEPARATOR, route.station2());
     }
 
-    private static String cardsCollectionPrinter(SortedBag<Card> cardsCollection) {
-        StringBuilder toBeDisplayed = new StringBuilder();
-        int counter = 0;
-        for (Card c : cardsCollection.toSet()) {
-            int n = cardsCollection.countOf(c);
-            if (counter == 0) {
-                toBeDisplayed.append(String.format("%s %s", n, cardName(c, n)));
-            } else if (counter == cardsCollection.toSet().size() - 1) {
-                toBeDisplayed.append(String.format("%s%s %s", StringsFr.AND_SEPARATOR, n, cardName(c, n)));
-            } else {
-                toBeDisplayed.append(String.format(", %s %s", n, cardName(c, n)));
-            }
-            counter++;
-        }
-
-        return toBeDisplayed.toString();
-
-    }
 
     /**
      * Displays if there is a draw between two players with the number of points
@@ -106,9 +91,9 @@ public final class Info {
      */
     public static String draw(List<String> playerNames, int points) {
         StringBuilder builder = new StringBuilder();
-        for(int i = 0 ; i<playerNames.size();++i){
-            String separator = i == playerNames.size()-2 ? StringsFr.AND_SEPARATOR:",";
-            separator = i == playerNames.size() -1 ?"":separator;
+        for (int i = 0; i < playerNames.size(); ++i) {
+            String separator = i == playerNames.size() - 2 ? StringsFr.AND_SEPARATOR : ",";
+            separator = i == playerNames.size() - 1 ? "" : separator;
             builder.append(playerNames.get(i));
             builder.append(separator);
         }
@@ -183,7 +168,7 @@ public final class Info {
      * @return (String) : the player has claimed the route with initialCards
      */
     public String claimedRoute(Route route, SortedBag<Card> initialCards) {
-        return String.format(StringsFr.CLAIMED_ROUTE, player, routePrinter(route), cardsCollectionPrinter(initialCards));
+        return String.format(StringsFr.CLAIMED_ROUTE, player, routePrinter(route), cardBagStringConverter.toString(initialCards));
     }
 
     /**
@@ -194,7 +179,8 @@ public final class Info {
      * @return (String) : the player has claimed the underground route with initialCards
      */
     public String attemptsTunnelClaim(Route route, SortedBag<Card> initialCards) {
-        return String.format(StringsFr.ATTEMPTS_TUNNEL_CLAIM, player, routePrinter(route), cardsCollectionPrinter(initialCards));
+
+        return String.format(StringsFr.ATTEMPTS_TUNNEL_CLAIM, player, routePrinter(route), (initialCards));
     }
 
     /**
@@ -206,7 +192,7 @@ public final class Info {
      */
     public String drewAdditionalCards(SortedBag<Card> drawnCards, int additionalCost) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(String.format(StringsFr.ADDITIONAL_CARDS_ARE, cardsCollectionPrinter(drawnCards)));
+        stringBuilder.append(String.format(StringsFr.ADDITIONAL_CARDS_ARE, cardBagStringConverter.toString(drawnCards)));
         if (additionalCost == 0) {
             return stringBuilder.append(String.format(StringsFr.NO_ADDITIONAL_COST)).toString();
         } else {

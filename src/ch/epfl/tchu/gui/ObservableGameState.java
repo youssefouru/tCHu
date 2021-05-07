@@ -19,17 +19,17 @@ import static javafx.collections.FXCollections.unmodifiableObservableList;
  */
 public final class ObservableGameState {
     private final PlayerId playerId;
-    private final IntegerProperty ticketPercentage = new SimpleIntegerProperty();
-    private final IntegerProperty cardPercentage = new SimpleIntegerProperty();
+    private final IntegerProperty ticketPct = new SimpleIntegerProperty();
+    private final IntegerProperty cardPct = new SimpleIntegerProperty();
     private final List<ObjectProperty<Card>> faceUpCards = createFaceUpCardProperty();
     private final Map<Route, ObjectProperty<PlayerId>> routeMap = creatMap();
-    private final Map<PlayerId, IntegerProperty> ticketCount = new HashMap<>();
+    private final Map<PlayerId, IntegerProperty> ticketCount = createPlayerIdMap();
     private final Map<PlayerId, IntegerProperty> cardCount = createPlayerIdMap();
     private final Map<PlayerId, IntegerProperty> carCount = createPlayerIdMap();
     private final Map<PlayerId, IntegerProperty> claimPoints = createPlayerIdMap();
     private final ObservableList<Ticket> playerTickets = observableArrayList();
     private final Map<Card, IntegerProperty> cardsTypeNumber = createsNumberOfCard();
-    private final Map<Route, BooleanProperty> routeClaimable = new HashMap<>();
+    private final Map<Route, BooleanProperty> routeClaimable = createBooleanMAp();
     private PlayerState playerState;
     private PublicGameState gameState;
 
@@ -62,23 +62,31 @@ public final class ObservableGameState {
         return map;
     }
 
+    private static Map<Route, BooleanProperty> createBooleanMAp() {
+        Map<Route, BooleanProperty> map = new HashMap<>();
+        for (Route route : ChMap.routes()) {
+            map.put(route, new SimpleBooleanProperty());
+        }
+        return map;
+    }
+
     /**
      * this method refresh the states of the game
      *
-     * @param publicGameState (PublicGameState)  : the new publicGameState of the this observer
-     * @param playerState     (PlayerState) : the new playerState of the observer
+     * @param gameState   (PublicGameState)  : the new gameState of the this observer
+     * @param playerState (PlayerState) : the new playerState of the observer
      */
-    public void setState(PublicGameState publicGameState, PlayerState playerState) {
-        gameState = publicGameState;
+    public void setState(PublicGameState gameState, PlayerState playerState) {
+        this.gameState = gameState;
         this.playerState = playerState;
-        ticketPercentage.set((gameState.ticketsCount() * 100 / ChMap.tickets().size()));
-        cardPercentage.set((gameState.cardState().deckSize() * 100 / Constants.ALL_CARDS.size()));
+        ticketPct.set((this.gameState.ticketsCount() * 100 / ChMap.tickets().size()));
+        cardPct.set((this.gameState.cardState().deckSize() * 100 / Constants.ALL_CARDS.size()));
         for (int slot : Constants.FACE_UP_CARD_SLOTS) {
-            faceUpCards.get(slot).set(gameState.cardState().faceUpCard(slot));
+            faceUpCards.get(slot).set(this.gameState.cardState().faceUpCard(slot));
         }
         updateRoutes();
         for (PlayerId playerId : PlayerId.ALL) {
-            PublicPlayerState idState = gameState.playerState(playerId);
+            PublicPlayerState idState = this.gameState.playerState(playerId);
             ticketCount.get(playerId).set(idState.ticketCount());
             cardCount.get(playerId).set(idState.cardCount());
             carCount.get(playerId).set(idState.carCount());
@@ -95,21 +103,21 @@ public final class ObservableGameState {
     }
 
     /**
-     * this method returns the readOnly part of the cardPercentage
+     * this method returns the readOnly part of the cardPct
      *
-     * @return (ReadOnlyIntegerProperty) : the readOnly part of the attribute cardPercentage
+     * @return (ReadOnlyIntegerProperty) : the readOnly part of the attribute cardPct
      */
     public ReadOnlyIntegerProperty cardPercentage() {
-        return cardPercentage;
+        return cardPct;
     }
 
     /**
-     * this method returns the readOnly part of the ticketPercentage
+     * this method returns the readOnly part of the ticketPct
      *
-     * @return (ReadOnlyIntegerProperty) : the readOnly part of the attribute ticketPercentage
+     * @return (ReadOnlyIntegerProperty) : the readOnly part of the attribute ticketPct
      */
     public ReadOnlyIntegerProperty ticketPercentage() {
-        return ticketPercentage;
+        return ticketPct;
     }
 
     /**
@@ -231,7 +239,6 @@ public final class ObservableGameState {
     }
 
     private void updateClaimableRoute() {
-        if (gameState == null) return;
         for (Route route : ChMap.routes()) {
             boolean routeClaimed = !gameState.claimedRoutes().contains(route);
             if (routeClaimed) {
@@ -242,7 +249,7 @@ public final class ObservableGameState {
                     }
                 }
             }
-            routeClaimable.put(route, new SimpleBooleanProperty(gameState.currentPlayerId() == playerId && playerState.canClaimRoute(route) && routeClaimed));
+            routeClaimable.get(route).set(gameState.currentPlayerId() == playerId && playerState.canClaimRoute(route) && routeClaimed);
         }
 
     }
@@ -267,7 +274,8 @@ public final class ObservableGameState {
         for (Route route : ChMap.routes()) {
             for (PlayerId playerId : PlayerId.ALL) {
                 if (gameState.playerState(playerId).routes().contains(route)) {
-                    routeMap.get(route).set(playerId);
+                    routeMap.get(route)
+                            .set(playerId);
                     break;
                 }
             }

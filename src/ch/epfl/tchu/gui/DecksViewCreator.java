@@ -4,8 +4,8 @@ import ch.epfl.tchu.game.Card;
 import ch.epfl.tchu.game.Constants;
 import ch.epfl.tchu.game.Ticket;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyIntegerProperty;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.*;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -41,28 +41,29 @@ public final class DecksViewCreator {
         VBox cardPaneBox = new VBox();
         cardPaneBox.getStylesheets().addAll("decks.css", "colors.css");
         cardPaneBox.setId("card-pane");
-        Button ticketButton = createButtons(gameState.ticketPercentage(), "Billets");
-        Button cardButton = createButtons(gameState.cardPercentage(), "Cartes");
+        Button ticketButton = createButtons(gameState.ticketPercentage(), StringsFr.TICKETS,ticketsHP.isNull());
+        Button cardButton = createButtons(gameState.cardPercentage(), StringsFr.CARDS,drawCardsHP.isNull());
         ticketButton.setOnMouseClicked(event -> ticketsHP.get().onDrawTickets());
         cardButton.setOnMouseClicked((event -> drawCardsHP.get().onDrawCard(-1)));
         cardPaneBox.getChildren().add(ticketButton);
-        for (int i = 0; i < Constants.FACE_UP_CARDS_COUNT; i++) {
-            Card card = gameState.faceUpCard(i).get();
+        for (int slot : Constants.FACE_UP_CARD_SLOTS) {
+            ReadOnlyObjectProperty<Card> card = gameState.faceUpCard(slot);
             StackPane cardPane = new StackPane();
-            cardPane.getStyleClass().addAll(card == Card.LOCOMOTIVE ? "NEUTRAL" : card.name(), "card");
+            card.addListener((o, oV, nV)-> cardPane.getStyleClass().set(0,nV == Card.LOCOMOTIVE ? "NEUTRAL" : nV.color().name()));
+            cardPane.getStyleClass().add("");
+            cardPane.getStyleClass().add("card");
             for (Rectangle rectangle : cardRectangle()) {
                 cardPane.getChildren().add(rectangle);
             }
             cardPaneBox.getChildren().add(cardPane);
-            int finalI = i;
-            cardPane.setOnMouseClicked(event -> drawCardsHP.get().onDrawCard(finalI));
+            cardPane.setOnMouseClicked(event -> drawCardsHP.get().onDrawCard(slot));
         }
         cardPaneBox.getChildren().add(cardButton);
         return cardPaneBox;
     }
 
 
-    private static Button createButtons(ReadOnlyIntegerProperty pctProperty, String text) {
+    private static Button createButtons(ReadOnlyIntegerProperty pctProperty, String text, BooleanBinding booleanProperty) {
         Button mainButton = new Button();
         mainButton.getStyleClass().add("gauged");
         mainButton.setText(text);
@@ -74,6 +75,7 @@ public final class DecksViewCreator {
         foregroundRectangle.getStyleClass().add("foreground");
         graphicGroup.getChildren().addAll(backgroundRectangle, foregroundRectangle);
         mainButton.setGraphic(graphicGroup);
+        mainButton.disableProperty().bind(booleanProperty);
         return mainButton;
     }
 

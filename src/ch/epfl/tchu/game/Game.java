@@ -33,15 +33,12 @@ public final class Game {
     public static void play(Map<PlayerId, Player> players, Map<PlayerId, String> playerNames, SortedBag<Ticket> tickets, Random rng) {
         Preconditions.checkArgument(players.size() == PlayerId.COUNT && playerNames.size() == PlayerId.COUNT);
         GameState gameState = GameState.initial(tickets, rng);
-
         players.forEach(((playerId, player) -> player.initPlayers(playerId, playerNames)));
         Map<PlayerId, Info> playersInfos = new EnumMap<>(PlayerId.class);
-        for (PlayerId playerId : PlayerId.ALL) {
-            playersInfos.put(playerId, new Info(playerNames.get(playerId)));
-        }
+        PlayerId.ALL.forEach((playerId -> playersInfos.put(playerId, new Info(playerNames.get(playerId)))));
         transmitInfo(players, playersInfos.
                 get(gameState.
-                currentPlayerId()).
+                        currentPlayerId()).
                 willPlayFirst());
 
         Map<PlayerId, String> infosOfTickets = new HashMap<>();
@@ -155,7 +152,7 @@ public final class Game {
             mapOfTrails.put(playerId, Trail.longest(playerState.routes()));
         }
 
-        List<PlayerId> playerTheLongestTrails = getsBonus(mapOfTrails);
+        Set<PlayerId> playerTheLongestTrails = getsBonus(mapOfTrails);
         Map<PlayerId, Integer> mapPoints = new EnumMap<>(PlayerId.class);
         for (PlayerId playerId : PlayerId.ALL) {
             //we verify if the player is among the player who has the longest trail and if he is among them he can have the bonus
@@ -167,13 +164,13 @@ public final class Game {
         }
 
         List<PlayerId> listOfPlayer = maxPoints(mapPoints);
+        PlayerId winner = listOfPlayer.get(0);
         if (listOfPlayer.size() == 1) {
-            PlayerId winner = listOfPlayer.get(0);
             int winnerPoint = mapPoints.get(winner);
             int looserPoint = mapPoints.get(winner.next());
             transmitInfo(players, playersInfos.get(listOfPlayer.get(0)).won(winnerPoint, looserPoint));
         } else {
-            int points = mapPoints.get(listOfPlayer.get(0));
+            int points = mapPoints.get(winner);
             List<String> names = listOfPlayer.stream().
                     map(playerNames::get).
                     collect(Collectors.toList());
@@ -193,7 +190,7 @@ public final class Game {
 
     }
 
-    private static List<PlayerId> getsBonus(Map<PlayerId, Trail> longestTrailList) {
+    private static Set<PlayerId> getsBonus(Map<PlayerId, Trail> longestTrailList) {
 
         int maxLength = longestTrailList.get(PlayerId.PLAYER_1).length();
         for (PlayerId playerId : PlayerId.ALL) {
@@ -201,7 +198,7 @@ public final class Game {
                 maxLength = longestTrailList.get(playerId).length();
             }
         }
-        List<PlayerId> playerIdList = new ArrayList<>();
+        Set<PlayerId> playerIdList = new TreeSet<>(Enum::compareTo);
         for (PlayerId playerId : PlayerId.ALL) {
             if (longestTrailList.get(playerId).length() == maxLength) {
                 playerIdList.add(playerId);
@@ -213,6 +210,7 @@ public final class Game {
 
     private static List<PlayerId> maxPoints(Map<PlayerId, Integer> points) {
         List<PlayerId> winner = new ArrayList<>();
+
         int max = points.get(PlayerId.PLAYER_1);
         for (PlayerId playerId : PlayerId.ALL) {
             if (points.get(playerId) > max) {
@@ -220,7 +218,7 @@ public final class Game {
             }
         }
         for (PlayerId playerId : PlayerId.ALL) {
-            if (points.get(playerId) == max ) {
+            if (points.get(playerId) == max) {
                 winner.add(playerId);
             }
         }

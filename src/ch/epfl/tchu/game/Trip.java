@@ -43,6 +43,7 @@ public final class Trip {
      * @return all (List<Trip>) : list of all the trips
      */
     public static List<Trip> all(List<Station> from, List<Station> to, int points) {
+        Preconditions.checkArgument(!from.isEmpty() && !to.isEmpty());
         List<Trip> all = new ArrayList<>();
         for (Station station : from) {
             for (Station stationBis : to) {

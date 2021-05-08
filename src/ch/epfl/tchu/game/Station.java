@@ -2,6 +2,8 @@ package ch.epfl.tchu.game;
 
 import ch.epfl.tchu.Preconditions;
 
+import java.util.Objects;
+
 /**
  * A Station : this class represent a station in the game
  *
@@ -23,7 +25,7 @@ public final class Station {
     public Station(int id, String name) {
         Preconditions.checkArgument(id >= 0);
         this.id = id;
-        this.name = name;
+        this.name = Objects.requireNonNull(name);
 
     }
 

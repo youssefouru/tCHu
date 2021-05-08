@@ -15,6 +15,7 @@ public class PublicPlayerState {
     private final int ticketCount;
     private final int cardCount;
     private final int numberOfWagon;
+    private final int claimPoints;
 
     /**
      * Constructor of PublicPlayerState
@@ -29,6 +30,7 @@ public class PublicPlayerState {
         this.ticketCount = ticketCount;
         this.cardCount = cardCount;
         this.numberOfWagon = computeWagon(routes);
+        claimPoints  = computePoints(routes);
     }
 
     private static int computeWagon(List<Route> routes) {
@@ -36,7 +38,7 @@ public class PublicPlayerState {
         for (Route route : routes) {
             i += route.length();
         }
-        return 40 - i;
+        return Constants.INITIAL_CAR_COUNT - i;
     }
 
     /**
@@ -81,6 +83,10 @@ public class PublicPlayerState {
      * @return (int) : returns the number of points wins by the player thanks to the routeOwner he has
      */
     public int claimPoints() {
+       return claimPoints;
+    }
+
+    private static int computePoints(List<Route> routes){
         int i = 0;
         for (Route route : routes) {
             i += route.claimPoints();

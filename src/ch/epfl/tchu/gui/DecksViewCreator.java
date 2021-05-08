@@ -44,7 +44,9 @@ public final class DecksViewCreator {
         Button ticketButton = createButtons(gameState.ticketPercentage(), StringsFr.TICKETS,ticketsHP.isNull());
         Button cardButton = createButtons(gameState.cardPercentage(), StringsFr.CARDS,drawCardsHP.isNull());
         ticketButton.setOnMouseClicked(event -> ticketsHP.get().onDrawTickets());
+        ticketButton.disableProperty().bind(ticketsHP.isNull());
         cardButton.setOnMouseClicked((event -> drawCardsHP.get().onDrawCard(-1)));
+        cardButton.disableProperty().bind(drawCardsHP.isNull());
         cardPaneBox.getChildren().add(ticketButton);
         for (int slot : Constants.FACE_UP_CARD_SLOTS) {
             ReadOnlyObjectProperty<Card> card = gameState.faceUpCard(slot);
@@ -56,6 +58,7 @@ public final class DecksViewCreator {
                 cardPane.getChildren().add(rectangle);
             }
             cardPaneBox.getChildren().add(cardPane);
+            cardPane.disableProperty().bind(drawCardsHP.isNull());
             cardPane.setOnMouseClicked(event -> drawCardsHP.get().onDrawCard(slot));
         }
         cardPaneBox.getChildren().add(cardButton);

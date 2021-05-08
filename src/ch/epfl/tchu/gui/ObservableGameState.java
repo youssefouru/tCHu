@@ -265,7 +265,7 @@ public final class ObservableGameState {
     private Map<Card, IntegerProperty> createsNumberOfCard() {
         Map<Card, IntegerProperty> listOfNumberOfCards = new EnumMap<>(Card.class);
         for (Card card : Card.ALL) {
-            listOfNumberOfCards.put(card, new SimpleIntegerProperty(0));
+            listOfNumberOfCards.put(card, new SimpleIntegerProperty());
         }
         return listOfNumberOfCards;
     }

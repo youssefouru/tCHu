@@ -16,11 +16,11 @@ public enum PlayerId {
     /**
      * ALL (List<PLayerId>) : contains all the element of this enum type
      */
-    public static List<PlayerId> ALL = List.of(PlayerId.values());
+    public final static List<PlayerId> ALL = List.of(PlayerId.values());
     /**
      * COUNT (int) :  represent the number of all the values of this enum type
      */
-    public static int COUNT = PlayerId.values().length;
+    public final static int COUNT = PlayerId.values().length;
 
     /**
      * this method returns the next player who has to play

@@ -103,13 +103,9 @@ public final class Ticket implements Comparable<Ticket> {
             int points = trip.points();
             if (connectivity.connected(from, to)) {
                 isConnected = true;
-                if (points > maxPointsEarned) {
-                    maxPointsEarned = points;
-                }
+                maxPointsEarned = Math.max(points,maxPointsEarned);
             }
-            if (minPoint > points) {
-                minPoint = points;
-            }
+            minPoint = Math.min(points,minPoint);
             if (isConnected) {
                 totalPoint = maxPointsEarned;
             } else {

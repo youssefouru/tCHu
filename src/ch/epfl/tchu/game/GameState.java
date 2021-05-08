@@ -31,18 +31,11 @@ public final class GameState extends PublicGameState {
      * @param lastPlayer      (PlayerId) : the Id of the last Player
      */
     private GameState(Deck<Ticket> tickets, CardState cardState, PlayerId currentPlayerId, Map<PlayerId, PlayerState> playerState, PlayerId lastPlayer) {
-        super(tickets.size(), cardState, currentPlayerId, transform(playerState), lastPlayer);
+        super(tickets.size(), cardState, currentPlayerId,Map.copyOf(playerState), lastPlayer);
         this.playerState = Map.copyOf(playerState);
         this.tickets = tickets;
         this.cardState = cardState;
 
-    }
-
-
-    private static Map<PlayerId, PublicPlayerState> transform(Map<PlayerId, PlayerState> playerState) {
-        Map<PlayerId, PublicPlayerState> map = new HashMap<>();
-        playerState.forEach(map::put);
-        return map;
     }
 
     /**

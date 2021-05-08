@@ -23,11 +23,11 @@ public enum Card {
     /**
      * COUNT (int) :  represent the number of all the values of this enum type
      */
-    public final static int COUNT = Card.values().length;
+    public final static int COUNT = values().length;
     /**
      * ALL (List<Card>) : contains all the element of this enum type
      */
-    public final static List<Card> ALL = List.of(Card.values());
+    public final static List<Card> ALL = List.of(values());
     /**
      * CARS (List<Card>) : contains the element of this enum type from BLACK to WHITE
      */
@@ -50,11 +50,26 @@ public enum Card {
      * @return (Card) : return the card with the color that has been chosen in parameter
      */
     public static Card of(Color color) {
-        for (Card card : ALL) {
-            if (card.color.equals(color))
-                return card;
+        switch (color){
+            case BLACK:
+                return Card.BLACK;
+            case VIOLET:
+                return Card.VIOLET;
+            case BLUE:
+                return Card.BLUE;
+            case GREEN :
+                return Card.GREEN;
+            case YELLOW:
+                return Card.YELLOW;
+            case ORANGE:
+                return Card.ORANGE;
+            case RED:
+                return Card.RED;
+            case WHITE:
+                return Card.WHITE;
+            default:
+                throw new Error();
         }
-        throw new Error();
     }
 
     /**

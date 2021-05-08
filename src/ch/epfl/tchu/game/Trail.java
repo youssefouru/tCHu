@@ -14,7 +14,7 @@ public final class Trail {
     private final List<Route> routesOfTheTrail;
     private final int length;
     private final Station station1,station2;
-    private final static Trail emptyTrail = new Trail(new ArrayList<>(),null,null);
+    private final static Trail emptyTrail = new Trail(new ArrayList<>(),null,null,0);
     /**
      * Constructor of Trail
      *
@@ -22,27 +22,19 @@ public final class Trail {
      * @param station1               (Station) : the first station of the trail
      * @param station2               (Station) : the second station of the trail
      */
-    private Trail(List<Route> routesOfTheTrail, Station station1, Station station2) {
-        this.routesOfTheTrail = List.copyOf(routesOfTheTrail);
-        this.length = computeLength(routesOfTheTrail);
+    private Trail(List<Route> routesOfTheTrail, Station station1, Station station2,int length) {
+        this.routesOfTheTrail =routesOfTheTrail;
+        this.length = length;
         this.station1 = station1;
         this.station2 = station2;
 
     }
 
-    private static int computeLength(List<Route> routes) {
-        int i = 0;
-        for (Route route : routes) {
-            i += route.length();
-        }
-        return i;
-    }
-
     private static List<Trail> trailCreation(List<Route> routes) {
         List<Trail> trails = new ArrayList<>();
         for (Route route : routes) {
-            trails.add(new Trail(List.of(route), route.station1(), route.station2()));
-            trails.add(new Trail(List.of(route), route.station2(), route.station1()));
+            trails.add(new Trail(List.of(route), route.station1(), route.station2(),route.length()));
+            trails.add(new Trail(List.of(route), route.station2(), route.station1(),route.length()));
         }
         return trails;
     }
@@ -59,11 +51,14 @@ public final class Trail {
         List<Trail> tempTrails = new ArrayList<>();
         //we create a list of trails composed of each route that we want to check what is the is the longest trail
         List<Trail> trailsToBeTested = trailCreation(routes);
-        Trail saved = new Trail(new ArrayList<>(), null, null);
+        Trail saved = new Trail(new ArrayList<>(), null, null,0);
+
         while (!trailsToBeTested.isEmpty()) {
+
             for (Trail trail : trailsToBeTested) {
                 if (trail.length() == 0)
                     continue;
+
                 List<Route> routesToTest = new ArrayList<>(routes);
                 routesToTest.removeAll(trail.routesOfTheTrail);
                 for (Route route : routesToTest) {
@@ -91,10 +86,10 @@ public final class Trail {
      * @param route (Route) the route that must be added
      * @return (Trail) the trail considered modified, with a route added to the right
      */
-    private Trail addARouteToTheRight(Route route, Station commonStation) { //for this class to be static, a copy of routesOfTheTrailIsMade
+    private Trail addARouteToTheRight(Route route, Station commonStation) {
         List<Route> myRoutes = new ArrayList<>(routesOfTheTrail);
         myRoutes.add(route);
-        return new Trail(myRoutes, this.station1, route.stationOpposite(commonStation));
+        return new Trail(myRoutes, this.station1, route.stationOpposite(commonStation),length + route.length());
     }
 
     /**

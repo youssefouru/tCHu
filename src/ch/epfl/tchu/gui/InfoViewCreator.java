@@ -11,17 +11,27 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
-import java.util.Collections;
 import java.util.Map;
+
 import static ch.epfl.tchu.game.PlayerId.ALL;
+
+/**
+ * InfoViewCreator : this class represents the creator of the info view
+ *
+ * @author Amine Youssef (324253)
+ * @author Louis Yves André Barinka (329847)
+ */
 public final class InfoViewCreator {
     private static final int CIRCLE_RADIUS = 5;
+
     /**
-     * @param playerId (PlayerId) :
-     * @param playerNames (Map< PlayerId, String >) :
-     * @param gameState (ObservableGameState) :
-     * @param texts (ObservableList<Text>) :
-     * @return (Node) :
+     * This method creates the view of the info.
+     *
+     * @param playerId    (PlayerId) : the id of the player who has the info
+     * @param playerNames (Map< PlayerId, String >) : the map that gives us all the names of each player
+     * @param gameState   (ObservableGameState) : the observator of the gameState
+     * @param texts       (ObservableList<Text>) : the list of info we want to show
+     * @return (Node) : the view of the info
      */
     public static Node createInfoView(PlayerId playerId, Map<PlayerId, String> playerNames, ObservableGameState gameState, ObservableList<Text> texts) {
         VBox statBox = new VBox();
@@ -31,11 +41,11 @@ public final class InfoViewCreator {
             statsText.textProperty().bind(Bindings.format(StringsFr.PLAYER_STATS, playerNames.get(id), gameState.ticketCount(id), gameState.cardCount(id), gameState.carCount(id), gameState.claimPoints(id)));
             Circle infoCircle = new Circle(CIRCLE_RADIUS);
             infoCircle.getStyleClass().add("filled");
-            TextFlow idFlow = new TextFlow(infoCircle,statsText);
+            TextFlow idFlow = new TextFlow(infoCircle, statsText);
             idFlow.getStyleClass().add(id.name());
             statBox.getChildren().add(idFlow);
         }
-        FXCollections.rotate(statBox.getChildren(),-playerId.ordinal());
+        FXCollections.rotate(statBox.getChildren(), -playerId.ordinal());
 
         TextFlow messageFlow = new TextFlow();
         messageFlow.setId("game-info");

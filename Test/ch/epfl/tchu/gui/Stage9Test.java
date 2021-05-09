@@ -16,8 +16,7 @@ import javafx.stage.Stage;
 import java.util.List;
 import java.util.Map;
 
-import static ch.epfl.tchu.game.PlayerId.PLAYER_1;
-import static ch.epfl.tchu.game.PlayerId.PLAYER_2;
+import static ch.epfl.tchu.game.PlayerId.*;
 
 public final class Stage9Test extends Application {
     public static ObservableList<Text> texts = FXCollections.observableArrayList();
@@ -70,6 +69,7 @@ public final class Stage9Test extends Application {
 
         p.startTurn(drawTicketsH, drawCardH, claimRouteH);
 
+
     }
 
     private void setState(GraphicalPlayer graphicalPlayer) {
@@ -80,7 +80,6 @@ public final class Stage9Test extends Application {
 
         PublicPlayerState p2State =
                 new PublicPlayerState(0, 0, ChMap.routes().subList(3, 6));
-
         Map<PlayerId, PublicPlayerState> pubPlayerStates =
                 Map.of(PLAYER_1, p1State, PLAYER_2, p2State);
         PublicCardState cardState =

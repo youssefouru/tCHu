@@ -151,14 +151,15 @@ public final class PlayerState extends PublicPlayerState {
         Preconditions.checkArgument(additionalCardsCount >= 1 && additionalCardsCount <= Constants.ADDITIONAL_TUNNEL_CARDS && !initialCards.isEmpty() && numberOfKinds(initialCards) <= 2 && drawnCards.size() == Constants.ADDITIONAL_TUNNEL_CARDS);
         SortedBag<Card> cards = cards().difference(initialCards);
         List<SortedBag<Card>> myList = new ArrayList<>();
-        if (colorOfTheBag(initialCards) == null) {
+        Color colorOfTheBag = colorOfTheBag(initialCards);
+        if (colorOfTheBag == null) {
             SortedBag<Card> bag = SortedBag.of(additionalCardsCount, Card.LOCOMOTIVE);
             if (cards.contains(bag)) {
                 myList.add(bag);
             }
             return myList;
         }
-        Card card = Card.of(colorOfTheBag(initialCards));
+        Card card = Card.of(colorOfTheBag);
         //this for loop will add iteratively all the possible bags that the player can play and
         for (int i = 0; i <= additionalCardsCount; ++i) {
             SortedBag<Card> bagOfCards;

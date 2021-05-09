@@ -24,11 +24,11 @@ public enum MessageId {
     /**
      * COUNT (int) :  represent the number of all the values of this enum type
      */
-    public static int COUNT = values().length;
+    public final static int COUNT = values().length;
 
     /**
      * ALL (List<MessageId>) : contains all the element of this enum type
      */
-    public static List<MessageId> ALL = List.of(values());
+    public final static List<MessageId> ALL = List.of(values());
 
 }

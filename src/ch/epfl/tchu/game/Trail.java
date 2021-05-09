@@ -56,11 +56,11 @@ public final class Trail {
         while (!trailsToBeTested.isEmpty()) {
 
             for (Trail trail : trailsToBeTested) {
-                if (trail.length() == 0)
-                    continue;
 
                 List<Route> routesToTest = new ArrayList<>(routes);
+
                 routesToTest.removeAll(trail.routesOfTheTrail);
+
                 for (Route route : routesToTest) {
                     List<Station> stations = route.stations();
                     if (stations.contains(trail.station2)) {

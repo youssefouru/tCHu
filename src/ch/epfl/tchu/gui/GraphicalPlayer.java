@@ -9,6 +9,7 @@ import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -30,7 +31,6 @@ import static javafx.application.Platform.isFxApplicationThread;
 
 public final class GraphicalPlayer {
     private final static int MAX_INFO_NUMBER = 5;
-    private final Map<PlayerId, String> playerNames;
     private final ObservableGameState gameState;
     private final ObservableList<Text> messages;
     private final ObjectProperty<DrawCardHandler> drawCardHP;
@@ -40,27 +40,26 @@ public final class GraphicalPlayer {
     private final Stage mainStage;
 
     /**
-     * Constructor of the GraphicalPlayer
+     * Constructor of the GraphicalPlayer.
      *
      * @param playerId    (PlayerId) : the id of the player
      * @param playerNames (Map< PlayerId, String >) : the names of the players
      */
     public GraphicalPlayer(PlayerId playerId, Map<PlayerId, String> playerNames) {
         assert isFxApplicationThread();
-        this.playerNames = playerNames;
         messages = FXCollections.observableArrayList();
         gameState = new ObservableGameState(playerId);
         drawCardHP = new SimpleObjectProperty<>();
         claimRouteHP = new SimpleObjectProperty<>();
         drawTicketHP = new SimpleObjectProperty<>();
         chooseCardsHP = new SimpleObjectProperty<>();
-        MapViewCreator.CardChooser chooser = (cards, c) -> chooseClaimCards(cards, chooseCardsHP.get());
         mainStage = new Stage(StageStyle.UTILITY);
-        mainStage.setTitle("tCHu - " + playerNames.get(playerId));
-        BorderPane mainPain = new BorderPane(MapViewCreator.createMapView(gameState, claimRouteHP, chooser),
+        mainStage.setTitle("tCHu \u2014 " + playerNames.get(playerId));
+        BorderPane mainPain = new BorderPane(MapViewCreator.createMapView(gameState, claimRouteHP, this::chooseClaimCards),
                 null,
-                DecksViewCreator.createCardsView(gameState, drawTicketHP, drawCardHP), DecksViewCreator.createHandView(gameState)
-                , InfoViewCreator.createInfoView(playerId, playerNames, gameState, messages));
+                DecksViewCreator.createCardsView(gameState, drawTicketHP, drawCardHP),
+                DecksViewCreator.createHandView(gameState),
+                InfoViewCreator.createInfoView(playerId, playerNames, gameState, messages));
 
         Scene mainScene = new Scene(mainPain);
         mainStage.setScene(mainScene);
@@ -83,8 +82,8 @@ public final class GraphicalPlayer {
     /**
      * this method is Called in the start of each turn
      *
-     * @param drawTicketsHandler (DrawTicketsHandler) : the ticket handler
-     * @param drawCardHandler    (DrawCardHandler) :
+     * @param drawTicketsHandler (DrawTicketsHandler) : the ticketHandler the player will use to draw tickets
+     * @param drawCardHandler    (DrawCardHandler) : the drawCardHandler the player will use to draw cards
      * @param claimRouteHandler  (ClaimRouteHandler) :
      */
     public void startTurn(DrawTicketsHandler drawTicketsHandler, DrawCardHandler drawCardHandler, ClaimRouteHandler claimRouteHandler) {
@@ -134,7 +133,7 @@ public final class GraphicalPlayer {
      * this method creates the window where the player will choose the tickets
      *
      * @param tickets        (SortedBag< Ticket >) : the tickets he has to choose
-     * @param ticketsHandler (ActionHandlers.ChooseTicketsHandler) : the ticket
+     * @param ticketsHandler (ActionHandlers.ChooseTicketsHandler) : the ticketHandler the player will use to draw tickets
      */
     public void chooseTickets(SortedBag<Ticket> tickets, ChooseTicketsHandler ticketsHandler) {
         assert isFxApplicationThread();
@@ -151,8 +150,9 @@ public final class GraphicalPlayer {
         ReadOnlyObjectProperty<Ticket> ticketObjectProperty = listView.getSelectionModel().selectedItemProperty();
 
         mainBox.getChildren().addAll(textFlow, listView, chooseButton);
-        SortedBag<Ticket> chosenTickets = SortedBag.of(listView.getSelectionModel().getSelectedItems());
-        chooseButton.disableProperty().bind(ticketObjectProperty.isNull());
+        ObservableList<Ticket> observableSelectedTicket = listView.getSelectionModel().getSelectedItems();
+        SortedBag<Ticket> chosenTickets = SortedBag.of(observableSelectedTicket);
+        chooseButton.disableProperty().bind(ticketObjectProperty.isNull().or(Bindings.lessThan(Bindings.size(observableSelectedTicket), minimalNumberOfCards)));
         chooseButton.setOnMouseClicked(e -> {
             ticketsHandler.onChooseTickets(chosenTickets);
             chooserStage.hide();
@@ -163,13 +163,13 @@ public final class GraphicalPlayer {
 
     private Stage stageCreator(String title, VBox box) {
         Stage stage = new Stage(StageStyle.UTILITY);
-        stage.initModality(Modality.WINDOW_MODAL);
         stage.initOwner(mainStage);
+        stage.initModality(Modality.WINDOW_MODAL);
         stage.setTitle(title);
-        BorderPane mainPane = new BorderPane(box);
-        Scene scene = new Scene(mainPane);
-        scene.getStylesheets().add("chooser.css");
+        stage.setOnCloseRequest(Event::consume);
+        Scene scene = new Scene(box);
         stage.setScene(scene);
+        scene.getStylesheets().add("chooser.css");
         return stage;
 
     }
@@ -192,14 +192,14 @@ public final class GraphicalPlayer {
     /**
      * This method is used to create the window to choose the additional Cards
      *
-     * @param possibleAdditionalCards (List< SortedBag< Card > >)
-     * @param chooseCardsHandler      (ChooseCardsHandler) :
+     * @param possibleAdditionalCards (List< SortedBag< Card > >) : the possible additional cards the player he can play to claim the underground root
+     * @param chooseCardsHandler      (ChooseCardsHandler) : the handler to choose the player will use to choose it's cards
      */
     public void chooseAdditionalCards(List<SortedBag<Card>> possibleAdditionalCards, ChooseCardsHandler chooseCardsHandler) {
         assert isFxApplicationThread();
         VBox mainBox = new VBox();
         Stage additionalCards = stageCreator(StringsFr.CHOOSE_ADDITIONAL_CARDS, mainBox);
-        TextFlow textFlow = new TextFlow(new Text(StringsFr.CHOOSE_ADDITIONAL_CARDS));
+        TextFlow textFlow = new TextFlow(new Text(StringsFr.CHOOSE_CARDS));
         ListView<SortedBag<Card>> additionalCardsView = cardBagView(possibleAdditionalCards);
         Button chooseButton = new Button();
         chooseButton.setOnMouseClicked(event -> {
@@ -216,6 +216,7 @@ public final class GraphicalPlayer {
     private ListView<SortedBag<Card>> cardBagView(List<SortedBag<Card>> possibleBags) {
         ListView<SortedBag<Card>> possibleView = new ListView<>(FXCollections.observableArrayList(possibleBags));
         possibleView.setCellFactory((v) -> new TextFieldListCell<>(new CardBagStringConverter()));
+        possibleView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         return possibleView;
     }
 
@@ -236,7 +237,8 @@ public final class GraphicalPlayer {
         chooseButton.setText(StringsFr.CHOOSE);
         ListView<SortedBag<Card>> possibleClaimCardView = cardBagView(claimCards);
         chooseButton.disableProperty().bind(possibleClaimCardView.getSelectionModel().selectedItemProperty().isNull());
-        chooseButton.setOnMouseClicked(event -> {
+
+        chooseButton.setOnAction(event -> {
             chooseCardsHandler.onChooseCards(possibleClaimCardView.getSelectionModel().getSelectedItem());
             claimCardsStage.hide();
         });

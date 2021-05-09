@@ -146,7 +146,7 @@ public final class Game {
         updateStates(players, gameState);
 
 
-        Map<PlayerId, Trail> mapOfTrails = new HashMap<>();
+       Map<PlayerId,Trail> mapOfTrails = new HashMap<>();
         for (PlayerId playerId : PlayerId.ALL) {
             PlayerState playerState = gameState.playerState(playerId);
             mapOfTrails.put(playerId, Trail.longest(playerState.routes()));
@@ -191,7 +191,6 @@ public final class Game {
     }
 
     private static Set<PlayerId> getsBonus(Map<PlayerId, Trail> longestTrailList) {
-
         int maxLength = longestTrailList.get(PlayerId.PLAYER_1).length();
         for (PlayerId playerId : PlayerId.ALL) {
             if (longestTrailList.get(playerId).length() > maxLength) {

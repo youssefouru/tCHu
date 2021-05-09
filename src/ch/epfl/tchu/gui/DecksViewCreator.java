@@ -17,6 +17,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 import java.util.List;
+import static ch.epfl.tchu.gui.ActionHandlers.*;
 
 /**
  * DecksViewCreator : this class creates the view of the deck
@@ -33,11 +34,11 @@ public final class DecksViewCreator {
      * this method creates the view of the cards
      *
      * @param gameState   (ObservableGameState) : the observer of the gameState
-     * @param ticketsHP   (ObjectProperty< ActionHandlers.DrawTicketsHandler > ) : the handler of the tickets
-     * @param drawCardsHP (ObjectProperty< ActionHandlers.DrawCardHandler >) : the handler of the cards
+     * @param ticketsHP   (ObjectProperty< DrawTicketsHandler > ) : the handler of the tickets
+     * @param drawCardsHP (ObjectProperty< DrawCardHandler >) : the handler of the cards
      * @return (Node) : the view of the cards
      */
-    public static Node createCardsView(ObservableGameState gameState, ObjectProperty<ActionHandlers.DrawTicketsHandler> ticketsHP, ObjectProperty<ActionHandlers.DrawCardHandler> drawCardsHP) {
+    public static Node createCardsView(ObservableGameState gameState, ObjectProperty<DrawTicketsHandler> ticketsHP, ObjectProperty<DrawCardHandler> drawCardsHP) {
         VBox cardPaneBox = new VBox();
         cardPaneBox.getStylesheets().addAll("decks.css", "colors.css");
         cardPaneBox.setId("card-pane");
@@ -63,34 +64,6 @@ public final class DecksViewCreator {
         }
         cardPaneBox.getChildren().add(cardButton);
         return cardPaneBox;
-    }
-
-
-    private static Button createButtons(ReadOnlyIntegerProperty pctProperty, String text, BooleanBinding booleanProperty) {
-        Button mainButton = new Button();
-        mainButton.getStyleClass().add("gauged");
-        mainButton.setText(text);
-        Group graphicGroup = new Group();
-        Rectangle backgroundRectangle = new Rectangle(50, 5);
-        backgroundRectangle.getStyleClass().add("background");
-        Rectangle foregroundRectangle = new Rectangle(50, 5);
-        foregroundRectangle.widthProperty().bind(pctProperty.multiply(50).divide(100));
-        foregroundRectangle.getStyleClass().add("foreground");
-        graphicGroup.getChildren().addAll(backgroundRectangle, foregroundRectangle);
-        mainButton.setGraphic(graphicGroup);
-        mainButton.disableProperty().bind(booleanProperty);
-        return mainButton;
-    }
-
-    private static List<Rectangle> cardRectangle() {
-        Rectangle outSideRectangle = new Rectangle(60, 90);
-        outSideRectangle.getStyleClass().add("outside");
-        Rectangle insideRectangle = new Rectangle(40, 70);
-        insideRectangle.getStyleClass().addAll("filled", "inside");
-        Rectangle trainRectangle = new Rectangle(40, 70);
-        trainRectangle.getStyleClass().add("train-image");
-
-        return List.of(outSideRectangle, insideRectangle, trainRectangle);
     }
 
     /**
@@ -124,5 +97,32 @@ public final class DecksViewCreator {
         }
         deckBox.getChildren().addAll(ticketListView, handPaneBox);
         return deckBox;
+    }
+
+    private static Button createButtons(ReadOnlyIntegerProperty pctProperty, String text, BooleanBinding booleanProperty) {
+        Button mainButton = new Button();
+        mainButton.getStyleClass().add("gauged");
+        mainButton.setText(text);
+        Group graphicGroup = new Group();
+        Rectangle backgroundRectangle = new Rectangle(50, 5);
+        backgroundRectangle.getStyleClass().add("background");
+        Rectangle foregroundRectangle = new Rectangle(50, 5);
+        foregroundRectangle.widthProperty().bind(pctProperty.multiply(50).divide(100));
+        foregroundRectangle.getStyleClass().add("foreground");
+        graphicGroup.getChildren().addAll(backgroundRectangle, foregroundRectangle);
+        mainButton.setGraphic(graphicGroup);
+        mainButton.disableProperty().bind(booleanProperty);
+        return mainButton;
+    }
+
+    private static List<Rectangle> cardRectangle() {
+        Rectangle outSideRectangle = new Rectangle(60, 90);
+        outSideRectangle.getStyleClass().add("outside");
+        Rectangle insideRectangle = new Rectangle(40, 70);
+        insideRectangle.getStyleClass().addAll("filled", "inside");
+        Rectangle trainRectangle = new Rectangle(40, 70);
+        trainRectangle.getStyleClass().add("train-image");
+
+        return List.of(outSideRectangle, insideRectangle, trainRectangle);
     }
 }

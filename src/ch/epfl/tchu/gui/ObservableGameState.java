@@ -29,7 +29,7 @@ public final class ObservableGameState {
     private final Map<PlayerId, IntegerProperty> claimPoints = createPlayerIdMap();
     private final ObservableList<Ticket> playerTickets = observableArrayList();
     private final Map<Card, IntegerProperty> cardsTypeNumber = createsNumberOfCard();
-    private final Map<Route, BooleanProperty> routeClaimable = createBooleanMAp();
+    private final Map<Route, BooleanProperty> routeClaimable = createBooleanMap();
     private PlayerState playerState;
     private PublicGameState gameState;
 
@@ -49,7 +49,7 @@ public final class ObservableGameState {
     private static Map<Route, ObjectProperty<PlayerId>> creatMap() {
         Map<Route, ObjectProperty<PlayerId>> mapRoute = new HashMap<>();
         for (Route route : ChMap.routes()) {
-            mapRoute.put(route, new SimpleObjectProperty<>(null));
+            mapRoute.put(route, new SimpleObjectProperty<>());
         }
         return mapRoute;
     }
@@ -57,12 +57,12 @@ public final class ObservableGameState {
     private static Map<PlayerId, IntegerProperty> createPlayerIdMap() {
         Map<PlayerId, IntegerProperty> map = new EnumMap<>(PlayerId.class);
         for (PlayerId playerId : PlayerId.ALL) {
-            map.put(playerId, new SimpleIntegerProperty(0));
+            map.put(playerId, new SimpleIntegerProperty());
         }
         return map;
     }
 
-    private static Map<Route, BooleanProperty> createBooleanMAp() {
+    private static Map<Route, BooleanProperty> createBooleanMap() {
         Map<Route, BooleanProperty> map = new HashMap<>();
         for (Route route : ChMap.routes()) {
             map.put(route, new SimpleBooleanProperty());
@@ -249,7 +249,7 @@ public final class ObservableGameState {
                     }
                 }
             }
-            routeClaimable.get(route).set(gameState.currentPlayerId() == playerId && playerState.canClaimRoute(route) && routeClaimed);
+            routeClaimable.get(route).set(routeClaimed && gameState.currentPlayerId() == playerId && playerState.canClaimRoute(route));
         }
 
     }

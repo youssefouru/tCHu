@@ -24,6 +24,7 @@ public final class RemotePlayerProxy implements Player {
      * Constructor of RemotePlayerProxy
      *
      * @param socket (Socket) : the socket we will use to write and read the data in the server
+     * @throws UncheckedIOException  : this error is thrown if
      */
     public RemotePlayerProxy(Socket socket) {
         try{

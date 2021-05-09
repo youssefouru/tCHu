@@ -41,39 +41,28 @@ public final class Info {
         String color;
         switch (card) {
             case BLACK:
-                color = StringsFr.BLACK_CARD;
-                break;
+                return StringsFr.BLACK_CARD + StringsFr.plural(count);
             case VIOLET:
-                color = StringsFr.VIOLET_CARD;
-                break;
+                return StringsFr.VIOLET_CARD + StringsFr.plural(count);
             case BLUE:
-                color = StringsFr.BLUE_CARD;
-                break;
+                return StringsFr.BLUE_CARD + StringsFr.plural(count);
             case GREEN:
-                color = StringsFr.GREEN_CARD;
-                break;
+                return StringsFr.GREEN_CARD + StringsFr.plural(count);
             case YELLOW:
-                color = StringsFr.YELLOW_CARD;
-                break;
+                return  StringsFr.YELLOW_CARD+ StringsFr.plural(count);
             case ORANGE:
-                color = StringsFr.ORANGE_CARD;
-                break;
+                return StringsFr.ORANGE_CARD + StringsFr.plural(count);
             case RED:
-                color = StringsFr.RED_CARD;
-                break;
+                return StringsFr.RED_CARD+ StringsFr.plural(count);
             case WHITE:
-                color = StringsFr.WHITE_CARD;
-                break;
+                return StringsFr.WHITE_CARD + StringsFr.plural(count);
             case LOCOMOTIVE:
-                color = StringsFr.LOCOMOTIVE_CARD;
-                break;
+                return StringsFr.LOCOMOTIVE_CARD  + StringsFr.plural(count);
             default:
                 throw new Error();
 
         }
 
-        color = color + StringsFr.plural(count);
-        return color;
     }
 
 
@@ -180,7 +169,7 @@ public final class Info {
      */
     public String attemptsTunnelClaim(Route route, SortedBag<Card> initialCards) {
 
-        return String.format(StringsFr.ATTEMPTS_TUNNEL_CLAIM, player, routePrinter(route), (initialCards));
+        return String.format(StringsFr.ATTEMPTS_TUNNEL_CLAIM, player, routePrinter(route), cardBagStringConverter.toString(initialCards));
     }
 
     /**

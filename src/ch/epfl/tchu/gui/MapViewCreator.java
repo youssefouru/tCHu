@@ -73,7 +73,7 @@ public final class MapViewCreator {
                 wayRectangle.getStyleClass().addAll("track", "filled");
                 Rectangle carRectangle = new Rectangle(RECTANGLE_WIDTH, RECTANGLE_HEIGHT);
                 carRectangle.getStyleClass().add("filled");
-                Group carGroup = new Group(carRectangle, new Circle(CIRCLE_X_POS, CIRCLE_Y_POS, CIRCLE_RADIUS), new Circle(2*CIRCLE_X_POS, CIRCLE_Y_POS, CIRCLE_RADIUS));
+                Group carGroup = new Group(carRectangle, new Circle(CIRCLE_X_POS, CIRCLE_Y_POS, CIRCLE_RADIUS), new Circle(2 * CIRCLE_X_POS, CIRCLE_Y_POS, CIRCLE_RADIUS));
                 carGroup.getStyleClass().add("car");
                 Group caseGroup = new Group(wayRectangle, carGroup);
                 caseGroup.setId(route.id() + "_" + i);

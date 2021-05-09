@@ -14,6 +14,12 @@ import java.util.stream.Collectors;
 import static ch.epfl.tchu.SortedBag.Builder;
 import static ch.epfl.tchu.gui.Info.cardName;
 
+/**
+ * CardBagStringConverter : this class represents a converter that convert a bag of Card in to a string representation
+ *
+ * @author Amine Youssef (324253)
+ * @author Louis Yves André Barinka (329847)
+ */
 public class CardBagStringConverter extends StringConverter<SortedBag<Card>> {
 
     private final Map<String, Card> cardMap;
@@ -25,12 +31,13 @@ public class CardBagStringConverter extends StringConverter<SortedBag<Card>> {
         cardMap = new HashMap<>();
         for (Card card : Card.ALL) {
             cardMap.put(Info.cardName(card, 1), card);
-            cardMap.put(Info.cardName(card,0),card);
+            cardMap.put(Info.cardName(card, 0), card);
         }
     }
 
     /**
      * this method convert a sorted bag of cards in a string representation
+     *
      * @param cardsCollection (SortedBag< Card >) : the bag of cards we want to convert into a string representation
      * @return (String) : the string representation of a bag
      */
@@ -53,16 +60,24 @@ public class CardBagStringConverter extends StringConverter<SortedBag<Card>> {
         return toBeDisplayed.toString();
     }
 
+    /**
+     * This method creates a bag of cards from it's string representation.
+     *
+     * @param stringRepresentation (String) : the string representation of the bag of cards.
+     * @return (SortedBag < Card >) : The bag of card which is represented with the string in parameter.
+     */
     @Override
-    public SortedBag<Card> fromString(String string) {
-        String[] stringTab = string.split(Pattern.quote(" "), -1);
-        List<String> filteredList = Arrays.stream(stringTab).filter((s) -> !(s.equals("et") || s.equals(","))).collect(Collectors.toList());
-        Builder<Card> cardBuilder = new Builder<>();
-        for(int i = 0 ; i< filteredList.size(); i = i+2){
-            String cardName =filteredList.get(i+1);
+    public SortedBag<Card> fromString(String stringRepresentation) {
+        String[] stringTab = stringRepresentation.split(Pattern.quote(" "), -1);
+        List<String> filteredList = Arrays.stream(stringTab).
+                                        filter((s) -> !(s.equals("et") || s.equals(","))).
+                                        map(s -> s.replaceAll(",","")).
+                                        collect(Collectors.toList());
 
+        Builder<Card> cardBuilder = new Builder<>();
+        for (int i = 0; i < filteredList.size(); i = i + 2) {
             cardBuilder.add(Integer.parseInt(filteredList.get(i)),
-                             cardMap.get(cardName.endsWith(",") || cardName.endsWith("s")? cardName.substring(0,cardName.length() -1) : cardName));
+                            cardMap.get( filteredList.get(i + 1)));
         }
         return cardBuilder.build();
     }

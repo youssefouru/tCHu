@@ -73,13 +73,11 @@ public final class RemotePlayerClient {
             MessageId messageReceived = MessageId.valueOf(stringTab[i++]);
             switch (messageReceived) {
                 case INIT_PLAYERS:
+
                     PlayerId playerId = Serdes.PLAYER_ID_SERDE.deserialize(stringTab[i++]);
                     List<String> namesList = Serdes.STRING_LIST_SERDE.deserialize(stringTab[i]);
                     Map<PlayerId, String> playerNames = new HashMap<>();
-                    for (int j = 0; j < PlayerId.ALL.size(); ++j) {
-                        playerNames.put(PlayerId.ALL.get(j),
-                                namesList.get(j));
-                    }
+                    PlayerId.ALL.forEach(id -> playerNames.put(PlayerId.ALL.get(id.ordinal()), namesList.get(id.ordinal())));
                     player.initPlayers(playerId, playerNames);
                     break;
 
@@ -119,12 +117,14 @@ public final class RemotePlayerClient {
 
                 case CARDS:
                     send(Serdes.CARD_BAG_SERDE.serialize(player.initialClaimCards()));
+
                     break;
 
                 case CHOOSE_ADDITIONAL_CARDS:
                     List<SortedBag<Card>> possibleAdditionalCard = Serdes.CARD_BAG_LIST_SERDE.deserialize(stringTab[i]);
                     SortedBag<Card> additionalCard = player.chooseAdditionalCards(possibleAdditionalCard);
                     send(Serdes.CARD_BAG_SERDE.serialize(additionalCard));
+
                     break;
 
                 default:

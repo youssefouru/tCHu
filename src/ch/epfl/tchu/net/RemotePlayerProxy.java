@@ -24,7 +24,6 @@ public final class RemotePlayerProxy implements Player {
      * Constructor of RemotePlayerProxy
      *
      * @param socket (Socket) : the socket we will use to write and read the data in the server
-     * @throws UncheckedIOException  : this error is thrown if
      */
     public RemotePlayerProxy(Socket socket) {
         try{
@@ -36,7 +35,7 @@ public final class RemotePlayerProxy implements Player {
     }
 
     private void send(MessageId messageId, String... strings)  {
-        List<String> messageList = Arrays.stream(strings).collect(Collectors.toCollection(LinkedList::new));
+        List<String> messageList = Arrays.stream(strings).collect(Collectors.toCollection(ArrayList::new));
         messageList.add(0,messageId.name());
         String message = String.join(" ", messageList);
         try {

@@ -46,7 +46,7 @@ public final class DecksViewCreator {
         Button cardButton = createButtons(gameState.cardPercentage(), StringsFr.CARDS,drawCardsHP.isNull());
         ticketButton.setOnMouseClicked(event -> ticketsHP.get().onDrawTickets());
         ticketButton.disableProperty().bind(ticketsHP.isNull());
-        cardButton.setOnMouseClicked((event -> drawCardsHP.get().onDrawCard(-1)));
+        cardButton.setOnMouseClicked((event -> drawCardsHP.get().onDrawCard(Constants.DECK_SLOT)));
         cardButton.disableProperty().bind(drawCardsHP.isNull());
         cardPaneBox.getChildren().add(ticketButton);
         for (int slot : Constants.FACE_UP_CARD_SLOTS) {

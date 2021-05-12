@@ -108,7 +108,7 @@ public final class Game {
                         transmitInfo(players, currentPlayerInfo.drewAdditionalCards(drawnCards, additionalCards));
                         gameState = gameState.withMoreDiscardedCards(drawnCards);
                         if (additionalCards != 0) {
-                            List<SortedBag<Card>> optionsOfSortedBag = gameState.currentPlayerState().possibleAdditionalCards(additionalCards, playedCard, drawnCards);
+                            List<SortedBag<Card>> optionsOfSortedBag = gameState.currentPlayerState().possibleAdditionalCards(additionalCards, playedCard);
                             if (optionsOfSortedBag.isEmpty()) {
                                 playedCard = SortedBag.of();
                             } else {

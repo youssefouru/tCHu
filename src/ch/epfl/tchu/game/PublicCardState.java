@@ -32,14 +32,6 @@ public class PublicCardState {
         this.discardsSize = discardsSize;
     }
 
-    /**
-     * this method returns the total number of cards that are not in the hand of the player
-     *
-     * @return (int) : the total number of cards of the cardState
-     */
-    public int totalSize() {
-        return faceUpCards.size() + deckSize + discardsSize;
-    }
 
     /**
      * return the faceUpCards

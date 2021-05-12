@@ -181,7 +181,6 @@ public final class GameState extends PublicGameState {
      * @return (GameState) : this GameState but without the slot faceUpCard that we add to the current player's state
      */
     public GameState withDrawnFaceUpCard(int slot) {
-        Preconditions.checkArgument(canDrawCards());
         Map<PlayerId, PlayerState> map = new HashMap<>(this.playerState);
         map.put(currentPlayerId(), currentPlayerState().withAddedCard(cardState.faceUpCard(slot)));
         return new GameState(tickets, cardState.withDrawnFaceUpCard(slot), currentPlayerId(), map, lastPlayer());
@@ -194,7 +193,6 @@ public final class GameState extends PublicGameState {
      * @return (GameState) : this  GameState but without the top deck card which has been added to the player's card
      */
     public GameState withBlindlyDrawnCard() {
-        Preconditions.checkArgument(canDrawCards());
         Map<PlayerId, PlayerState> map = new HashMap<>(this.playerState);
         map.put(currentPlayerId(), currentPlayerState().withAddedCard(cardState.topDeckCard()));
         return new GameState(tickets, cardState.withoutTopDeckCard(), currentPlayerId(), map, lastPlayer());

@@ -60,12 +60,15 @@ public final class GraphicalPlayer {
                 DecksViewCreator.createCardsView(gameState, drawTicketHP, drawCardHP),
                 DecksViewCreator.createHandView(gameState),
                 InfoViewCreator.createInfoView(playerId, playerNames, gameState, messages));
-
-        Scene mainScene = new Scene(mainPain);
-        mainStage.setScene(mainScene);
+        mainStage.setScene(new Scene(mainPain));
         mainStage.show();
     }
 
+    private void handlerSetter(){
+        drawTicketHP.set(null);
+        drawCardHP.set(null);
+        claimRouteHP.set(null);
+    }
 
     /**
      * this method calls the method setState of the observable GameState
@@ -90,25 +93,19 @@ public final class GraphicalPlayer {
         assert isFxApplicationThread();
 
         claimRouteHP.set((route, cards) -> {
-            drawTicketHP.set(null);
-            drawCardHP.set(null);
+           handlerSetter();
             claimRouteHandler.onClaimRoute(route, cards);
-            claimRouteHP.set(null);
         });
         if (gameState.canDrawTickets()) {
             drawTicketHP.set(() -> {
-                drawCardHP.set(null);
-                claimRouteHP.set(null);
+                handlerSetter();
                 drawTicketsHandler.onDrawTickets();
-                drawTicketHP.set(null);
             });
         }
         if (gameState.canDrawCards()) {
             drawCardHP.set((i) -> {
-                claimRouteHP.set(null);
-                drawTicketHP.set(null);
+                handlerSetter();
                 drawCardHandler.onDrawCard(i);
-                drawCardHP.set(null);
             });
         }
 
@@ -140,7 +137,7 @@ public final class GraphicalPlayer {
         Preconditions.checkArgument(tickets.size() == Constants.IN_GAME_TICKETS_COUNT || tickets.size() == Constants.INITIAL_TICKETS_COUNT);
         VBox mainBox = new VBox();
         Stage chooserStage = stageCreator(StringsFr.TICKETS_CHOICE, mainBox);
-        chooserStage.show();
+
         int minimalNumberOfCards = tickets.size() - Constants.DISCARDABLE_TICKETS_COUNT;
         TextFlow textFlow = new TextFlow(new Text(String.format(StringsFr.CHOOSE_TICKETS, minimalNumberOfCards, StringsFr.plural(minimalNumberOfCards))));
         ListView<Ticket> listView = new ListView<>(FXCollections.observableArrayList(tickets.toList()));
@@ -158,6 +155,7 @@ public final class GraphicalPlayer {
             chooserStage.hide();
         });
         mainBox.getChildren().addAll(textFlow, listView, chooseButton);
+        chooserStage.show();
 
     }
 
@@ -182,10 +180,13 @@ public final class GraphicalPlayer {
      */
     public void drawCard(DrawCardHandler drawCardHandler) {
         assert isFxApplicationThread();
-        drawCardHP.set(drawCardHandler);
-        drawTicketHP.set(null);
-        claimRouteHP.set(null);
-        chooseCardsHP.set(null);
+        drawCardHP.set((c)->{
+            drawTicketHP.set(null);
+            claimRouteHP.set(null);
+            drawCardHP.set(null);
+            drawCardHandler.onDrawCard(c);
+        });
+
 
     }
 
@@ -198,7 +199,7 @@ public final class GraphicalPlayer {
     public void chooseAdditionalCards(List<SortedBag<Card>> possibleAdditionalCards, ChooseCardsHandler chooseCardsHandler) {
         assert isFxApplicationThread();
         VBox mainBox = new VBox();
-        Stage additionalCards = stageCreator(StringsFr.CHOOSE_ADDITIONAL_CARDS, mainBox);
+        Stage additionalCardsStage = stageCreator(StringsFr.CHOOSE_ADDITIONAL_CARDS, mainBox);
         TextFlow textFlow = new TextFlow(new Text(StringsFr.CHOOSE_CARDS));
         ListView<SortedBag<Card>> additionalCardsView = cardBagView(possibleAdditionalCards);
         Button chooseButton = new Button();
@@ -208,9 +209,10 @@ public final class GraphicalPlayer {
             } else {
                 chooseCardsHandler.onChooseCards(additionalCardsView.getSelectionModel().getSelectedItem());
             }
-            additionalCards.hide();
+            additionalCardsStage.hide();
         });
         mainBox.getChildren().addAll(textFlow, additionalCardsView, chooseButton);
+        additionalCardsStage.show();
     }
 
     private ListView<SortedBag<Card>> cardBagView(List<SortedBag<Card>> possibleBags) {
@@ -231,7 +233,7 @@ public final class GraphicalPlayer {
         assert isFxApplicationThread();
         VBox mainBox = new VBox();
         Stage claimCardsStage = stageCreator(StringsFr.CHOOSE_CARDS, mainBox);
-        claimCardsStage.show();
+
         TextFlow textFlow = new TextFlow(new Text(StringsFr.CHOOSE_CARDS));
         Button chooseButton = new Button();
         chooseButton.setText(StringsFr.CHOOSE);
@@ -244,6 +246,7 @@ public final class GraphicalPlayer {
         });
 
         mainBox.getChildren().addAll(textFlow, possibleClaimCardView, chooseButton);
+        claimCardsStage.show();
 
     }
 

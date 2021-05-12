@@ -84,23 +84,13 @@ public final class PlayerState extends PublicPlayerState {
     }
 
     /**
-     * return a new PlayerState with new cards added to it's cards
-     *
-     * @param additionalCards (SortedBag<Card>) : the additional cards
-     * @return (PlayerState) : new PlayerState with the same attributes except for the cards which we add the new cards
-     */
-    public PlayerState withAddedCards(SortedBag<Card> additionalCards) {
-        return new PlayerState(tickets, this.cards.union(additionalCards), routes());
-    }
-
-    /**
      * return a new PlayerState with a new card added to it's cards
      *
      * @param card (Card) : the card added to the bag of cards
      * @return (PlayerState) : new PlayerState with the same attributes except for the cards which we add the new card
      */
     public PlayerState withAddedCard(Card card) {
-        return withAddedCards(SortedBag.of(card));
+        return new PlayerState(tickets,cards.union(SortedBag.of(card)),routes());
     }
 
     /**
@@ -144,11 +134,10 @@ public final class PlayerState extends PublicPlayerState {
      *
      * @param additionalCardsCount (int) :  the number of additional cards needed
      * @param initialCards         (SortedBag<Card>) : initial cards played to take the route
-     * @param drawnCards           (SortedBag<Card>) : drawn cards
      * @return (List < SortedBag < Card > >) : returns the possible additional cards that can be played to take the route
      */
-    public List<SortedBag<Card>> possibleAdditionalCards(int additionalCardsCount, SortedBag<Card> initialCards, SortedBag<Card> drawnCards) {
-        Preconditions.checkArgument(additionalCardsCount >= 1 && additionalCardsCount <= Constants.ADDITIONAL_TUNNEL_CARDS && !initialCards.isEmpty() && numberOfKinds(initialCards) <= 2 && drawnCards.size() == Constants.ADDITIONAL_TUNNEL_CARDS);
+    public List<SortedBag<Card>> possibleAdditionalCards(int additionalCardsCount, SortedBag<Card> initialCards) {
+        Preconditions.checkArgument(additionalCardsCount >= 1 && additionalCardsCount <= Constants.ADDITIONAL_TUNNEL_CARDS && !initialCards.isEmpty() && numberOfKinds(initialCards) <= 2);
         SortedBag<Card> cards = cards().difference(initialCards);
         List<SortedBag<Card>> myList = new ArrayList<>();
         Color colorOfTheBag = colorOfTheBag(initialCards);

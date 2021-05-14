@@ -36,7 +36,6 @@ public final class GraphicalPlayer {
     private final ObjectProperty<DrawCardHandler> drawCardHP;
     private final ObjectProperty<ClaimRouteHandler> claimRouteHP;
     private final ObjectProperty<DrawTicketsHandler> drawTicketHP;
-    private final ObjectProperty<ChooseCardsHandler> chooseCardsHP;
     private final Stage mainStage;
 
     /**
@@ -52,7 +51,6 @@ public final class GraphicalPlayer {
         drawCardHP = new SimpleObjectProperty<>();
         claimRouteHP = new SimpleObjectProperty<>();
         drawTicketHP = new SimpleObjectProperty<>();
-        chooseCardsHP = new SimpleObjectProperty<>();
         mainStage = new Stage(StageStyle.UTILITY);
         mainStage.setTitle("tCHu \u2014 " + playerNames.get(playerId));
         BorderPane mainPain = new BorderPane(MapViewCreator.createMapView(gameState, claimRouteHP, this::chooseClaimCards),
@@ -87,7 +85,7 @@ public final class GraphicalPlayer {
      *
      * @param drawTicketsHandler (DrawTicketsHandler) : the ticketHandler the player will use to draw tickets
      * @param drawCardHandler    (DrawCardHandler) : the drawCardHandler the player will use to draw cards
-     * @param claimRouteHandler  (ClaimRouteHandler) :
+     * @param claimRouteHandler  (ClaimRouteHandler) : the claimRouteHandler the player will use to clain a route
      */
     public void startTurn(DrawTicketsHandler drawTicketsHandler, DrawCardHandler drawCardHandler, ClaimRouteHandler claimRouteHandler) {
         assert isFxApplicationThread();
@@ -112,7 +110,7 @@ public final class GraphicalPlayer {
     }
 
     /**
-     * this method receive the info
+     * This method is used to receive the infos.
      *
      * @param string (String) : the info we want to receive
      */
@@ -144,12 +142,10 @@ public final class GraphicalPlayer {
         listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         Button chooseButton = new Button();
         chooseButton.setText(StringsFr.CHOOSE);
-        ReadOnlyObjectProperty<Ticket> ticketObjectProperty = listView.getSelectionModel().selectedItemProperty();
-
-        mainBox.getChildren().addAll(textFlow, listView, chooseButton);
         ObservableList<Ticket> observableSelectedTicket = listView.getSelectionModel().getSelectedItems();
         SortedBag<Ticket> chosenTickets = SortedBag.of(observableSelectedTicket);
-        chooseButton.disableProperty().bind(ticketObjectProperty.isNull().or(Bindings.lessThan(Bindings.size(observableSelectedTicket), minimalNumberOfCards)));
+        chooseButton.disableProperty().bind(Bindings.lessThan(Bindings.size(observableSelectedTicket),
+                                                                minimalNumberOfCards));
         chooseButton.setOnMouseClicked(e -> {
             ticketsHandler.onChooseTickets(chosenTickets);
             chooserStage.hide();

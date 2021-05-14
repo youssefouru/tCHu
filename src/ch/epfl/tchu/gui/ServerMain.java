@@ -3,7 +3,7 @@ package ch.epfl.tchu.gui;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-public class ServerMain extends Application {
+public final class ServerMain extends Application {
     public static void main(String[] args) {
 
     }

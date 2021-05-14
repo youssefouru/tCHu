@@ -14,13 +14,14 @@ import static javafx.application.Platform.runLater;
 
 public final class GraphicalPlayerAdapter implements Player {
 
-    private final BlockingQueue<SortedBag<Ticket>> inGameTicketsQueue = new ArrayBlockingQueue<>(1);
-    private final BlockingQueue<SortedBag<Ticket>> initialTicketQueue = new ArrayBlockingQueue<>(1);
-    private final BlockingQueue<SortedBag<Ticket>> ticketChoice = new ArrayBlockingQueue<>(1);
-    private final BlockingQueue<SortedBag<Card>> additionalCardQueue = new ArrayBlockingQueue<>(1);
-    private final BlockingQueue<SortedBag<Card>> initialClaimCard = new ArrayBlockingQueue<>(1);
-    private final BlockingQueue<Integer> slotQueue = new ArrayBlockingQueue<>(1);
-    private final BlockingQueue<Route> routeQueue = new ArrayBlockingQueue<>(1);
+    private final static int QUEUE_CAPACITY = 1;
+    private final static BlockingQueue<GraphicalPlayer> playerQueue = new ArrayBlockingQueue<>(QUEUE_CAPACITY);
+    private final BlockingQueue<SortedBag<Ticket>> initialTicketQueue = new ArrayBlockingQueue<>(QUEUE_CAPACITY);
+    private final BlockingQueue<SortedBag<Ticket>> ticketChoice = new ArrayBlockingQueue<>(QUEUE_CAPACITY);
+    private final BlockingQueue<SortedBag<Card>> additionalCardQueue = new ArrayBlockingQueue<>(QUEUE_CAPACITY);
+    private final BlockingQueue<SortedBag<Card>> initialClaimCard = new ArrayBlockingQueue<>(QUEUE_CAPACITY);
+    private final BlockingQueue<Integer> slotQueue = new ArrayBlockingQueue<>(QUEUE_CAPACITY);
+    private final BlockingQueue<Route> routeQueue = new ArrayBlockingQueue<>(QUEUE_CAPACITY);
     private GraphicalPlayer graphicalPlayer;
 
 
@@ -40,7 +41,8 @@ public final class GraphicalPlayerAdapter implements Player {
      */
     @Override
     public void initPlayers(PlayerId ownId, Map<PlayerId, String> playerNames) {
-        graphicalPlayer = new GraphicalPlayer(ownId, playerNames);
+    runLater(()-> playerQueue.add(new GraphicalPlayer(ownId,playerNames)));
+     graphicalPlayer = taker(playerQueue);
     }
 
     /**
@@ -81,7 +83,7 @@ public final class GraphicalPlayerAdapter implements Player {
      */
     @Override
     public SortedBag<Ticket> chooseInitialTickets() {
-        runLater(() -> graphicalPlayer.chooseTickets(taker(initialTicketQueue),ticketChoice::add));
+        runLater(() -> graphicalPlayer.chooseTickets(taker(initialTicketQueue), ticketChoice::add));
         return taker(ticketChoice);
     }
 
@@ -94,7 +96,7 @@ public final class GraphicalPlayerAdapter implements Player {
     public TurnKind nextTurn() {
         BlockingQueue<TurnKind> turnKindBlockingQueue = new LinkedBlockingDeque<>();
         DrawCardHandler cardHandler = (c) ->
-            turnKindBlockingQueue.add(TurnKind.DRAW_CARDS);
+                turnKindBlockingQueue.add(TurnKind.DRAW_CARDS);
 
         ClaimRouteHandler routeHandler = (route, cards) -> {
             turnKindBlockingQueue.add(TurnKind.CLAIM_ROUTE);
@@ -104,7 +106,7 @@ public final class GraphicalPlayerAdapter implements Player {
 
         };
         DrawTicketsHandler ticketsHandler = () ->
-            turnKindBlockingQueue.add(TurnKind.DRAW_TICKETS);
+                turnKindBlockingQueue.add(TurnKind.DRAW_TICKETS);
 
         runLater(() -> graphicalPlayer.startTurn(ticketsHandler, cardHandler, routeHandler));
         try {
@@ -122,7 +124,7 @@ public final class GraphicalPlayerAdapter implements Player {
      */
     @Override
     public SortedBag<Ticket> chooseTickets(SortedBag<Ticket> options) {
-        BlockingQueue<SortedBag<Ticket>> ticketsQueue = new LinkedBlockingDeque<>();
+        BlockingQueue<SortedBag<Ticket>> ticketsQueue = new ArrayBlockingQueue<>(QUEUE_CAPACITY);
         ChooseTicketsHandler chooseTicketsHandler = ticketsQueue::add;
         runLater(() -> graphicalPlayer.chooseTickets(options, chooseTicketsHandler));
         try {

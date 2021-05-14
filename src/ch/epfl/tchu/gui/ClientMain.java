@@ -3,10 +3,9 @@ package ch.epfl.tchu.gui;
 import ch.epfl.tchu.net.RemotePlayerClient;
 import javafx.application.Application;
 import javafx.stage.Stage;
-
 import java.util.List;
 
-public class ClientMain extends Application {
+public final class ClientMain extends Application {
     /**
      * the main method of the programme
      *
@@ -36,7 +35,6 @@ public class ClientMain extends Application {
         List<String> parameters = getParameters().getRaw();
         int i = 0;
         RemotePlayerClient client = new RemotePlayerClient(new GraphicalPlayerAdapter(), parameters.get(i++), Integer.parseInt(parameters.get(i)));
-        Thread clientThread = new Thread(client::run);
-        clientThread.start();
+        new Thread(client::run).start();
     }
 }

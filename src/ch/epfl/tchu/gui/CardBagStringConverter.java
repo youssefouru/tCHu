@@ -20,7 +20,7 @@ import static ch.epfl.tchu.gui.Info.cardName;
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)
  */
-public class CardBagStringConverter extends StringConverter<SortedBag<Card>> {
+public final class CardBagStringConverter extends StringConverter<SortedBag<Card>> {
 
     private final Map<String, Card> cardMap;
 

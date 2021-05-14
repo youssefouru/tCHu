@@ -98,7 +98,7 @@ public class RemotePlayerTest {
         @Override
         public void receiveInfo(String info) {
             infos++;
-            System.out.println("Message pour "+ playerNames.get(ownId) + " : " + info);
+            System.out.println("Message pour "+ playerNames.get(ownId) + " : " + info + ":::::info done");
             if (info.contains("victoire")) {
                 System.out.println(info);
                 Pattern p = Pattern.compile("-?\\d+");
@@ -116,6 +116,7 @@ public class RemotePlayerTest {
         public void updateState(PublicGameState newState, PlayerState ownState) {
             this.gameState = newState;
             this.ownState = ownState;
+            System.out.println(Serdes.PUBLIC_GAME_STATE_SERDE.serialize(newState) + " " + Serdes.PLAYER_STATE_SERDE.serialize(ownState));
         }
 
         @Override

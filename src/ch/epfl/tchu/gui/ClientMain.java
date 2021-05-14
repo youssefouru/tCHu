@@ -34,7 +34,7 @@ public final class ClientMain extends Application {
     public void start(Stage primaryStage) throws Exception {
         List<String> parameters = getParameters().getRaw();
         int i = 0;
-        RemotePlayerClient client = new RemotePlayerClient(new GraphicalPlayerAdapter(), parameters.get(i++), Integer.parseInt(parameters.get(i)));
+        RemotePlayerClient client = new RemotePlayerClient(new GraphicalPlayerAdapter(), "localhost" ,5108);
         new Thread(client::run).start();
     }
 }

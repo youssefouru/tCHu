@@ -54,10 +54,10 @@ public final class GraphicalPlayer {
         mainStage = new Stage(StageStyle.UTILITY);
         mainStage.setTitle("tCHu \u2014 " + playerNames.get(playerId));
         BorderPane mainPain = new BorderPane(MapViewCreator.createMapView(gameState, claimRouteHP, this::chooseClaimCards),
-                null,
-                DecksViewCreator.createCardsView(gameState, drawTicketHP, drawCardHP),
-                DecksViewCreator.createHandView(gameState),
-                InfoViewCreator.createInfoView(playerId, playerNames, gameState, messages));
+                                            null,
+                                            DecksViewCreator.createCardsView(gameState, drawTicketHP, drawCardHP),
+                                            DecksViewCreator.createHandView(gameState),
+                                            InfoViewCreator.createInfoView(playerId, playerNames, gameState, messages));
         mainStage.setScene(new Scene(mainPain));
         mainStage.show();
     }
@@ -116,7 +116,7 @@ public final class GraphicalPlayer {
      */
     public void receiveInfo(String string) {
         assert isFxApplicationThread();
-        if (messages.size() == MAX_INFO_NUMBER) {
+        while (messages.size() >= MAX_INFO_NUMBER) {
             messages.remove(0);
         }
         messages.add(new Text(string));
@@ -135,19 +135,18 @@ public final class GraphicalPlayer {
         Preconditions.checkArgument(tickets.size() == Constants.IN_GAME_TICKETS_COUNT || tickets.size() == Constants.INITIAL_TICKETS_COUNT);
         VBox mainBox = new VBox();
         Stage chooserStage = stageCreator(StringsFr.TICKETS_CHOICE, mainBox);
-
         int minimalNumberOfCards = tickets.size() - Constants.DISCARDABLE_TICKETS_COUNT;
         TextFlow textFlow = new TextFlow(new Text(String.format(StringsFr.CHOOSE_TICKETS, minimalNumberOfCards, StringsFr.plural(minimalNumberOfCards))));
         ListView<Ticket> listView = new ListView<>(FXCollections.observableArrayList(tickets.toList()));
         listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         Button chooseButton = new Button();
         chooseButton.setText(StringsFr.CHOOSE);
-        ObservableList<Ticket> observableSelectedTicket = listView.getSelectionModel().getSelectedItems();
-        SortedBag<Ticket> chosenTickets = SortedBag.of(observableSelectedTicket);
-        chooseButton.disableProperty().bind(Bindings.lessThan(Bindings.size(observableSelectedTicket),
-                                                                minimalNumberOfCards));
+
+
+        chooseButton.disableProperty().bind(Bindings.lessThan(Bindings.size(listView.getSelectionModel().getSelectedItems()),
+                                                                            minimalNumberOfCards));
         chooseButton.setOnMouseClicked(e -> {
-            ticketsHandler.onChooseTickets(chosenTickets);
+            ticketsHandler.onChooseTickets(SortedBag.of(listView.getSelectionModel().getSelectedItems()));
             chooserStage.hide();
         });
         mainBox.getChildren().addAll(textFlow, listView, chooseButton);

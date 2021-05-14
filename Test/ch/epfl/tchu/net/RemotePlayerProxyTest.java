@@ -32,6 +32,7 @@ public class RemotePlayerProxyTest{
              playerProxy.chooseInitialTickets();
              playerProxy.claimedRoute();
              playerProxy.initialClaimCards();
+             playerProxy.claimedRoute();
         }
 
         System.out.println("Server done!");

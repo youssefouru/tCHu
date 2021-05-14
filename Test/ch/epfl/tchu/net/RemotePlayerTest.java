@@ -163,7 +163,7 @@ public class RemotePlayerTest {
         @Override
         public Route claimedRoute() {
             Route route = ChMap.routes().get((new Random()).nextInt(ChMap.routes().size()));
-            System.out.println(String.join(" ", List.of(route.station1().toString(), "-",route.station2().toString())));
+            System.out.println(String.join(" ", List.of(route.station1().toString(), "-",route.station2().toString(), "(" + route.length() + ")")));
             routeToClaim = route;
             return route;
         }
@@ -185,14 +185,7 @@ public class RemotePlayerTest {
             return options.get(rng.nextInt(options.size()));
         }
 
-        private void debug() {
-            System.out.print("tickets : " + ownState.tickets().size());
-            System.out.print(" ; cards : " + ownState.cards().size());
-            System.out.print(" ; routeOwner : " + ownState.routes().size());
-            System.out.println(" ; cars : " + ownState.carCount());
 
-
-        }
     }
 
 

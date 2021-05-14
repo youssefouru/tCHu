@@ -15,8 +15,7 @@ import static javafx.application.Platform.runLater;
 public final class GraphicalPlayerAdapter implements Player {
 
     private final static int QUEUE_CAPACITY = 1;
-    private final static BlockingQueue<GraphicalPlayer> playerQueue = new ArrayBlockingQueue<>(QUEUE_CAPACITY);
-    private final BlockingQueue<SortedBag<Ticket>> initialTicketQueue = new ArrayBlockingQueue<>(QUEUE_CAPACITY);
+    private final BlockingQueue<GraphicalPlayer> playerQueue = new ArrayBlockingQueue<>(QUEUE_CAPACITY);
     private final BlockingQueue<SortedBag<Ticket>> ticketChoice = new ArrayBlockingQueue<>(QUEUE_CAPACITY);
     private final BlockingQueue<SortedBag<Card>> additionalCardQueue = new ArrayBlockingQueue<>(QUEUE_CAPACITY);
     private final BlockingQueue<SortedBag<Card>> initialClaimCard = new ArrayBlockingQueue<>(QUEUE_CAPACITY);
@@ -41,8 +40,8 @@ public final class GraphicalPlayerAdapter implements Player {
      */
     @Override
     public void initPlayers(PlayerId ownId, Map<PlayerId, String> playerNames) {
-    runLater(()-> playerQueue.add(new GraphicalPlayer(ownId,playerNames)));
-     graphicalPlayer = taker(playerQueue);
+        runLater(() -> playerQueue.add(new GraphicalPlayer(ownId, playerNames)));
+        graphicalPlayer = taker(playerQueue);
     }
 
     /**
@@ -73,7 +72,7 @@ public final class GraphicalPlayerAdapter implements Player {
      */
     @Override
     public void setInitialTicketChoice(SortedBag<Ticket> tickets) {
-        runLater(() -> graphicalPlayer.chooseTickets(tickets, initialTicketQueue::add));
+        runLater(() -> graphicalPlayer.chooseTickets(tickets, ticketChoice::add));
     }
 
     /**
@@ -83,7 +82,6 @@ public final class GraphicalPlayerAdapter implements Player {
      */
     @Override
     public SortedBag<Ticket> chooseInitialTickets() {
-        runLater(() -> graphicalPlayer.chooseTickets(taker(initialTicketQueue), ticketChoice::add));
         return taker(ticketChoice);
     }
 
@@ -95,25 +93,21 @@ public final class GraphicalPlayerAdapter implements Player {
     @Override
     public TurnKind nextTurn() {
         BlockingQueue<TurnKind> turnKindBlockingQueue = new LinkedBlockingDeque<>();
-        DrawCardHandler cardHandler = (c) ->
-                turnKindBlockingQueue.add(TurnKind.DRAW_CARDS);
+        DrawCardHandler cardHandler = (c) -> {
+            turnKindBlockingQueue.add(TurnKind.DRAW_CARDS);
+            slotQueue.add(c);
+        };
 
         ClaimRouteHandler routeHandler = (route, cards) -> {
             turnKindBlockingQueue.add(TurnKind.CLAIM_ROUTE);
             routeQueue.add(route);
             initialClaimCard.add(cards);
-
-
         };
         DrawTicketsHandler ticketsHandler = () ->
                 turnKindBlockingQueue.add(TurnKind.DRAW_TICKETS);
 
         runLater(() -> graphicalPlayer.startTurn(ticketsHandler, cardHandler, routeHandler));
-        try {
-            return turnKindBlockingQueue.take();
-        } catch (InterruptedException interruptedException) {
-            throw new Error();
-        }
+        return taker(turnKindBlockingQueue);
     }
 
     /**
@@ -177,10 +171,6 @@ public final class GraphicalPlayerAdapter implements Player {
     @Override
     public SortedBag<Card> chooseAdditionalCards(List<SortedBag<Card>> options) {
         runLater(() -> graphicalPlayer.chooseAdditionalCards(options, additionalCardQueue::add));
-        try {
-            return additionalCardQueue.take();
-        } catch (InterruptedException interruptedException) {
-            throw new Error();
-        }
+        return taker(additionalCardQueue);
     }
 }

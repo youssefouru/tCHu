@@ -1,17 +1,40 @@
 package ch.epfl.tchu.gui;
 
+import ch.epfl.tchu.SortedBag;
+import ch.epfl.tchu.game.Game;
+import ch.epfl.tchu.game.Player;
+import ch.epfl.tchu.game.PlayerId;
+import ch.epfl.tchu.net.RemotePlayerProxy;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-public final class ServerMain extends Application {
-    public static void main(String[] args) {
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
+import static ch.epfl.tchu.game.ChMap.tickets;
+
+/**
+ * ServerMain : This class represents the main server.
+ *
+ * @author Amine Youssef (324253)
+ * @author Louis Yves André Barinka (329847)
+ */
+public final class ServerMain extends Application {
+    /**
+     * This method will launch the arguments of the program
+     *
+     * @param args (String[]) :
+     */
+    public static void main(String[] args) {
+        launch(args);
     }
 
     /**
-     * The main entry point for all JavaFX applications.
-     * The start method is called after the init method has returned,
-     * and after the system is ready for the application to begin running.
+     * This method
      *
      * <p>
      * NOTE: This method is called on the JavaFX Application Thread.
@@ -25,6 +48,22 @@ public final class ServerMain extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
+        List<String> parameters = getParameters().getRaw();
+        ServerSocket server = new ServerSocket(5108);
+        Socket socket = server.accept();
+        Map<PlayerId, Player> players = new EnumMap<>(PlayerId.class);
+        Map<PlayerId, String> playerNames = new EnumMap<>(PlayerId.class);
+        players.put(PlayerId.PLAYER_1, new GraphicalPlayerAdapter());
+        for (PlayerId playerId : PlayerId.ALL) {
+            playerNames.put(playerId, parameters.get(playerId.ordinal()));
+            if (playerId == PlayerId.PLAYER_1) {
+                continue;
+            }
+            players.put(playerId, new RemotePlayerProxy(socket));
+        }
+
+        new Thread(() -> Game.play(players, playerNames, SortedBag.of(tickets()), new Random())).start();
+
 
     }
 }

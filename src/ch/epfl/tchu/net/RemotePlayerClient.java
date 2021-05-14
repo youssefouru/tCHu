@@ -43,6 +43,7 @@ public final class RemotePlayerClient {
         } catch (IOException ioException) {
             throw new UncheckedIOException(ioException);
         }
+
     }
 
     private void send(String message) {

@@ -18,7 +18,7 @@ import java.util.Random;
 import static ch.epfl.tchu.game.ChMap.tickets;
 
 /**
- * ServerMain : This class represents the main server.
+ * ServerMain : This class represents the main server that  will host the game.
  *
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)
@@ -34,7 +34,7 @@ public final class ServerMain extends Application {
     }
 
     /**
-     * This method
+     * This method creates
      *
      * <p>
      * NOTE: This method is called on the JavaFX Application Thread.
@@ -51,17 +51,14 @@ public final class ServerMain extends Application {
         List<String> parameters = getParameters().getRaw();
         ServerSocket server = new ServerSocket(5108);
         Socket socket = server.accept();
+        int i = 0;
         Map<PlayerId, Player> players = new EnumMap<>(PlayerId.class);
         Map<PlayerId, String> playerNames = new EnumMap<>(PlayerId.class);
         players.put(PlayerId.PLAYER_1, new GraphicalPlayerAdapter());
-        for (PlayerId playerId : PlayerId.ALL) {
-            playerNames.put(playerId, parameters.get(playerId.ordinal()));
-            if (playerId == PlayerId.PLAYER_1) {
-                continue;
-            }
-            players.put(playerId, new RemotePlayerProxy(socket));
-        }
+        players.put(PlayerId.PLAYER_2, new RemotePlayerProxy(socket));
 
+        playerNames.put(PlayerId.PLAYER_1,parameters.isEmpty()?"Ada":parameters.get(i++));
+        playerNames.put(PlayerId.PLAYER_2,parameters.isEmpty()?"Charles":parameters.get(i));
         new Thread(() -> Game.play(players, playerNames, SortedBag.of(tickets()), new Random())).start();
 
 

@@ -198,6 +198,7 @@ public final class GraphicalPlayer {
         TextFlow textFlow = new TextFlow(new Text(StringsFr.CHOOSE_CARDS));
         ListView<SortedBag<Card>> additionalCardsView = cardBagView(possibleAdditionalCards);
         Button chooseButton = new Button();
+        chooseButton.setText(StringsFr.CHOOSE);
         chooseButton.setOnMouseClicked(event -> {
             if (additionalCardsView.getSelectionModel().selectionModeProperty().isNull().get()) {
                 chooseCardsHandler.onChooseCards(SortedBag.of());

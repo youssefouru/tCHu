@@ -123,6 +123,7 @@ public class RemotePlayerTest {
         public void setInitialTicketChoice(SortedBag<Ticket> tickets) {
             System.out.println(Serdes.TICKET_BAG_SERDE.serialize(tickets));
             inTickets = tickets;
+            System.out.println(tickets);
         }
 
         @Override
@@ -150,6 +151,7 @@ public class RemotePlayerTest {
                 else
                     numb++;
             }
+
             return SortedBag.of(inT);
         }
 

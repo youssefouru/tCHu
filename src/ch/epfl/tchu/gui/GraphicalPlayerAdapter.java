@@ -12,6 +12,12 @@ import java.util.concurrent.LinkedBlockingDeque;
 import static ch.epfl.tchu.gui.ActionHandlers.*;
 import static javafx.application.Platform.runLater;
 
+/**
+ * GraphicalPlayerAdapter :This class is the adapter of the graphical Player
+ *
+ * @author Amine Youssef (324253)
+ * @author Louis Yves André Barinka (329847)
+ */
 public final class GraphicalPlayerAdapter implements Player {
 
     private final static int QUEUE_CAPACITY = 1;

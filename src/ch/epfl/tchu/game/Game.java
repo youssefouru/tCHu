@@ -146,7 +146,7 @@ public final class Game {
         updateStates(players, gameState);
 
 
-       Map<PlayerId,Trail> mapOfTrails = new HashMap<>();
+        Map<PlayerId, Trail> mapOfTrails = new HashMap<>();
         for (PlayerId playerId : PlayerId.ALL) {
             PlayerState playerState = gameState.playerState(playerId);
             mapOfTrails.put(playerId, Trail.longest(playerState.routes()));

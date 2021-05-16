@@ -27,6 +27,8 @@ public final class MapViewCreator {
     private final static int CIRCLE_X_POS = 12;
     private final static int CIRCLE_Y_POS = 6;
 
+    private MapViewCreator(){
+    }
     /**
      * this method create the view of the map
      *

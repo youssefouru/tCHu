@@ -24,6 +24,9 @@ import static ch.epfl.tchu.game.PlayerId.ALL;
 public final class InfoViewCreator {
     private static final int CIRCLE_RADIUS = 5;
 
+    private InfoViewCreator(){
+
+    }
     /**
      * This method creates the view of the info.
      *

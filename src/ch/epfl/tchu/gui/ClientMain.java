@@ -5,6 +5,12 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import java.util.List;
 
+/**
+ * ClientMain : This class represents the client who will play the game.
+ *
+ * @author Amine Youssef (324253)
+ * @author Louis Yves André Barinka (329847)
+ */
 public final class ClientMain extends Application {
     /**
      * the main method of the programme
@@ -16,9 +22,7 @@ public final class ClientMain extends Application {
     }
 
     /**
-     * The main entry point for all JavaFX applications.
-     * The start method is called after the init method has returned,
-     * and after the system is ready for the application to begin running.
+     * This method will create and launch the graphical Player which represents our client.
      *
      * <p>
      * NOTE: This method is called on the JavaFX Application Thread.

@@ -28,7 +28,8 @@ public final class ServerMainBonus{
     /**
      * This method will launch the arguments of the program
      *
-     * @param args (String[]) :
+     * @param args (String[]) : the arguments of the program
+     * @throws IOException : if something goes wrong
      */
     public static void main(String[] args) throws IOException {
         ServerSocket server = new ServerSocket(5108,PlayerId.COUNT);
@@ -37,6 +38,7 @@ public final class ServerMainBonus{
         Map<PlayerId, String> playerNames = new EnumMap<>(PlayerId.class);
         for(PlayerId playerId : PlayerId.ALL) {
             RemotePlayerProxy playerProxy = new RemotePlayerProxy(server.accept());
+            System.out.println(playerId + " connected");
             players.put(playerId, playerProxy);
             playerNames.put(playerId, args.length == 0 ? "Charles" : args[i++]);
         }

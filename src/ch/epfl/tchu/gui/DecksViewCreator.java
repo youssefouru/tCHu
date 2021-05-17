@@ -25,7 +25,7 @@ import static ch.epfl.tchu.gui.ActionHandlers.*;
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)
  */
-public final class DecksViewCreator {
+final class DecksViewCreator {
     private DecksViewCreator() {
     }
 

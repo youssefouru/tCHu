@@ -21,7 +21,7 @@ import static ch.epfl.tchu.game.PlayerId.ALL;
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)
  */
-public final class InfoViewCreator {
+final class InfoViewCreator {
     private static final int CIRCLE_RADIUS = 5;
 
     private InfoViewCreator(){

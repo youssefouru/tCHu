@@ -20,7 +20,7 @@ import java.util.List;
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)
  */
-public final class MapViewCreator {
+ final class MapViewCreator {
     private final static int CIRCLE_RADIUS = 3;
     private final static int RECTANGLE_WIDTH = 36;
     private final static int RECTANGLE_HEIGHT = 12;

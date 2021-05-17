@@ -2,38 +2,26 @@ package ch.epfl.tchu.net;
 
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
-import ch.epfl.tchu.gui.MapViewCreator;
 import ch.epfl.test.TestRandomizer;
-import org.junit.jupiter.api.Test;
-import ch.epfl.tchu.net.RemotePlayerClient;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static ch.epfl.tchu.game.PlayerId.PLAYER_1;
-import static ch.epfl.tchu.game.PlayerId.PLAYER_2;
-
 public class RemotePlayerTest {
 
-    public static void main(String[] args)  {
+    public static void main(String[] args) {
         System.out.println("Starting client!");
         RemotePlayerClient playerClient =
-                new RemotePlayerClient(new TestPlayer(510,new ArrayList<>()),
+                new RemotePlayerClient(new TestPlayer(510, new ArrayList<>()),
                         "localhost",
                         5108);
         playerClient.run();
         System.out.println("Client done!");
     }
-
-
-
-
-
 
 
     private static final class TestPlayer implements Player {
@@ -45,6 +33,24 @@ public class RemotePlayerTest {
         private int pointsFin;
         private boolean winner;
         private boolean ex;
+        private int infos;
+        private int turnCounter;
+        private PlayerState ownState;
+        private PublicGameState gameState;
+        //Rajoutés par moi
+        private PlayerId ownId;
+        private Map<PlayerId, String> playerNames;
+        private SortedBag<Ticket> inTickets;
+        // Lorsque nextTurn retourne CLAIM_ROUTE
+        private Route routeToClaim;
+        private SortedBag<Card> initialClaimCards;
+
+
+        public TestPlayer(long randomSeed, List<Route> allRoutes) {
+            this.rng = new Random(randomSeed);
+            this.allRoutes = List.copyOf(allRoutes);
+            this.turnCounter = 0;
+        }
 
         public int pointsFin() {
             return pointsFin;
@@ -66,27 +72,6 @@ public class RemotePlayerTest {
             return infos;
         }
 
-        private int infos;
-        private int turnCounter;
-        private PlayerState ownState;
-        private PublicGameState gameState;
-
-
-        //Rajoutés par moi
-        private PlayerId ownId;
-        private Map<PlayerId, String> playerNames;
-        private SortedBag<Ticket> inTickets;
-
-        // Lorsque nextTurn retourne CLAIM_ROUTE
-        private Route routeToClaim;
-        private SortedBag<Card> initialClaimCards;
-
-        public TestPlayer(long randomSeed, List<Route> allRoutes) {
-            this.rng = new Random(randomSeed);
-            this.allRoutes = List.copyOf(allRoutes);
-            this.turnCounter = 0;
-        }
-
         @Override
         public void initPlayers(PlayerId ownId, Map<PlayerId, String> playerNames) {
             this.ownId = ownId;
@@ -98,7 +83,7 @@ public class RemotePlayerTest {
         @Override
         public void receiveInfo(String info) {
             infos++;
-            System.out.println("Message pour "+ playerNames.get(ownId) + " : " + info + ":::::info done");
+            System.out.println("Message pour " + playerNames.get(ownId) + " : " + info + ":::::info done");
             if (info.contains("victoire")) {
                 System.out.println(info);
                 Pattern p = Pattern.compile("-?\\d+");
@@ -128,8 +113,8 @@ public class RemotePlayerTest {
 
         @Override
         public SortedBag<Ticket> chooseInitialTickets() {
-            int index = TestRandomizer.newRandom().nextInt(3 +1) + 1;
-            SortedBag<Ticket> tickets =  SortedBag.of(inTickets.toList().subList(0,index));
+            int index = TestRandomizer.newRandom().nextInt(3 + 1) + 1;
+            SortedBag<Ticket> tickets = SortedBag.of(inTickets.toList().subList(0, index));
             System.out.println(Serdes.TICKET_BAG_SERDE.serialize(tickets));
             return tickets;
         }
@@ -165,7 +150,7 @@ public class RemotePlayerTest {
         @Override
         public Route claimedRoute() {
             Route route = ChMap.routes().get((new Random()).nextInt(ChMap.routes().size()));
-            System.out.println(String.join(" ", List.of(route.station1().toString(), "-",route.station2().toString(), "(" + route.length() + ")")));
+            System.out.println(String.join(" ", List.of(route.station1().toString(), "-", route.station2().toString(), "(" + route.length() + ")")));
             routeToClaim = route;
             return route;
         }

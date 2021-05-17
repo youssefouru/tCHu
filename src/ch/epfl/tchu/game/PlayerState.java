@@ -16,6 +16,7 @@ public final class PlayerState extends PublicPlayerState {
 
     private final SortedBag<Ticket> tickets;
     private final SortedBag<Card> cards;
+    private final int ticketPoint;
 
 
     /**
@@ -29,6 +30,7 @@ public final class PlayerState extends PublicPlayerState {
         super(tickets.size(), cards.size(), routes);
         this.tickets = tickets;
         this.cards = cards;
+        ticketPoint = computeTicketPoint();
     }
 
 
@@ -194,12 +196,7 @@ public final class PlayerState extends PublicPlayerState {
         return max;
     }
 
-    /**
-     * return the total points that the player has with the all his tickets
-     *
-     * @return (int) : the total number of points that the player has
-     */
-    public int ticketPoints() {
+    private int computeTicketPoint(){
         int i = 0;
         StationPartition.Builder builder = new StationPartition.Builder(findMaxId() + 1);
         for (Route route : routes()) {
@@ -210,6 +207,14 @@ public final class PlayerState extends PublicPlayerState {
             i += ticket.points(partition);
         }
         return i;
+    }
+    /**
+     * return the total points that the player has with the all his tickets
+     *
+     * @return (int) : the total number of points that the player has
+     */
+    public int ticketPoints() {
+        return ticketPoint;
     }
 
 

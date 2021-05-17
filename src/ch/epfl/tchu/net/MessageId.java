@@ -21,14 +21,4 @@ public enum MessageId {
     CARDS,
     CHOOSE_ADDITIONAL_CARDS;
 
-    /**
-     * COUNT (int) :  represent the number of all the values of this enum type
-     */
-    public final static int COUNT = values().length;
-
-    /**
-     * ALL (List<MessageId>) : contains all the element of this enum type
-     */
-    public final static List<MessageId> ALL = List.of(values());
-
 }

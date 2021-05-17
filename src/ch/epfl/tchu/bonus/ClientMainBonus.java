@@ -11,7 +11,7 @@ import java.util.List;
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)
  */
-public final class ClientMain extends Application {
+public final class ClientMainBonus extends Application {
     /**
      * the main method of the programme
      *
@@ -39,8 +39,8 @@ public final class ClientMain extends Application {
         List<String> parameters = getParameters().getRaw();
         int i = 0;
         RemotePlayerClient client = new RemotePlayerClient(new GraphicalPlayerAdapter(),
-                                                          (parameters.isEmpty() || parameters.size() == 1)?"localhost": parameters.get(i++) ,
-                                                           parameters.isEmpty()?5108:Integer.parseInt(parameters.get(i)));
+                (parameters.isEmpty() || parameters.size() == 1)?"localhost": parameters.get(i++) ,
+                parameters.isEmpty()?5108:Integer.parseInt(parameters.get(i)));
         new Thread(client::run).start();
     }
 }

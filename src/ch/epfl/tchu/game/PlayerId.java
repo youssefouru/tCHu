@@ -10,8 +10,7 @@ import java.util.List;
  */
 public enum PlayerId {
     PLAYER_1,
-    PLAYER_2,
-    PLAYER_3;
+    PLAYER_2;
     //TODO : SUPPRIME
 
     /**

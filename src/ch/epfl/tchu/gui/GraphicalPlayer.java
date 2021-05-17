@@ -132,7 +132,6 @@ public final class GraphicalPlayer {
      */
     public void chooseTickets(SortedBag<Ticket> tickets, ChooseTicketsHandler ticketsHandler) {
         assert isFxApplicationThread();
-        Preconditions.checkArgument(tickets.size() == Constants.IN_GAME_TICKETS_COUNT || tickets.size() == Constants.INITIAL_TICKETS_COUNT);
         VBox mainBox = new VBox();
         Stage chooserStage = stageCreator(StringsFr.TICKETS_CHOICE, mainBox);
         int minimalNumberOfCards = tickets.size() - Constants.DISCARDABLE_TICKETS_COUNT;

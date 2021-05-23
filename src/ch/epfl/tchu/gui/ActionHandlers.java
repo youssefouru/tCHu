@@ -14,52 +14,56 @@ import ch.epfl.tchu.game.Ticket;
 public interface ActionHandlers {
 
 
-    
     @FunctionalInterface
-    interface DrawTicketsHandler{
+    interface DrawTicketsHandler {
         /**
-         * this method is called when the player want to draw a ticket
+         * This method is called when the player want to draw a ticket.
          */
         void onDrawTickets();
     }
 
     @FunctionalInterface
-    interface DrawCardHandler{
+    interface DrawCardHandler {
         /**
-         * this method is called when the player want to draw a card
+         * This method is called when the player want to draw a card.
          *
-         * @param slot (int) : the card the player wants to draw a card
+         * @param slot (int) : The card the player wants to draw a card.
          */
         void onDrawCard(int slot);
     }
 
     @FunctionalInterface
-    interface ClaimRouteHandler{
+    interface ClaimRouteHandler {
         /**
-         * this method is called when the player wants to claim a route with a sortedBag of cards
+         * This method is called when the player wants to claim a route with a sortedBag of cards.
          *
-         * @param route (Route) : the route the player wants to claim
-         * @param cards (SortedBag< Card >) : the cards used to claim the route
+         * @param route (Route) : The route the player wants to claim.
+         * @param cards (SortedBag< Card >) : The cards used to claim the route.
          */
         void onClaimRoute(Route route, SortedBag<Card> cards);
     }
-
+    /**
+     *
+     */
     @FunctionalInterface
-    interface ChooseTicketsHandler{
+    interface ChooseTicketsHandler {
         /**
-         * this method is called when the player wants to choose which tickets he wants to keep
+         * This method is called when the player wants to choose which tickets he wants to keep.
          *
-         * @param tickets (SortedBag< Ticket >) : tickets that the player wants to keep
+         * @param tickets (SortedBag< Ticket >) : Tickets that the player wants to keep.
          */
         void onChooseTickets(SortedBag<Ticket> tickets);
     }
 
+    /**
+     *  interface : This interface will be used by the player to choose the cards.
+     */
     @FunctionalInterface
-    interface ChooseCardsHandler{
+    interface ChooseCardsHandler {
         /**
-         *this method is called when the player wants to play additional cards to claim an underground route
+         * This method is called when the player wants to play additional cards to claim an underground route.
          *
-         * @param cards (SortedBag< Card >) : the additional cards the player wants to play to claim an underground route
+         * @param cards (SortedBag< Card >) : The additional cards the player wants to play to claim an underground route.
          */
         void onChooseCards(SortedBag<Card> cards);
     }

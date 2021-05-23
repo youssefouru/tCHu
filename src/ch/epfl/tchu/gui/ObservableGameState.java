@@ -37,7 +37,7 @@ public final class ObservableGameState {
     /**
      * Constructor of ObservableGameState
      *
-     * @param playerId (PlayerId) : the id of the player to this class
+     * @param playerId (PlayerId) : the id of the player linked to this class
      */
     public ObservableGameState(PlayerId playerId) {
         this.playerId = playerId;
@@ -68,6 +68,22 @@ public final class ObservableGameState {
             map.put(route, new SimpleBooleanProperty());
         }
         return map;
+    }
+
+    private static List<ObjectProperty<Card>> createFaceUpCardProperty() {
+        List<ObjectProperty<Card>> cards = new ArrayList<>();
+        for (int i = 0; i < Constants.FACE_UP_CARDS_COUNT; i++) {
+            cards.add(new SimpleObjectProperty<>());
+        }
+        return cards;
+    }
+
+    private static Map<Card, IntegerProperty> createsNumberOfCard() {
+        Map<Card, IntegerProperty> listOfNumberOfCards = new EnumMap<>(Card.class);
+        for (Card card : Card.ALL) {
+            listOfNumberOfCards.put(card, new SimpleIntegerProperty());
+        }
+        return listOfNumberOfCards;
     }
 
     /**
@@ -252,22 +268,6 @@ public final class ObservableGameState {
             routeClaimable.get(route).set(routeClaimed && gameState.currentPlayerId() == playerId && playerState.canClaimRoute(route));
         }
 
-    }
-
-    private List<ObjectProperty<Card>> createFaceUpCardProperty() {
-        List<ObjectProperty<Card>> cards = new ArrayList<>();
-        for (int i = 0; i < Constants.FACE_UP_CARDS_COUNT; i++) {
-            cards.add(new SimpleObjectProperty<>());
-        }
-        return cards;
-    }
-
-    private Map<Card, IntegerProperty> createsNumberOfCard() {
-        Map<Card, IntegerProperty> listOfNumberOfCards = new EnumMap<>(Card.class);
-        for (Card card : Card.ALL) {
-            listOfNumberOfCards.put(card, new SimpleIntegerProperty());
-        }
-        return listOfNumberOfCards;
     }
 
     private void updateRoutes() {

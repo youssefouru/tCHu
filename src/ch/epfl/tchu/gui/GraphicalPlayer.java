@@ -1,11 +1,9 @@
 package ch.epfl.tchu.gui;
 
-import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,6 +11,7 @@ import javafx.event.Event;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.layout.BorderPane;
@@ -29,8 +28,15 @@ import java.util.Map;
 import static ch.epfl.tchu.gui.ActionHandlers.*;
 import static javafx.application.Platform.isFxApplicationThread;
 
+/**
+ * GraphicalPlayer : This class represents the graphical interface of the main player.
+ *
+ * @author Amine Youssef (324253)
+ * @author Louis Yves André Barinka (329847)
+ */
 public final class GraphicalPlayer {
     private final static int MAX_INFO_NUMBER = 5;
+    private final static String CHOOSER_CLASS = "chooser.css";
     private final ObservableGameState gameState;
     private final ObservableList<Text> messages;
     private final ObjectProperty<DrawCardHandler> drawCardHP;
@@ -41,8 +47,8 @@ public final class GraphicalPlayer {
     /**
      * Constructor of the GraphicalPlayer.
      *
-     * @param playerId    (PlayerId) : the id of the player
-     * @param playerNames (Map< PlayerId, String >) : the names of the players
+     * @param playerId    (PlayerId) : the id of the player.
+     * @param playerNames (Map< PlayerId, String >) : the names of the players.
      */
     public GraphicalPlayer(PlayerId playerId, Map<PlayerId, String> playerNames) {
         assert isFxApplicationThread();
@@ -51,28 +57,28 @@ public final class GraphicalPlayer {
         drawCardHP = new SimpleObjectProperty<>();
         claimRouteHP = new SimpleObjectProperty<>();
         drawTicketHP = new SimpleObjectProperty<>();
-        mainStage = new Stage(StageStyle.UTILITY);
+        mainStage = new Stage();
         mainStage.setTitle("tCHu \u2014 " + playerNames.get(playerId));
         BorderPane mainPain = new BorderPane(MapViewCreator.createMapView(gameState, claimRouteHP, this::chooseClaimCards),
-                                            null,
-                                            DecksViewCreator.createCardsView(gameState, drawTicketHP, drawCardHP),
-                                            DecksViewCreator.createHandView(gameState),
-                                            InfoViewCreator.createInfoView(playerId, playerNames, gameState, messages));
+                null,
+                DecksViewCreator.createCardsView(gameState, drawTicketHP, drawCardHP),
+                DecksViewCreator.createHandView(gameState),
+                InfoViewCreator.createInfoView(playerId, playerNames, gameState, messages));
         mainStage.setScene(new Scene(mainPain));
         mainStage.show();
     }
 
-    private void handlerSetter(){
+    private void handlerSetter() {
         drawTicketHP.set(null);
         drawCardHP.set(null);
         claimRouteHP.set(null);
     }
 
     /**
-     * this method calls the method setState of the observable GameState
+     * This method calls the method setState of the observable GameState.
      *
-     * @param publicGameState (PublicGameState) : the new publicGameState of the observableGameState
-     * @param playerState     (PlayerState) : the new playerState of the observableGameState
+     * @param publicGameState (PublicGameState) : the new publicGameState of the observableGameState.
+     * @param playerState     (PlayerState) : the new playerState of the observableGameState.
      */
     public void setState(PublicGameState publicGameState, PlayerState playerState) {
         assert isFxApplicationThread();
@@ -91,7 +97,7 @@ public final class GraphicalPlayer {
         assert isFxApplicationThread();
 
         claimRouteHP.set((route, cards) -> {
-           handlerSetter();
+            handlerSetter();
             claimRouteHandler.onClaimRoute(route, cards);
         });
         if (gameState.canDrawTickets()) {
@@ -143,7 +149,7 @@ public final class GraphicalPlayer {
 
 
         chooseButton.disableProperty().bind(Bindings.lessThan(Bindings.size(listView.getSelectionModel().getSelectedItems()),
-                                                                            minimalNumberOfCards));
+                minimalNumberOfCards));
         chooseButton.setOnMouseClicked(e -> {
             ticketsHandler.onChooseTickets(SortedBag.of(listView.getSelectionModel().getSelectedItems()));
             chooserStage.hide();
@@ -161,7 +167,7 @@ public final class GraphicalPlayer {
         stage.setOnCloseRequest(Event::consume);
         Scene scene = new Scene(box);
         stage.setScene(scene);
-        scene.getStylesheets().add("chooser.css");
+        scene.getStylesheets().add(CHOOSER_CLASS);
         return stage;
 
     }
@@ -174,7 +180,7 @@ public final class GraphicalPlayer {
      */
     public void drawCard(DrawCardHandler drawCardHandler) {
         assert isFxApplicationThread();
-        drawCardHP.set((c)->{
+        drawCardHP.set((c) -> {
             drawTicketHP.set(null);
             claimRouteHP.set(null);
             drawCardHP.set(null);
@@ -199,11 +205,9 @@ public final class GraphicalPlayer {
         Button chooseButton = new Button();
         chooseButton.setText(StringsFr.CHOOSE);
         chooseButton.setOnMouseClicked(event -> {
-            if (additionalCardsView.getSelectionModel().selectionModeProperty().isNull().get()) {
-                chooseCardsHandler.onChooseCards(SortedBag.of());
-            } else {
-                chooseCardsHandler.onChooseCards(additionalCardsView.getSelectionModel().getSelectedItem());
-            }
+            MultipleSelectionModel<SortedBag<Card>> sortedBagSelectionModel = additionalCardsView.getSelectionModel();
+            SortedBag<Card> cardsChosen = sortedBagSelectionModel.getSelectedItem();
+            chooseCardsHandler.onChooseCards(cardsChosen == null ? SortedBag.of() : cardsChosen);
             additionalCardsStage.hide();
         });
         mainBox.getChildren().addAll(textFlow, additionalCardsView, chooseButton);

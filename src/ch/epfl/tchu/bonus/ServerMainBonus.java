@@ -38,7 +38,6 @@ public final class ServerMainBonus{
         Map<PlayerId, String> playerNames = new EnumMap<>(PlayerId.class);
         for(PlayerId playerId : PlayerId.ALL) {
             RemotePlayerProxy playerProxy = new RemotePlayerProxy(server.accept());
-            System.out.println(playerId + " connected");
             players.put(playerId, playerProxy);
             playerNames.put(playerId, args.length == 0 ? "Charles" : args[i++]);
         }

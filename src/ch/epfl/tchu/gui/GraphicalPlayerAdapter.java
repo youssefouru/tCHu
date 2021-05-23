@@ -39,21 +39,22 @@ public final class GraphicalPlayerAdapter implements Player {
     }
 
     /**
-     * this method communicate to the player his own ID and the name of the other player
+     * This method communicate to the player his own ID and the name of the other player.
      *
-     * @param ownId       (PlayerId) : id of the player
-     * @param playerNames (Map<PlayerId, String>) : the names of the players of the game
+     * @param ownId       (PlayerId) : The id of this player.
+     * @param playerNames (Map<PlayerId, String>) : The names of the players of the game.
      */
     @Override
     public void initPlayers(PlayerId ownId, Map<PlayerId, String> playerNames) {
         runLater(() -> playerQueue.add(new GraphicalPlayer(ownId, playerNames)));
         graphicalPlayer = taker(playerQueue);
+
     }
 
     /**
-     * this method is used to communicate the info in parameter
+     * This method is used to communicate the info in parameter.
      *
-     * @param info (String) : info we want to communicate
+     * @param info (String) : The info we want to communicate.
      */
     @Override
     public void receiveInfo(String info) {
@@ -61,10 +62,10 @@ public final class GraphicalPlayerAdapter implements Player {
     }
 
     /**
-     * this methode inform the player of the new state of the game and his own state
+     * This methode inform the player of the new state of the game and his own state.
      *
-     * @param newState (PublicGameState) : the PublicGameState we want to communicate
-     * @param ownState (PlayerState) : own state of the player
+     * @param newState (PublicGameState) : The PublicGameState we want to communicate.
+     * @param ownState (PlayerState) : The state of the player.
      */
     @Override
     public void updateState(PublicGameState newState, PlayerState ownState) {
@@ -72,9 +73,9 @@ public final class GraphicalPlayerAdapter implements Player {
     }
 
     /**
-     * this methode tells the player the tickets which were distributed to the player
+     * This methode tells the player the tickets which were distributed to the player.
      *
-     * @param tickets (SortedBag<Ticket>) : the tickets which were distributed to the player
+     * @param tickets (SortedBag<Ticket>) : The tickets which were distributed to the player.
      */
     @Override
     public void setInitialTicketChoice(SortedBag<Ticket> tickets) {

@@ -3,6 +3,7 @@ package ch.epfl.tchu.gui;
 import ch.epfl.tchu.net.RemotePlayerClient;
 import javafx.application.Application;
 import javafx.stage.Stage;
+
 import java.util.List;
 
 /**
@@ -15,7 +16,7 @@ public final class ClientMain extends Application {
     /**
      * the main method of the programme
      *
-     * @param args (String[]) :
+     * @param args (String[]) : the arguments of the programme
      */
     public static void main(String[] args) {
         launch(args);
@@ -30,8 +31,7 @@ public final class ClientMain extends Application {
      *
      * @param primaryStage the primary stage for this application, onto which
      *                     the application scene can be set.
-     *                     Applications may create other stages, if needed, but they will not be
-     *                     primary stages.
+     *                     But in this class it has no utility
      * @throws Exception if something goes wrong
      */
     @Override
@@ -39,8 +39,8 @@ public final class ClientMain extends Application {
         List<String> parameters = getParameters().getRaw();
         int i = 0;
         RemotePlayerClient client = new RemotePlayerClient(new GraphicalPlayerAdapter(),
-                                                          (parameters.isEmpty() || parameters.size() == 1)?"localhost": parameters.get(i++) ,
-                                                           parameters.isEmpty()?5108:Integer.parseInt(parameters.get(i)));
+                (parameters.isEmpty() || parameters.size() == 1) ? "localhost" : parameters.get(i++),
+                parameters.isEmpty() ? 5108 : Integer.parseInt(parameters.get(i)));
         new Thread(client::run).start();
     }
 }

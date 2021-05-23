@@ -20,15 +20,24 @@ import java.util.List;
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)
  */
- final class MapViewCreator {
+final class MapViewCreator {
     private final static int CIRCLE_RADIUS = 3;
     private final static int RECTANGLE_WIDTH = 36;
     private final static int RECTANGLE_HEIGHT = 12;
     private final static int CIRCLE_X_POS = 12;
     private final static int CIRCLE_Y_POS = 6;
+    private final static String MAP_NAME = "map.png";
+    private final static String MAP_CLASS = "map.css";
+    private final static String COLOR_CLASS = "colors.css";
+    private final static String TRACK_STRING = "track";
+    private final static String FILLED = "filled";
+    private final static String CAR = "car";
+    private final static String ROUTE = "route";
+    private final static String NEUTRAL_COLOR = "NEUTRAL";
 
-    private MapViewCreator(){
+    private MapViewCreator() {
     }
+
     /**
      * this method create the view of the map
      *
@@ -39,46 +48,54 @@ import java.util.List;
      */
     public static Node createMapView(ObservableGameState gameState, ObjectProperty<ActionHandlers.ClaimRouteHandler> claimRouteHP, CardChooser cardChooser) {
         Pane mapView = new Pane();
-        mapView.getStylesheets().addAll("map.css", "colors.css");
-        ImageView imageView = new ImageView("map.png");
-        mapView.getChildren().add(imageView);
+        mapView.getStylesheets().addAll(MAP_CLASS, COLOR_CLASS);
+        mapView.getChildren().add(new ImageView(MAP_NAME));
 
 
         for (Route route : ChMap.routes()) {
-
             Group routeGroup = new Group();
+
             routeGroup.setId(route.id());
 
-
             routeGroup.disableProperty().bind(claimRouteHP.isNull().or(gameState.claimable(route).not()));
+
             routeGroup.setOnMouseClicked((e) -> {
                 List<SortedBag<Card>> possibleClaimCards = gameState.possibleClaimCards(route);
+
                 ActionHandlers.ClaimRouteHandler claimRouteH = claimRouteHP.get();
+
                 if (possibleClaimCards.size() == 1) {
                     claimRouteH.onClaimRoute(route, possibleClaimCards.get(0));
                 } else {
                     ActionHandlers.ChooseCardsHandler chooseCardsH = chosenCards -> claimRouteH.onClaimRoute(route, chosenCards);
+
                     cardChooser.chooseCards(possibleClaimCards, chooseCardsH);
                 }
 
             });
 
-            routeGroup.getStyleClass().addAll("route",
+            routeGroup.getStyleClass().addAll(ROUTE,
                     route.level().name(),
-                    route.color() == null ? "NEUTRAL" : route.color().name());
+                    route.color() == null ? NEUTRAL_COLOR : route.color().name());
 
             gameState.routeOwner(route).addListener((o, oV, nV) -> routeGroup.getStyleClass().add(nV.name()));
 
-
             for (int i = 1; i <= route.length(); i++) {
                 Rectangle wayRectangle = new Rectangle(RECTANGLE_WIDTH, RECTANGLE_HEIGHT);
-                wayRectangle.getStyleClass().addAll("track", "filled");
+
+                wayRectangle.getStyleClass().addAll(TRACK_STRING, FILLED);
+
                 Rectangle carRectangle = new Rectangle(RECTANGLE_WIDTH, RECTANGLE_HEIGHT);
-                carRectangle.getStyleClass().add("filled");
+
+                carRectangle.getStyleClass().add(FILLED);
+
                 Group carGroup = new Group(carRectangle, new Circle(CIRCLE_X_POS, CIRCLE_Y_POS, CIRCLE_RADIUS), new Circle(2 * CIRCLE_X_POS, CIRCLE_Y_POS, CIRCLE_RADIUS));
-                carGroup.getStyleClass().add("car");
+                carGroup.getStyleClass().add(CAR);
+
                 Group caseGroup = new Group(wayRectangle, carGroup);
+
                 caseGroup.setId(route.id() + "_" + i);
+
                 routeGroup.getChildren().add(caseGroup);
             }
 
@@ -90,7 +107,9 @@ import java.util.List;
 
     }
 
-
+    /**
+     * This interface is used by the player to choose a card.
+     */
     @FunctionalInterface
     interface CardChooser {
         /**

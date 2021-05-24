@@ -38,7 +38,6 @@ public final class Info {
      * @return (String) the String described
      */
     public static String cardName(Card card, int count) {
-        String color;
         switch (card) {
             case BLACK:
                 return StringsFr.BLACK_CARD + StringsFr.plural(count);
@@ -72,7 +71,7 @@ public final class Info {
 
 
     /**
-     * Displays if there is a draw between two players with the number of points
+     * Displays if there is a draw between two players with the number of points.
      *
      * @param playerNames (String) : the name of the player
      * @param points      (int) : the number of points
@@ -91,7 +90,7 @@ public final class Info {
     }
 
     /**
-     * Displays the next player to play first
+     * Displays the next player to play first.
      *
      * @return (String) : the name of the player who will play first
      */
@@ -100,7 +99,7 @@ public final class Info {
     }
 
     /**
-     * Displays the number of tickets the player has chosen to keep
+     * Displays the number of tickets the player has chosen to keep.
      *
      * @param count (int) : number of tickets
      * @return (String) : that the player has count ticket
@@ -111,7 +110,7 @@ public final class Info {
 
 
     /**
-     * Displays that the the players can play
+     * Displays that the the players can play.
      *
      * @return (String) : that the player can play
      */
@@ -120,7 +119,7 @@ public final class Info {
     }
 
     /**
-     * Displays that a certain player drew tickets
+     * Displays that a certain player drew tickets.
      *
      * @param count (int) : the number of tickets drawn
      * @return (String) : that the player drew count ticket
@@ -131,7 +130,7 @@ public final class Info {
 
 
     /**
-     * Displays that a player drew a blind card
+     * Displays that a player drew a blind card.
      *
      * @return (String) : that the player drawn a blind card
      */
@@ -140,7 +139,7 @@ public final class Info {
     }
 
     /**
-     * Displays that a player drew a visible card, with the name of the card
+     * Displays that a player drew a visible card, with the name of the card.
      *
      * @param card (Card) : the card drawn
      * @return (String) : that the player drew the card in parameter
@@ -150,7 +149,7 @@ public final class Info {
     }
 
     /**
-     * Displays the message that a player Claimed a route with the given cards
+     * Displays the message that a player Claimed a route with the given cards.
      *
      * @param route        (Route) : the route that has been claimed
      * @param initialCards (SortedBag<Card>) : the initial cards
@@ -161,7 +160,7 @@ public final class Info {
     }
 
     /**
-     * displays that a player attempt to claim a tunnel with the given cards
+     * displays that a player attempt to claim a tunnel with the given cards.
      *
      * @param route        (Route) : the route that has been claimed
      * @param initialCards (SortedBag<Card>) : the initial cards
@@ -173,7 +172,7 @@ public final class Info {
     }
 
     /**
-     * Displays that a player drew additional cards, with the cards drawn and the additional cost
+     * Displays that a player drew additional cards, with the cards drawn and the additional cost.
      *
      * @param drawnCards     (SortedBag<Card>) : the cards drawn
      * @param additionalCost (int) : the additional cost
@@ -183,14 +182,14 @@ public final class Info {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(String.format(StringsFr.ADDITIONAL_CARDS_ARE, cardBagStringConverter.toString(drawnCards)));
         if (additionalCost == 0) {
-            return stringBuilder.append(String.format(StringsFr.NO_ADDITIONAL_COST)).toString();
+            return stringBuilder.append(StringsFr.NO_ADDITIONAL_COST).toString();
         } else {
             return stringBuilder.append(String.format(StringsFr.SOME_ADDITIONAL_COST, additionalCost, StringsFr.plural(additionalCost))).toString();
         }
     }
 
     /**
-     * Displays that a player didn't claimed a route, with the name of the route
+     * Displays that a player didn't claimed a route, with the name of the route.
      *
      * @param route (Route) : the route that hasn't been claimed
      * @return (String) : the player hasn't claimed the route
@@ -200,7 +199,7 @@ public final class Info {
     }
 
     /**
-     * Displays that the last turn of the play is beginning, and indicates the number of cars of one of the player
+     * Displays that the last turn of the play is beginning, and indicates the number of cars of one of the player.
      *
      * @param carCount (int) : number of Wagons
      * @return (String) : the number of wagons left for the player
@@ -210,7 +209,7 @@ public final class Info {
     }
 
     /**
-     * Displays that a player got the longest trail bonus, with the longest trail displayed
+     * Displays that a player got the longest trail bonus, with the longest trail displayed.
      *
      * @param longestTrail (Trail) : the trail that we want to display
      * @return (String) : a player got the longest trail bonus, with the longest trail displayed
@@ -221,7 +220,7 @@ public final class Info {
     }
 
     /**
-     * Display that a player won, among the number of points of the winner and the number of points of the loser
+     * Display that a player won, among the number of points of the winner and the number of points of the loser.
      *
      * @param points      (int) : the number of points of the player
      * @param loserPoints (int) : the loser points of the other player

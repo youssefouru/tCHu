@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -32,11 +33,15 @@ public final class ServerMainBonus{
      * @throws IOException : if something goes wrong
      */
     public static void main(String[] args) throws IOException {
-        ServerSocket server = new ServerSocket(5108,PlayerId.COUNT);
+        ServerSocket server = new ServerSocket(5108);
+        ServerSocket managerServer = new ServerSocket(5109);
+        Socket managerSocket = new Socket("localhost",5109);
         int i = 0;
         Map<PlayerId, Player> players = new EnumMap<>(PlayerId.class);
         Map<PlayerId, String> playerNames = new EnumMap<>(PlayerId.class);
         for(PlayerId playerId : PlayerId.ALL) {
+            Socket instructionSocket  = server.accept();
+            Socket clientSocket = server.accept();
             RemotePlayerProxy playerProxy = new RemotePlayerProxy(server.accept());
             players.put(playerId, playerProxy);
             playerNames.put(playerId, args.length == 0 ? "Charles" : args[i++]);

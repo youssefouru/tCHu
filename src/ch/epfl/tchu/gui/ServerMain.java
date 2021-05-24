@@ -9,6 +9,7 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,7 @@ public final class ServerMain extends Application {
     /**
      * This method will launch the arguments of the program
      *
-     * @param args (String[]) :
+     * @param args (String[]) : the arguments of the programme
      */
     public static void main(String[] args) {
         launch(args);
@@ -55,8 +56,8 @@ public final class ServerMain extends Application {
         players.put(PlayerId.PLAYER_1, new GraphicalPlayerAdapter());
         players.put(PlayerId.PLAYER_2, new RemotePlayerProxy(serverSocket.accept()));
 
-        playerNames.put(PlayerId.PLAYER_1, parameters.isEmpty() ? "Ada" : parameters.get(i++));
-        playerNames.put(PlayerId.PLAYER_2, parameters.isEmpty() ? "Charles" : parameters.get(i));
+        playerNames.put(PlayerId.PLAYER_1,parameters.isEmpty()?"Ada":parameters.get(i++));
+        playerNames.put(PlayerId.PLAYER_2,parameters.isEmpty()?"Charles":parameters.get(i));
         new Thread(() -> Game.play(players, playerNames, SortedBag.of(tickets()), new Random())).start();
 
 

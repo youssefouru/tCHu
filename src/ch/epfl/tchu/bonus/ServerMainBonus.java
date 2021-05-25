@@ -1,19 +1,12 @@
 package ch.epfl.tchu.bonus;
 
 import ch.epfl.tchu.SortedBag;
-import ch.epfl.tchu.game.Game;
-import ch.epfl.tchu.game.GameState;
-import ch.epfl.tchu.game.Player;
 import ch.epfl.tchu.game.PlayerId;
-import ch.epfl.tchu.net.RemotePlayerProxy;
-import javafx.application.Application;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.EnumMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -41,13 +34,17 @@ public final class ServerMainBonus{
         Map<PlayerId, String> playerNames = new EnumMap<>(PlayerId.class);
         for(PlayerId playerId : PlayerId.ALL) {
             Socket instructionSocket  = server.accept();
-            Socket clientSocket = server.accept();
-            RemotePlayerProxy playerProxy = new RemotePlayerProxy(server.accept());
+            Socket messageSocket = server.accept();
+            RemotePlayerProxy playerProxy = new RemotePlayerProxy(server.accept(), messageSocket,managerSocket);
             players.put(playerId, playerProxy);
             playerNames.put(playerId, args.length == 0 ? "Charles" : args[i++]);
         }
+        MessageManager manager = new MessageManager(players,managerSocket,playerNames);
         new Thread(() -> Game.play(players, playerNames, SortedBag.of(tickets()), new Random())).start();
-
+        new Thread(manager::manage).start();
+        for(PlayerId playerId : PlayerId.ALL){
+            new Thread(()->players.get(playerId).sendToManager()).start();
+        }
     }
 
 }

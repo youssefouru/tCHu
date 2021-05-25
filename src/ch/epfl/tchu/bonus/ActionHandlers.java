@@ -1,4 +1,4 @@
-package ch.epfl.tchu.gui;
+package ch.epfl.tchu.bonus;
 
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.Card;

@@ -31,7 +31,7 @@ public final class GameState extends PublicGameState {
      * @param lastPlayer      (PlayerId) : the Id of the last Player
      */
     private GameState(Deck<Ticket> tickets, CardState cardState, PlayerId currentPlayerId, Map<PlayerId, PlayerState> playerState, PlayerId lastPlayer) {
-        super(tickets.size(), cardState, currentPlayerId,Map.copyOf(playerState), lastPlayer);
+        super(tickets.size(), cardState, currentPlayerId, playerState, lastPlayer);
         this.playerState = Map.copyOf(playerState);
         this.tickets = tickets;
         this.cardState = cardState;
@@ -156,7 +156,7 @@ public final class GameState extends PublicGameState {
     public GameState withInitiallyChosenTickets(PlayerId playerId, SortedBag<Ticket> chosenTickets) {
         Preconditions.checkArgument(playerState(playerId).ticketCount() == 0);
         Map<PlayerId, PlayerState> map = (new HashMap<>(this.playerState));
-        map.put(playerId,playerState(playerId).withAddedTickets(chosenTickets));
+        map.put(playerId, playerState(playerId).withAddedTickets(chosenTickets));
         return new GameState(tickets, cardState, currentPlayerId(), map, lastPlayer());
     }
 

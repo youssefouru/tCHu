@@ -2,7 +2,7 @@ package ch.epfl.tchu.bonus;
 
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
-import ch.epfl.tchu.net.MessageId;
+
 import ch.epfl.tchu.net.Serdes;
 
 import java.io.*;
@@ -154,7 +154,7 @@ public final class RemotePlayerProxy implements Player {
      * @return (TurnKind) : the turnKind chosen by the client
      */
     @Override
-    public TurnKind nextTurn() {
+    public ch.epfl.tchu.game.Player.TurnKind nextTurn() {
         sendInstruction(MessageId.NEXT_TURN);
         return Serdes.TURN_KIND_SERDE.deserialize(receiveInstruction());
     }
@@ -217,5 +217,44 @@ public final class RemotePlayerProxy implements Player {
         sendInstruction(MessageId.CHOOSE_ADDITIONAL_CARDS,
                 Serdes.CARD_BAG_LIST_SERDE.serialize(options));
         return Serdes.CARD_BAG_SERDE.deserialize(receiveInstruction());
+    }
+
+
+    /**
+     * This method is used to send a message to the client bound to the player.
+     * @param serializedMessage (String) : the serialized message sent from the manager that we want to send tot the client
+     */
+    public void sendToClient(String serializedMessage){
+        sendTo(messageWriter,serializedMessage);
+    }
+
+    /**
+     * This method is used to verify if a message has been written in the socket of the client and write it in the socket of the manager
+     */
+    public void sendToManager(){
+        String receiveMessage;
+        while((receiveMessage=receiveFrom(messageReader)) != null){
+            sendTo(managerWriter,receiveMessage);
+        }
+    }
+
+    /**
+     * This method is used to receive a message from a the socket of messages.
+     *
+     * @return (String) : The message received from the proxy
+     */
+    @Override
+    public String receiveMessage() {
+        return null;
+    }
+
+    /**
+     * This method is used to notify the client that the routes in parameter are in the longest Trail.
+     *
+     * @param routes (List< Route >) : the routes in the longest trail.
+     */
+    @Override
+    public void notifyLongest(List<Route> routes) {
+        sendInstruction(MessageId.NOTIFY_LONGEST,Serdes.ROUTE_LIST_SERDE.serialize(routes));
     }
 }

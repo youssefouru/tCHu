@@ -31,7 +31,7 @@ public class PublicGameState {
      * @param playerState     (Map<PlayerId, PublicPlayerState>): the map which will give us the player state of each player based on id of the player
      * @param lastPlayer      (PlayerId) : the Id of the last Player
      */
-    public PublicGameState(int ticketsCount, PublicCardState cardState, PlayerId currentPlayerId, Map<PlayerId, PublicPlayerState> playerState, PlayerId lastPlayer) {
+    public PublicGameState(int ticketsCount, PublicCardState cardState, PlayerId currentPlayerId, Map<PlayerId,? extends PublicPlayerState> playerState, PlayerId lastPlayer) {
         Preconditions.checkArgument(playerState.size() == PlayerId.COUNT && ticketsCount >= 0);
         this.ticketsCount = ticketsCount;
         this.cardState = Objects.requireNonNull(cardState);

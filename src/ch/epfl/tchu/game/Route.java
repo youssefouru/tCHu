@@ -2,6 +2,8 @@ package ch.epfl.tchu.game;
 
 import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,7 @@ public final class Route {
     private final int length;
     private final Level level;
     private final Color color;
+    private final BooleanProperty isHighlighted = new SimpleBooleanProperty();
 
 
     /**
@@ -172,7 +175,12 @@ public final class Route {
         return Constants.ROUTE_CLAIM_POINTS.get(length);
     }
 
-
+    /**
+     * This method will set the route Highlighted
+     */
+    public void highlight(){
+        isHighlighted.set(true);
+    }
     /**
      * Level enum type
      */

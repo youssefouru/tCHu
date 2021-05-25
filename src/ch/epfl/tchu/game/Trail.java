@@ -23,7 +23,7 @@ public final class Trail {
      * @param station2               (Station) : the second station of the trail
      */
     private Trail(List<Route> routesOfTheTrail, Station station1, Station station2,int length) {
-        this.routesOfTheTrail =routesOfTheTrail;
+        this.routesOfTheTrail =List.copyOf(routesOfTheTrail);
         this.length = length;
         this.station1 = station1;
         this.station2 = station2;
@@ -117,6 +117,15 @@ public final class Trail {
      */
     public Station station2() {
         return station2;
+    }
+
+    /**
+     * This method returns the list of routes of this trail.
+     *
+     * @return (List< Route >) : The attribute routesOfTheTrail of the trail.
+     */
+    public List<Route> routes(){
+        return routesOfTheTrail;
     }
 
     /**

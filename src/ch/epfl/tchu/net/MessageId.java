@@ -1,7 +1,5 @@
 package ch.epfl.tchu.net;
 
-import java.util.List;
-
 /**
  * A MessageId : this class represents all of the types of a messages used by a player
  *

@@ -63,6 +63,7 @@ public final class RemotePlayerClient {
             throw new UncheckedIOException(ioException);
         }
     }
+
     /**
      * this method will receive the instruction from the proxy and will make the player
      */
@@ -133,15 +134,13 @@ public final class RemotePlayerClient {
             }
 
         }
-        try{
+        try {
             reader.close();
             writer.close();
-        }catch (IOException ioException){
+        } catch (IOException ioException) {
             throw new UncheckedIOException(ioException);
         }
     }
-
-
 
 
 }

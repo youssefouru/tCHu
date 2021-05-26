@@ -5,7 +5,10 @@ import ch.epfl.tchu.game.*;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static java.nio.charset.StandardCharsets.US_ASCII;
@@ -26,17 +29,17 @@ public final class RemotePlayerProxy implements Player {
      * @param socket (Socket) : the socket we will use to write and read the data in the server
      */
     public RemotePlayerProxy(Socket socket) {
-        try{
+        try {
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), US_ASCII));
-            writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(),US_ASCII));
-        } catch (IOException ioException){
+            writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), US_ASCII));
+        } catch (IOException ioException) {
             throw new UncheckedIOException(ioException);
         }
     }
 
-    private void send(MessageId messageId, String... strings)  {
+    private void send(MessageId messageId, String... strings) {
         List<String> messageList = Arrays.stream(strings).collect(Collectors.toCollection(ArrayList::new));
-        messageList.add(0,messageId.name());
+        messageList.add(0, messageId.name());
         String message = String.join(" ", messageList);
         try {
             writer.write(message);
@@ -64,10 +67,10 @@ public final class RemotePlayerProxy implements Player {
     @Override
     public void initPlayers(PlayerId ownId, Map<PlayerId, String> playerNames) {
         send(MessageId.INIT_PLAYERS,
-             Serdes.PLAYER_ID_SERDE.serialize(ownId),
-             Serdes.STRING_LIST_SERDE.serialize((PlayerId.ALL.stream().
-                                                              map(playerNames::get)).
-                                                              collect(Collectors.toList())));
+                Serdes.PLAYER_ID_SERDE.serialize(ownId),
+                Serdes.STRING_LIST_SERDE.serialize((PlayerId.ALL.stream().
+                        map(playerNames::get)).
+                        collect(Collectors.toList())));
     }
 
 

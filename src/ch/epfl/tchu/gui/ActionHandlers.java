@@ -51,6 +51,7 @@ public interface ActionHandlers {
          */
         void onClaimRoute(Route route, SortedBag<Card> cards);
     }
+
     /**
      * This functional interface is used by the players to choose the tickets.
      */

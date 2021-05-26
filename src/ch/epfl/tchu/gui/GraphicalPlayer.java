@@ -24,6 +24,7 @@ import javafx.stage.StageStyle;
 
 import java.util.List;
 import java.util.Map;
+
 import static ch.epfl.tchu.gui.ActionHandlers.*;
 import static javafx.application.Platform.isFxApplicationThread;
 
@@ -59,10 +60,10 @@ public final class GraphicalPlayer {
         mainStage = new Stage();
         mainStage.setTitle("tCHu \u2014 " + playerNames.get(playerId));
         BorderPane mainPain = new BorderPane(MapViewCreator.createMapView(gameState, claimRouteHP, this::chooseClaimCards),
-                                        null,
-                                             DecksViewCreator.createCardsView(gameState, drawTicketHP, drawCardHP),
-                                             DecksViewCreator.createHandView(gameState),
-                                             InfoViewCreator.createInfoView(playerId, playerNames, gameState, messages));
+                null,
+                DecksViewCreator.createCardsView(gameState, drawTicketHP, drawCardHP),
+                DecksViewCreator.createHandView(gameState),
+                InfoViewCreator.createInfoView(playerId, playerNames, gameState, messages));
         mainStage.setScene(new Scene(mainPain));
         mainStage.show();
     }

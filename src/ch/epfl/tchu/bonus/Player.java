@@ -109,10 +109,8 @@ public interface Player {
 
     /**
      * This method is used to receive a message from a the socket of messages.
-     *
-     * @return (String) : The message received from the proxy
      */
-    String receiveMessage();
+    void receiveMessage(String message);
 
     /**
      * This method is used to notify the client that the routes in parameter are in the longest Trail.

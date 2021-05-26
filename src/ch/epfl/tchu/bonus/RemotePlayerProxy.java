@@ -241,12 +241,13 @@ public final class RemotePlayerProxy implements Player {
     /**
      * This method is used to receive a message from a the socket of messages.
      *
-     * @return (String) : The message received from the proxy
+     * @param message (String) :
      */
     @Override
-    public String receiveMessage() {
-        return null;
+    public void receiveMessage(String message) {
+
     }
+
 
     /**
      * This method is used to notify the client that the routes in parameter are in the longest Trail.

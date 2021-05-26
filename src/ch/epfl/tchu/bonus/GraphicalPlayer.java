@@ -1,18 +1,19 @@
-package ch.epfl.tchu.gui;
+package ch.epfl.tchu.bonus;
 
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
+import ch.epfl.tchu.gui.CardBagStringConverter;
+import ch.epfl.tchu.gui.ObservableGameState;
+import ch.epfl.tchu.gui.StringsFr;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
+import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MultipleSelectionModel;
-import javafx.scene.control.SelectionMode;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -24,7 +25,8 @@ import javafx.stage.StageStyle;
 
 import java.util.List;
 import java.util.Map;
-import static ch.epfl.tchu.gui.ActionHandlers.*;
+
+import static ch.epfl.tchu.bonus.ActionHandlers.*;
 import static javafx.application.Platform.isFxApplicationThread;
 
 /**
@@ -36,12 +38,18 @@ import static javafx.application.Platform.isFxApplicationThread;
 public final class GraphicalPlayer {
     private final static int MAX_INFO_NUMBER = 5;
     private final static String CHOOSER_CLASS = "chooser.css";
+    private static final String CHOOSE_THE_PLAYER = "Choose The  Player";
+    private static final String MESSAGE_FROM = "Message from %s to %s : %s";
+    private static final String SEND_NAME = "SEND";
     private final ObservableGameState gameState;
     private final ObservableList<Text> messages;
     private final ObjectProperty<DrawCardHandler> drawCardHP;
     private final ObjectProperty<ClaimRouteHandler> claimRouteHP;
     private final ObjectProperty<DrawTicketsHandler> drawTicketHP;
+    private final ObservableList<Text> chatList;
     private final Stage mainStage;
+    private final PlayerId id;
+    private final Map<PlayerId, String> playerNames;
 
     /**
      * Constructor of the GraphicalPlayer.
@@ -52,19 +60,42 @@ public final class GraphicalPlayer {
     public GraphicalPlayer(PlayerId playerId, Map<PlayerId, String> playerNames) {
         assert isFxApplicationThread();
         messages = FXCollections.observableArrayList();
+        id = playerId;
+        this.playerNames = playerNames;
         gameState = new ObservableGameState(playerId);
         drawCardHP = new SimpleObjectProperty<>();
         claimRouteHP = new SimpleObjectProperty<>();
         drawTicketHP = new SimpleObjectProperty<>();
         mainStage = new Stage();
+        chatList = FXCollections.observableArrayList();
         mainStage.setTitle("tCHu \u2014 " + playerNames.get(playerId));
         BorderPane mainPain = new BorderPane(MapViewCreator.createMapView(gameState, claimRouteHP, this::chooseClaimCards),
                                         null,
-                                             DecksViewCreator.createCardsView(gameState, drawTicketHP, drawCardHP),
-                                             DecksViewCreator.createHandView(gameState),
-                                             InfoViewCreator.createInfoView(playerId, playerNames, gameState, messages));
+                                        DecksViewCreator.createCardsView(gameState, drawTicketHP, drawCardHP, chatBoxCreator(chatList, playerId, playerNames,this::receive)),
+                                        DecksViewCreator.createHandView(gameState),
+                                        InfoViewCreator.createInfoView(playerId, playerNames, gameState, messages));
         mainStage.setScene(new Scene(mainPain));
         mainStage.show();
+    }
+
+    private static Node chatBoxCreator(ObservableList<Text> chatMessage, PlayerId currentId, Map<PlayerId, String> playerNames, MessageSender messageSender) {
+        ListView<Text> chats = new ListView<>(chatMessage);
+        TextField messageField = new TextField();
+        MenuItem[] items = new MenuItem[PlayerId.COUNT - 1];
+        for (PlayerId playerId : PlayerId.ALL) {
+            if (playerId == currentId) continue;
+            MenuItem menuItem = new MenuItem(playerNames.get(playerId));
+            menuItem.setOnAction((event) -> {
+                messageSender.onSendedMessage(messageField.getText(), playerId);
+                messageField.clear();
+            });
+            items[playerId.ordinal()] = menuItem;
+        }
+        Button sendButton = new Button();
+        MenuButton idChooser = new MenuButton(CHOOSE_THE_PLAYER, sendButton, items);
+
+
+        return new VBox(chats, idChooser);
     }
 
     private void handlerSetter() {
@@ -82,6 +113,10 @@ public final class GraphicalPlayer {
     public void setState(PublicGameState publicGameState, PlayerState playerState) {
         assert isFxApplicationThread();
         gameState.setState(publicGameState, playerState);
+    }
+
+    public void receive(String message, PlayerId to) {
+        chatList.add(new Text(String.format(MESSAGE_FROM, playerNames.get(id), playerNames.get(to), message)));
     }
 
 

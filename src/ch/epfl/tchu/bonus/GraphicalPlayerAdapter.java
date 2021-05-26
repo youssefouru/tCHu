@@ -1,4 +1,4 @@
-package ch.epfl.tchu.gui;
+package ch.epfl.tchu.bonus;
 
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
@@ -9,7 +9,8 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
-import static ch.epfl.tchu.gui.ActionHandlers.*;
+import static ch.epfl.tchu.bonus.ActionHandlers.*;
+import static ch.epfl.tchu.game.Player.TurnKind.*;
 import static javafx.application.Platform.runLater;
 
 /**
@@ -28,6 +29,7 @@ public final class GraphicalPlayerAdapter implements Player {
     private final BlockingQueue<Integer> slotQueue = new ArrayBlockingQueue<>(QUEUE_CAPACITY);
     private final BlockingQueue<Route> routeQueue = new ArrayBlockingQueue<>(QUEUE_CAPACITY);
     private GraphicalPlayer graphicalPlayer;
+    private PlayerId ownId;
 
 
     private static <C> C taker(BlockingQueue<C> queue) {
@@ -48,6 +50,7 @@ public final class GraphicalPlayerAdapter implements Player {
     public void initPlayers(PlayerId ownId, Map<PlayerId, String> playerNames) {
         runLater(() -> playerQueue.add(new GraphicalPlayer(ownId, playerNames)));
         graphicalPlayer = taker(playerQueue);
+        this.ownId = ownId;
 
     }
 
@@ -98,20 +101,20 @@ public final class GraphicalPlayerAdapter implements Player {
      * @return (TurnKind) : the turn kind the player has chosen
      */
     @Override
-    public TurnKind nextTurn() {
-        BlockingQueue<TurnKind> turnKindBlockingQueue = new LinkedBlockingDeque<>();
+    public ch.epfl.tchu.game.Player.TurnKind nextTurn() {
+        BlockingQueue<ch.epfl.tchu.game.Player.TurnKind> turnKindBlockingQueue = new LinkedBlockingDeque<>();
         DrawCardHandler cardHandler = (c) -> {
-            turnKindBlockingQueue.add(TurnKind.DRAW_CARDS);
+            turnKindBlockingQueue.add(DRAW_CARDS);
             slotQueue.add(c);
         };
 
         ClaimRouteHandler routeHandler = (route, cards) -> {
-            turnKindBlockingQueue.add(TurnKind.CLAIM_ROUTE);
+            turnKindBlockingQueue.add(CLAIM_ROUTE);
             routeQueue.add(route);
             initialClaimCard.add(cards);
         };
         DrawTicketsHandler ticketsHandler = () ->
-                turnKindBlockingQueue.add(TurnKind.DRAW_TICKETS);
+                turnKindBlockingQueue.add(DRAW_TICKETS);
 
         runLater(() -> graphicalPlayer.startTurn(ticketsHandler, cardHandler, routeHandler));
         return taker(turnKindBlockingQueue);
@@ -173,5 +176,42 @@ public final class GraphicalPlayerAdapter implements Player {
     public SortedBag<Card> chooseAdditionalCards(List<SortedBag<Card>> options) {
         runLater(() -> graphicalPlayer.chooseAdditionalCards(options, additionalCardQueue::add));
         return taker(additionalCardQueue);
+    }
+
+    /**
+     * This method is used to send a message to the client bound to the player.
+     *
+     * @param serializedMessage (String) : the serialized message sent from the manager that we want to send tot the client
+     */
+    @Override
+    public void sendToClient(String serializedMessage) {
+
+    }
+
+    /**
+     * This method is used to verify if a message has been written in the socket of the client and write it in the socket of the manager
+     */
+    @Override
+    public void sendToManager() {
+
+    }
+
+    /**
+     * This method is used to receive a message from a the socket of messages.
+     *
+     * @param message (String) : the message received
+     */
+    @Override
+    public void receiveMessage(String message) {
+        runLater(()-> graphicalPlayer.receive(message,ownId));
+    }
+
+    /**
+     * This method is used to notify the client that the routes in parameter are in the longest Trail.
+     *
+     * @param routes (List< Route >) : the routes in the longest trail.
+     */
+    @Override
+    public void notifyLongest(List<Route> routes) {
     }
 }

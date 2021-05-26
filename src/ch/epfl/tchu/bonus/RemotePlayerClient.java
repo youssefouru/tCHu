@@ -2,7 +2,6 @@ package ch.epfl.tchu.bonus;
 
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
-import ch.epfl.tchu.game.Player;
 import ch.epfl.tchu.net.Serdes;
 
 import java.io.*;
@@ -64,7 +63,7 @@ public final class RemotePlayerClient {
         }
     }
 
-    private void send(String message) {
+    private void sendInstruction(String message) {
         try {
             instructionWriter.write(message);
             instructionWriter.write("\n");
@@ -74,9 +73,9 @@ public final class RemotePlayerClient {
         }
     }
 
-    private String receive() {
+    private String receive(BufferedReader reader) {
         try {
-            return instructionReader.readLine();
+            return reader.readLine();
         } catch (IOException ioException) {
             throw new UncheckedIOException(ioException);
         }
@@ -87,7 +86,7 @@ public final class RemotePlayerClient {
      */
     public void run() {
         String message;
-        while ((message = receive()) != null) {
+        while ((message = receive(instructionReader)) != null) {
             int i = 0;
             String[] stringTab = message.split(Pattern.quote(" "), -1);
             MessageId messageReceived = MessageId.valueOf(stringTab[i++]);
@@ -111,7 +110,7 @@ public final class RemotePlayerClient {
 
                 case CHOOSE_INITIAL_TICKETS:
                     SortedBag<Ticket> chooseInitialTickets = player.chooseInitialTickets();
-                    send(Serdes.TICKET_BAG_SERDE.serialize(chooseInitialTickets));
+                    sendInstruction(Serdes.TICKET_BAG_SERDE.serialize(chooseInitialTickets));
                     break;
 
                 case SET_INITIAL_TICKETS:
@@ -119,31 +118,31 @@ public final class RemotePlayerClient {
                     break;
 
                 case NEXT_TURN:
-                    send(Serdes.TURN_KIND_SERDE.serialize(player.nextTurn()));
+                    sendInstruction(Serdes.TURN_KIND_SERDE.serialize(player.nextTurn()));
                     break;
 
                 case CHOOSE_TICKETS:
                     SortedBag<Ticket> chosenTicket = player.chooseTickets(Serdes.TICKET_BAG_SERDE.deserialize(stringTab[i]));
-                    send(Serdes.TICKET_BAG_SERDE.serialize(chosenTicket));
+                    sendInstruction(Serdes.TICKET_BAG_SERDE.serialize(chosenTicket));
                     break;
 
                 case DRAW_SLOT:
-                    send(Serdes.INTEGER_SERDE.serialize(player.drawSlot()));
+                    sendInstruction(Serdes.INTEGER_SERDE.serialize(player.drawSlot()));
                     break;
 
                 case ROUTE:
-                    send(Serdes.ROUTE_SERDE.serialize(player.claimedRoute()));
+                    sendInstruction(Serdes.ROUTE_SERDE.serialize(player.claimedRoute()));
                     break;
 
                 case CARDS:
-                    send(Serdes.CARD_BAG_SERDE.serialize(player.initialClaimCards()));
+                    sendInstruction(Serdes.CARD_BAG_SERDE.serialize(player.initialClaimCards()));
 
                     break;
 
                 case CHOOSE_ADDITIONAL_CARDS:
                     List<SortedBag<Card>> possibleAdditionalCard = Serdes.CARD_BAG_LIST_SERDE.deserialize(stringTab[i]);
                     SortedBag<Card> additionalCard = player.chooseAdditionalCards(possibleAdditionalCard);
-                    send(Serdes.CARD_BAG_SERDE.serialize(additionalCard));
+                    sendInstruction(Serdes.CARD_BAG_SERDE.serialize(additionalCard));
 
                     break;
                 case NOTIFY_LONGEST:
@@ -154,7 +153,6 @@ public final class RemotePlayerClient {
                 default:
                     throw new Error();
             }
-
         }
         try {
             instructionReader.close();
@@ -168,6 +166,10 @@ public final class RemotePlayerClient {
      * This method will receive the
      */
     public void manageMessages() {
+            String messageReceived;
+            while((messageReceived = receive(messageReader)) != null){
+                 player.receiveMessage(Serdes.STRING_SERDE.deserialize(messageReceived));
+            }
 
     }
 

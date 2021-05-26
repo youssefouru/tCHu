@@ -2,6 +2,7 @@ package ch.epfl.tchu.bonus;
 
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.Card;
+import ch.epfl.tchu.game.PlayerId;
 import ch.epfl.tchu.game.Route;
 import ch.epfl.tchu.game.Ticket;
 
@@ -84,7 +85,8 @@ public interface ActionHandlers {
          * This method is used to send messages to a player of the game
          *
          * @param message (String) : the message Sent
+         * @param playerId (PlayerId) : the id of the player we want him to receive the message
          */
-        void onSendedMessage(String message);
+        void onSendedMessage(String message, PlayerId playerId);
     }
 }

@@ -24,8 +24,8 @@ import javafx.scene.text.Text;
 
 import java.util.List;
 
-import static ch.epfl.tchu.gui.ActionHandlers.DrawCardHandler;
-import static ch.epfl.tchu.gui.ActionHandlers.DrawTicketsHandler;
+import static ch.epfl.tchu.bonus.ActionHandlers.DrawCardHandler;
+import static ch.epfl.tchu.bonus.ActionHandlers.DrawTicketsHandler;
 
 /**
  * DecksViewCreator : this class creates the view of the deck
@@ -34,7 +34,6 @@ import static ch.epfl.tchu.gui.ActionHandlers.DrawTicketsHandler;
  * @author Louis Yves André Barinka (329847)
  */
 public final class DecksViewCreator {
-    public static final String SEND_NAME = "SEND";
     private static final String DECK_CLASS = "decks.css";
     private static final String COLORS_CLASS = "colors.css";
     private static final String DECKS_CLASS = "decks.css";
@@ -58,8 +57,6 @@ public final class DecksViewCreator {
     private static final int RECTANGLE_WIDTH = 40;
     private static final int RECTANGLE_HEIGHT = 70;
     private static final char SEPARATION_CHAR = 28;
-    public static final String CHOOSE_THE_PLAYER = "Choose The  Player";
-    public static final String MESSAGE_FROM = "Message from %s : %s";
     private DecksViewCreator() {
     }
 
@@ -70,10 +67,9 @@ public final class DecksViewCreator {
      * @param gameState   (ObservableGameState) : The observer of the gameState.
      * @param ticketsHP   (ObjectProperty< DrawTicketsHandler > ) : The handler of the tickets.
      * @param drawCardsHP (ObjectProperty< DrawCardHandler >) : The handler of the cards.
-     * @param chatMessage (ObservableList< Text >) : The Chat messages.
      * @return (Node) : The view of the cards.
      */
-    public static Node createCardsView(ObservableGameState gameState, ObjectProperty<DrawTicketsHandler> ticketsHP, ObjectProperty<DrawCardHandler> drawCardsHP, Node chatBox,ObservableList<Text> chatMessage, ActionHandlers.MessageSender sender) {
+    public static Node createCardsView(ObservableGameState gameState, ObjectProperty<DrawTicketsHandler> ticketsHP, ObjectProperty<DrawCardHandler> drawCardsHP, Node chatBox) {
         VBox cardPaneBox = new VBox();
         cardPaneBox.getStylesheets().addAll(DECKS_CLASS, COLORS_CLASS);
         cardPaneBox.setId(CARD_PANE_NAME);
@@ -109,19 +105,6 @@ public final class DecksViewCreator {
             cardPane.disableProperty().bind(drawCardsHP.isNull());
             cardPane.setOnMouseClicked(event -> drawCardsHP.get().onDrawCard(slot));
         }
-        ListView<Text> chats = new ListView<>(chatMessage);
-        TextField messageField = new TextField();
-        Button sendButton = new Button();
-        sendButton.setText(SEND_NAME);
-        MenuItem[] items = new MenuItem[PlayerId.COUNT];
-        for (PlayerId playerId : PlayerId.ALL) {
-            items[playerId.ordinal()] = new MenuItem(playerId.name());
-        }
-        MenuButton idChooser = new MenuButton(CHOOSE_THE_PLAYER, sendButton, items);
-        sendButton.setOnMouseClicked((e)->{
-            sender.onSendedMessage(String.format(MESSAGE_FROM,idChooser.getTypeSelector(),messageField.getText()));
-            messageField.clear();
-        });
         cardPaneBox.getChildren().add(cardButton);
         return new HBox(chatBox,cardPaneBox);
     }

@@ -9,7 +9,6 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -34,11 +33,7 @@ public final class ServerMain extends Application {
     }
 
     /**
-     * This method creates
-     *
-     * <p>
-     * NOTE: This method is called on the JavaFX Application Thread.
-     * </p>
+     * This method launch the server connects the other player to the game and launch the game
      *
      * @param primaryStage the primary stage for this application, onto which
      *                     the application scene can be set.
@@ -56,8 +51,8 @@ public final class ServerMain extends Application {
         players.put(PlayerId.PLAYER_1, new GraphicalPlayerAdapter());
         players.put(PlayerId.PLAYER_2, new RemotePlayerProxy(serverSocket.accept()));
 
-        playerNames.put(PlayerId.PLAYER_1,parameters.isEmpty()?"Ada":parameters.get(i++));
-        playerNames.put(PlayerId.PLAYER_2,parameters.isEmpty()?"Charles":parameters.get(i));
+        playerNames.put(PlayerId.PLAYER_1, parameters.isEmpty() ? "Ada" : parameters.get(i++));
+        playerNames.put(PlayerId.PLAYER_2, parameters.isEmpty() ? "Charles" : parameters.get(i));
         new Thread(() -> Game.play(players, playerNames, SortedBag.of(tickets()), new Random())).start();
 
 

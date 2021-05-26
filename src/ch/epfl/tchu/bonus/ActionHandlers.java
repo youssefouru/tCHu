@@ -51,6 +51,7 @@ public interface ActionHandlers {
          */
         void onClaimRoute(Route route, SortedBag<Card> cards);
     }
+
     /**
      * This functional interface is used by the players to choose the tickets.
      */
@@ -75,5 +76,15 @@ public interface ActionHandlers {
          * @param cards (SortedBag< Card >) : The additional cards the player wants to play to claim an underground route.
          */
         void onChooseCards(SortedBag<Card> cards);
+    }
+
+    @FunctionalInterface
+    interface MessageSender {
+        /**
+         * This method is used to send messages to a player of the game
+         *
+         * @param message (String) : the message Sent
+         */
+        void onSendedMessage(String message);
     }
 }

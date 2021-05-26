@@ -57,8 +57,9 @@ public final class DecksViewCreator {
     private static final int RECTANGLE_OUTSIDE_HEIGHT = 90;
     private static final int RECTANGLE_WIDTH = 40;
     private static final int RECTANGLE_HEIGHT = 70;
+    private static final char SEPARATION_CHAR = 28;
     public static final String CHOOSE_THE_PLAYER = "Choose The  Player";
-
+    public static final String MESSAGE_FROM = "Message from %s : %s";
     private DecksViewCreator() {
     }
 
@@ -72,7 +73,7 @@ public final class DecksViewCreator {
      * @param chatMessage (ObservableList< Text >) : The Chat messages.
      * @return (Node) : The view of the cards.
      */
-    public static Node createCardsView(ObservableGameState gameState, ObjectProperty<DrawTicketsHandler> ticketsHP, ObjectProperty<DrawCardHandler> drawCardsHP, ObservableList<Text> chatMessage) {
+    public static Node createCardsView(ObservableGameState gameState, ObjectProperty<DrawTicketsHandler> ticketsHP, ObjectProperty<DrawCardHandler> drawCardsHP, Node chatBox,ObservableList<Text> chatMessage, ActionHandlers.MessageSender sender) {
         VBox cardPaneBox = new VBox();
         cardPaneBox.getStylesheets().addAll(DECKS_CLASS, COLORS_CLASS);
         cardPaneBox.setId(CARD_PANE_NAME);
@@ -117,11 +118,12 @@ public final class DecksViewCreator {
             items[playerId.ordinal()] = new MenuItem(playerId.name());
         }
         MenuButton idChooser = new MenuButton(CHOOSE_THE_PLAYER, sendButton, items);
-        idChooser.setOnMouseClicked((e)->{
-            
+        sendButton.setOnMouseClicked((e)->{
+            sender.onSendedMessage(String.format(MESSAGE_FROM,idChooser.getTypeSelector(),messageField.getText()));
+            messageField.clear();
         });
         cardPaneBox.getChildren().add(cardButton);
-        return new HBox(new VBox(chats,idChooser,messageField),cardPaneBox);
+        return new HBox(chatBox,cardPaneBox);
     }
 
     /**
@@ -132,6 +134,7 @@ public final class DecksViewCreator {
      */
     public static Node createHandView(ObservableGameState gameState) {
         HBox deckBox = new HBox();
+
 
         deckBox.getStylesheets().addAll(DECK_CLASS, COLORS_CLASS);
 

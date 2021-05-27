@@ -13,7 +13,6 @@ import ch.epfl.tchu.game.Ticket;
  */
 public interface ActionHandlers {
 
-
     /**
      * This functional interface is used by the players to draw the tickets
      */
@@ -51,6 +50,7 @@ public interface ActionHandlers {
          */
         void onClaimRoute(Route route, SortedBag<Card> cards);
     }
+
     /**
      * This functional interface is used by the players to choose the tickets.
      */

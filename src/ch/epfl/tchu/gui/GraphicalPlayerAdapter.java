@@ -104,7 +104,6 @@ public final class GraphicalPlayerAdapter implements Player {
             turnKindBlockingQueue.add(TurnKind.DRAW_CARDS);
             slotQueue.add(c);
         };
-
         ClaimRouteHandler routeHandler = (route, cards) -> {
             turnKindBlockingQueue.add(TurnKind.CLAIM_ROUTE);
             routeQueue.add(route);
@@ -112,7 +111,6 @@ public final class GraphicalPlayerAdapter implements Player {
         };
         DrawTicketsHandler ticketsHandler = () ->
                 turnKindBlockingQueue.add(TurnKind.DRAW_TICKETS);
-
         runLater(() -> graphicalPlayer.startTurn(ticketsHandler, cardHandler, routeHandler));
         return taker(turnKindBlockingQueue);
     }

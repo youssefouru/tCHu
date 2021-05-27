@@ -267,7 +267,6 @@ public final class ObservableGameState {
             }
             routeClaimable.get(route).set(routeClaimed && gameState.currentPlayerId() == playerId && playerState.canClaimRoute(route));
         }
-
     }
 
     private void updateRoutes() {

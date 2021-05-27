@@ -32,7 +32,7 @@ public final class RemotePlayerClient {
      * @param name   (String) : the name of the proxy
      * @param id     (int) : the id of the proxy
      */
-    public RemotePlayerClient(Player player, String name, int id) {
+    public RemotePlayerClient(ch.epfl.tchu.bonus.Player player, String name, int id) {
         this.player = player;
         try {
             Socket instructionSocket = new Socket(name, id);
@@ -147,9 +147,7 @@ public final class RemotePlayerClient {
                     break;
                 case NOTIFY_LONGEST:
                     List<Route> routesInTheLongestTrail = Serdes.ROUTE_LIST_SERDE.deserialize(stringTab[i]);
-                    for (Route route : routesInTheLongestTrail) {
-                            route.highlight();
-                    }
+
                 default:
                     throw new Error();
             }

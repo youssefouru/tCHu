@@ -1,6 +1,5 @@
-package ch.epfl.tchu.gui;
+package ch.epfl.tchu.bonus;
 
-import ch.epfl.tchu.net.RemotePlayerClient;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -24,6 +23,10 @@ public final class ClientMain extends Application {
 
     /**
      * This method will create and launch the graphical Player which represents our client.
+     *
+     * <p>
+     * NOTE: This method is called on the JavaFX Application Thread.
+     * </p>
      *
      * @param primaryStage the primary stage for this application, onto which
      *                     the application scene can be set.

@@ -23,7 +23,7 @@ public final class Route {
     private final int length;
     private final Level level;
     private final Color color;
-    private final BooleanProperty isHighlighted = new SimpleBooleanProperty();
+
 
 
     /**
@@ -175,12 +175,6 @@ public final class Route {
         return Constants.ROUTE_CLAIM_POINTS.get(length);
     }
 
-    /**
-     * This method will set the route Highlighted
-     */
-    public void highlight(){
-        isHighlighted.set(true);
-    }
     /**
      * Level enum type
      */

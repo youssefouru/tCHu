@@ -31,7 +31,7 @@ public final class CardBagStringConverter extends StringConverter<SortedBag<Card
         cardMap = new HashMap<>();
         for (Card card : Card.ALL) {
             cardMap.put(Info.cardName(card, 1), card);
-            cardMap.put(Info.cardName(card, 0), card);
+            cardMap.put(Info.cardName(card, 2), card);
         }
     }
 
@@ -56,7 +56,6 @@ public final class CardBagStringConverter extends StringConverter<SortedBag<Card
             }
             counter++;
         }
-
         return toBeDisplayed.toString();
     }
 
@@ -70,14 +69,13 @@ public final class CardBagStringConverter extends StringConverter<SortedBag<Card
     public SortedBag<Card> fromString(String stringRepresentation) {
         String[] stringTab = stringRepresentation.split(Pattern.quote(" "), -1);
         List<String> filteredList = Arrays.stream(stringTab).
-                                        filter((s) -> !(s.equals("et") || s.equals(","))).
-                                        map(s -> s.replaceAll(",","")).
-                                        collect(Collectors.toList());
-
+                filter((s) -> !(s.equals("et") || s.equals(","))).
+                map(s -> s.replaceAll(",", "")).
+                collect(Collectors.toList());
         Builder<Card> cardBuilder = new Builder<>();
         for (int i = 0; i < filteredList.size(); i = i + 2) {
             cardBuilder.add(Integer.parseInt(filteredList.get(i)),
-                            cardMap.get( filteredList.get(i + 1)));
+                            cardMap.get(filteredList.get(i + 1)));
         }
         return cardBuilder.build();
     }

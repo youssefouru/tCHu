@@ -44,7 +44,7 @@ final class MapViewCreator {
      * @param gameState    (ObservableGameState) : the observer of the gameState
      * @param claimRouteHP (ObjectProperty< ActionHandlers.ClaimRouteHandler >) : the  handler of the route
      * @param cardChooser  (CardChooser) : the chooser of the cards
-     * @return (Node) : the view of the map
+     * @return (Node) : The View of the map
      */
     public static Node createMapView(ObservableGameState gameState, ObjectProperty<ActionHandlers.ClaimRouteHandler> claimRouteHP, CardChooser cardChooser) {
         Pane mapView = new Pane();
@@ -71,7 +71,6 @@ final class MapViewCreator {
 
                     cardChooser.chooseCards(possibleClaimCards, chooseCardsH);
                 }
-
             });
 
             routeGroup.getStyleClass().addAll(ROUTE,

@@ -120,15 +120,6 @@ public final class Trail {
     }
 
     /**
-     * This method returns the list of routes of this trail.
-     *
-     * @return (List< Route >) : The attribute routesOfTheTrail of the trail.
-     */
-    public List<Route> routes(){
-        return routesOfTheTrail;
-    }
-
-    /**
      * this method returns a textual representation of the trail
      *
      * @return (String) : the textual representation of the trail

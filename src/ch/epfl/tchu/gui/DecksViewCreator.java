@@ -181,7 +181,6 @@ final class DecksViewCreator {
         mainButton.setGraphic(graphicGroup);
 
         mainButton.disableProperty().bind(booleanProperty);
-
         return mainButton;
     }
 

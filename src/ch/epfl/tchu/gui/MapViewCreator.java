@@ -71,7 +71,6 @@ final class MapViewCreator {
 
                     cardChooser.chooseCards(possibleClaimCards, chooseCardsH);
                 }
-
             });
 
             routeGroup.getStyleClass().addAll(ROUTE,

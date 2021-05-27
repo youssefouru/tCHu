@@ -55,6 +55,5 @@ public final class ServerMain extends Application {
         playerNames.put(PlayerId.PLAYER_2, parameters.isEmpty() ? "Charles" : parameters.get(i));
         new Thread(() -> Game.play(players, playerNames, SortedBag.of(tickets()), new Random())).start();
 
-
     }
 }

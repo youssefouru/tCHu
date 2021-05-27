@@ -189,5 +189,6 @@ public final class RemotePlayerProxy implements Player {
         send(MessageId.CHOOSE_ADDITIONAL_CARDS,
                 Serdes.CARD_BAG_LIST_SERDE.serialize(options));
         return Serdes.CARD_BAG_SERDE.deserialize(receive());
+
     }
 }

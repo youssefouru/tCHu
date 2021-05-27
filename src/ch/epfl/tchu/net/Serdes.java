@@ -14,7 +14,6 @@ import java.util.regex.Pattern;
  * @author Louis Yves André Barinka (329847)
  */
 public final class Serdes {
-
     /**
      * (Serde<Integer>) :this attribute is the serde that will help us to serialize and deserialize an integer
      */

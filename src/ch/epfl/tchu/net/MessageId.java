@@ -19,4 +19,5 @@ public enum MessageId {
     CARDS,
     CHOOSE_ADDITIONAL_CARDS;
 
+
 }

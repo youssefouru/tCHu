@@ -13,7 +13,6 @@ import ch.epfl.tchu.game.Ticket;
  */
 public interface ActionHandlers {
 
-
     /**
      * This functional interface is used by the players to draw the tickets
      */

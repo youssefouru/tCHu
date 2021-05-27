@@ -144,8 +144,6 @@ public final class GraphicalPlayer {
         listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         Button chooseButton = new Button();
         chooseButton.setText(StringsFr.CHOOSE);
-
-
         chooseButton.disableProperty().bind(Bindings.lessThan(Bindings.size(listView.getSelectionModel().getSelectedItems()),
                 minimalNumberOfCards));
         chooseButton.setOnMouseClicked(e -> {

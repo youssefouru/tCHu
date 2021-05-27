@@ -82,6 +82,7 @@ public interface Serde<T> {
         Serde<List<C>> listSerde = Serde.listOf(serde, character);
         return of(bag -> listSerde.serialize(bag.toList()),
                 string -> SortedBag.of(listSerde.deserialize(string)));
+
     }
 
 

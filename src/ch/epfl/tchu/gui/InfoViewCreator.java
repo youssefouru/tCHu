@@ -63,7 +63,6 @@ final class InfoViewCreator {
 
             statBox.getChildren().add(idFlow);
         }
-
         FXCollections.rotate(statBox.getChildren(), -playerId.ordinal());
 
         TextFlow messageFlow = new TextFlow();

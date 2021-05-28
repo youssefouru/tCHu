@@ -23,7 +23,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-import java.net.Socket;
 import java.util.List;
 import java.util.Map;
 
@@ -40,14 +39,12 @@ public final class GraphicalPlayer {
     private final static int MAX_INFO_NUMBER = 5;
     private final static String CHOOSER_CLASS = "chooser.css";
     private static final String CHOOSE_THE_PLAYER = "Choose The  Player";
-    private static final String MESSAGE_FROM = "Message from %s to %s : %s";
     private static final String SEND_NAME = "SEND";
     private final ObservableGameState gameState;
     private final ObservableList<Text> messages;
     private final ObjectProperty<DrawCardHandler> drawCardHP;
     private final ObjectProperty<ClaimRouteHandler> claimRouteHP;
     private final ObjectProperty<DrawTicketsHandler> drawTicketHP;
-    private final ObservableList<Text> chatList;
     private final Stage mainStage;
     private final PlayerId id;
     private final Map<PlayerId, String> playerNames;
@@ -58,7 +55,7 @@ public final class GraphicalPlayer {
      * @param playerId    (PlayerId) : the id of the player.
      * @param playerNames (Map< PlayerId, String >) : the names of the players.
      */
-    public GraphicalPlayer(PlayerId playerId, Map<PlayerId, String> playerNames) {
+    public GraphicalPlayer(PlayerId playerId, Map<PlayerId, String> playerNames,MessageSender messageSender,ObservableList<Text> chatList) {
         assert isFxApplicationThread();
         messages = FXCollections.observableArrayList();
         id = playerId;
@@ -68,14 +65,15 @@ public final class GraphicalPlayer {
         claimRouteHP = new SimpleObjectProperty<>();
         drawTicketHP = new SimpleObjectProperty<>();
         mainStage = new Stage();
-        chatList = FXCollections.observableArrayList();
+
         mainStage.setTitle("tCHu \u2014 " + playerNames.get(playerId));
         BorderPane mainPain = new BorderPane(MapViewCreator.createMapView(gameState, claimRouteHP, this::chooseClaimCards),
                                         null,
-                                        DecksViewCreator.createCardsView(gameState, drawTicketHP, drawCardHP, chatBoxCreator(chatList, playerId, playerNames,this::receive)),
+                                        DecksViewCreator.createCardsView(gameState, drawTicketHP, drawCardHP, chatBoxCreator(chatList, playerId, playerNames,messageSender)),
                                         DecksViewCreator.createHandView(gameState),
                                         InfoViewCreator.createInfoView(playerId, playerNames, gameState, messages));
         mainStage.setScene(new Scene(mainPain));
+
         mainStage.show();
     }
 
@@ -87,16 +85,20 @@ public final class GraphicalPlayer {
             if (playerId == currentId) continue;
             MenuItem menuItem = new MenuItem(playerNames.get(playerId));
             menuItem.setOnAction((event) -> {
-                messageSender.onSendedMessage(messageField.getText(), playerId);
-                messageField.clear();
+                if(!messageField.getText().isEmpty()) {
+                    messageSender.onSentMessage(messageField.getText(), currentId, playerId);
+                    messageField.clear();
+                }
             });
-            items[playerId.ordinal()] = menuItem;
+            int index = playerId.ordinal()>currentId.ordinal()?playerId.ordinal()-1:playerId.ordinal();
+            items[index] = menuItem;
         }
         Button sendButton = new Button();
+        sendButton.setText(SEND_NAME);
         MenuButton idChooser = new MenuButton(CHOOSE_THE_PLAYER, sendButton, items);
 
 
-        return new VBox(chats, idChooser);
+        return new VBox(chats, idChooser,messageField);
     }
 
     private void handlerSetter() {
@@ -116,9 +118,6 @@ public final class GraphicalPlayer {
         gameState.setState(publicGameState, playerState);
     }
 
-    public void receive(String message, PlayerId to) {
-        chatList.add(new Text(String.format(MESSAGE_FROM, playerNames.get(id), playerNames.get(to), message)));
-    }
 
 
     /**

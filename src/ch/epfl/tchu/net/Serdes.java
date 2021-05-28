@@ -14,6 +14,10 @@ import java.util.regex.Pattern;
  * @author Louis Yves André Barinka (329847)
  */
 public final class Serdes {
+    private static final char COMPOSITE_SEPARATOR = ';';
+    private static final char LIST_SEPARATOR = ',';
+
+
     /**
      * (Serde<Integer>) :this attribute is the serde that will help us to serialize and deserialize an integer
      */
@@ -43,7 +47,7 @@ public final class Serdes {
      * (Serde<Ticket>) : this is the serde used to serialize and deserialize a ticket
      */
     public final static Serde<Ticket> TICKET_SERDE = Serde.oneOf(ChMap.tickets());
-    private static final char LIST_SEPARATOR = ',';
+
     /**
      * (Serde<List<String>>) : this is the serde use to serialize and deserialize a list of strings
      */
@@ -64,7 +68,7 @@ public final class Serdes {
      * (Serde<SortedBag<Ticket>>) : this is the serde use to serialize and deserialize a bag of tickets
      */
     public final static Serde<SortedBag<Ticket>> TICKET_BAG_SERDE = Serde.bagOf(TICKET_SERDE, LIST_SEPARATOR);
-    private static final char COMPOSITE_SEPARATOR = ';';
+
     /**
      * (Serde<SortedBag<Route>>) : this is the serde use to serialize and deserialize a list of bags of cards
      */
@@ -146,9 +150,8 @@ public final class Serdes {
             stringList.add(PUBLIC_CARD_STATE_SERDE.serialize(publicGameState.cardState()));
             stringList.add(PLAYER_ID_SERDE.serialize(publicGameState.currentPlayerId()));
             PlayerId.ALL.forEach(playerId -> stringList.
-                    add(PUBLIC_PLAYER_STATE_SERDE.
-                            serialize(publicGameState.
-                                    playerState(playerId))));
+                          add(PUBLIC_PLAYER_STATE_SERDE.
+                                                        serialize(publicGameState.playerState(playerId))));
             stringList.add(PLAYER_ID_SERDE.serialize(publicGameState.lastPlayer()));
             return String.join(String.valueOf(gameStateSeparator), stringList);
         }
@@ -162,7 +165,7 @@ public final class Serdes {
             int ticketsCount = INTEGER_SERDE.deserialize(stringsTab[i++]);
             PublicCardState cardState = PUBLIC_CARD_STATE_SERDE.deserialize(stringsTab[i++]);
             PlayerId currentPlayerId = PLAYER_ID_SERDE.deserialize(stringsTab[i++]);
-            Map<PlayerId, PublicPlayerState> map = new HashMap<>();
+            Map<PlayerId, PublicPlayerState> map = new EnumMap<>(PlayerId.class);
             for (PlayerId playerId : PlayerId.ALL) {
                 map.put(playerId, PUBLIC_PLAYER_STATE_SERDE.deserialize(stringsTab[i++]));
             }

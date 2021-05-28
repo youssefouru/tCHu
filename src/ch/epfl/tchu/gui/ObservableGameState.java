@@ -1,6 +1,5 @@
 package ch.epfl.tchu.gui;
 
-import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
 import javafx.beans.property.*;
@@ -153,7 +152,6 @@ public final class ObservableGameState {
      * @return (ReadOnlyObjectProperty < Card >) : the readOnlyObjectProperty of the card of index slot
      */
     public ReadOnlyObjectProperty<Card> faceUpCard(int slot) {
-        Preconditions.checkArgument(slot >= 0 && slot <= Constants.FACE_UP_CARDS_COUNT);
         return faceUpCards.get(slot);
     }
 

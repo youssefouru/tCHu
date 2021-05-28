@@ -23,6 +23,7 @@ import static ch.epfl.tchu.gui.Info.cardName;
 public final class CardBagStringConverter extends StringConverter<SortedBag<Card>> {
 
     private final Map<String, Card> cardMap;
+    private final static List<String> SKIP_STRINGS = List.of("et",",");
 
     /**
      * Constructor  of CardBagStringConverter
@@ -30,6 +31,7 @@ public final class CardBagStringConverter extends StringConverter<SortedBag<Card
     public CardBagStringConverter() {
         cardMap = new HashMap<>();
         for (Card card : Card.ALL) {
+            // we use 1 and 2 to have the singular and in plural
             cardMap.put(Info.cardName(card, 1), card);
             cardMap.put(Info.cardName(card, 2), card);
         }
@@ -69,7 +71,7 @@ public final class CardBagStringConverter extends StringConverter<SortedBag<Card
     public SortedBag<Card> fromString(String stringRepresentation) {
         String[] stringTab = stringRepresentation.split(Pattern.quote(" "), -1);
         List<String> filteredList = Arrays.stream(stringTab).
-                filter((s) -> !(s.equals("et") || s.equals(","))).
+                filter((s) -> !SKIP_STRINGS.contains(s)).
                 map(s -> s.replaceAll(",", "")).
                 collect(Collectors.toList());
         Builder<Card> cardBuilder = new Builder<>();

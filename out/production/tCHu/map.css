@@ -41,6 +41,12 @@ ImageView {
     -fx-fill: white;
 }
 
+.longest {
+    -fx-stroke: #d4ff00;
+    -fx-stroke-width: 2 ;
+
+}
+
 .PLAYER_1 .car {
     visibility: visible;
 }

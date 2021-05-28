@@ -1,9 +1,9 @@
-package ch.epfl.tchu.gui;
+package ch.epfl.tchu.bonus;
 
-import ch.epfl.tchu.net.RemotePlayerClient;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import java.net.Socket;
 import java.util.List;
 
 /**
@@ -12,9 +12,7 @@ import java.util.List;
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)
  */
-public final class ClientMain extends Application {
-    private final static String DEFAULT_HOST_NAME = "localhost";
-    private final static int DEFAULT_PORT = 5108;
+public final class ClientMainB extends Application {
     /**
      * the main method of the programme
      *
@@ -27,6 +25,7 @@ public final class ClientMain extends Application {
     /**
      * This method will create and launch the graphical Player which represents our client.
      *
+     *
      * @param primaryStage the primary stage for this application, onto which
      *                     the application scene can be set.
      *                     But in this class it has no utility
@@ -36,9 +35,14 @@ public final class ClientMain extends Application {
     public void start(Stage primaryStage) throws Exception {
         List<String> parameters = getParameters().getRaw();
         int i = 0;
-        RemotePlayerClient client = new RemotePlayerClient(new GraphicalPlayerAdapter(),
-                (parameters.isEmpty() || parameters.size() == 1) ? DEFAULT_HOST_NAME : parameters.get(i++),
-                parameters.isEmpty() ? DEFAULT_PORT : Integer.parseInt(parameters.get(i)));
+        String instructionSocketName = (parameters.isEmpty() || parameters.size() == 2) ? "localhost" : parameters.get(i++);
+        int instructionSocketPort = parameters.isEmpty() ? 5108 : Integer.parseInt(parameters.get(i));
+        String messageSocketName = (parameters.isEmpty() || parameters.size() == 2) ? "localhost" : parameters.get(i++);
+        int messageSocketPort = parameters.isEmpty() ? 5115 : Integer.parseInt(parameters.get(i));
+        Socket messageSocket = new Socket(instructionSocketName,instructionSocketPort);
+        Player graphicalPlayer =new GraphicalPlayerAdapter(messageSocket);
+        RemotePlayerClient client = new RemotePlayerClient(graphicalPlayer, instructionSocketName, instructionSocketPort,messageSocket);
         new Thread(client::run).start();
+        new Thread(client::manageMessages).start();
     }
 }

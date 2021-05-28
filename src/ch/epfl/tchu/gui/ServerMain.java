@@ -23,6 +23,8 @@ import static ch.epfl.tchu.game.ChMap.tickets;
  * @author Louis Yves André Barinka (329847)
  */
 public final class ServerMain extends Application {
+    private final static int PORT_NUMBER = 5108;
+    private final static List<String> DEFAULT_NAMES = List.of("Ada","Charles");
     /**
      * This method will launch the arguments of the program
      *
@@ -44,15 +46,20 @@ public final class ServerMain extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         List<String> parameters = getParameters().getRaw();
-        ServerSocket serverSocket = new ServerSocket(5108);
+        ServerSocket serverSocket = new ServerSocket(PORT_NUMBER);
         int i = 0;
+
         Map<PlayerId, Player> players = new EnumMap<>(PlayerId.class);
         Map<PlayerId, String> playerNames = new EnumMap<>(PlayerId.class);
-        players.put(PlayerId.PLAYER_1, new GraphicalPlayerAdapter());
-        players.put(PlayerId.PLAYER_2, new RemotePlayerProxy(serverSocket.accept()));
-
-        playerNames.put(PlayerId.PLAYER_1, parameters.isEmpty() ? "Ada" : parameters.get(i++));
-        playerNames.put(PlayerId.PLAYER_2, parameters.isEmpty() ? "Charles" : parameters.get(i));
+        for(PlayerId playerId : PlayerId.ALL){
+            if(playerId == PlayerId.PLAYER_1){
+                players.put(playerId, new GraphicalPlayerAdapter());
+                playerNames.put(playerId, parameters.isEmpty() ?  DEFAULT_NAMES.get(i++): parameters.get(i++));
+                continue;
+            }
+            players.put(playerId, new RemotePlayerProxy(serverSocket.accept()));
+            playerNames.put(playerId, parameters.isEmpty() ? DEFAULT_NAMES.get(i): parameters.get(i));
+        }
         new Thread(() -> Game.play(players, playerNames, SortedBag.of(tickets()), new Random())).start();
 
     }

@@ -2,7 +2,17 @@ package ch.epfl.tchu.bonus;
 
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
+import ch.epfl.tchu.net.Serdes;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.text.Text;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.UncheckedIOException;
+import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -28,9 +38,27 @@ public final class GraphicalPlayerAdapter implements Player {
     private final BlockingQueue<SortedBag<Card>> initialClaimCard = new ArrayBlockingQueue<>(QUEUE_CAPACITY);
     private final BlockingQueue<Integer> slotQueue = new ArrayBlockingQueue<>(QUEUE_CAPACITY);
     private final BlockingQueue<Route> routeQueue = new ArrayBlockingQueue<>(QUEUE_CAPACITY);
+    private static final String MESSAGE_FROM = "Message from %s : %s";
+    private final BufferedWriter writer;
+    private final char SEPARATOR_CHAR = 28;
+    private final ObservableList<Text> chatList;
     private GraphicalPlayer graphicalPlayer;
     private PlayerId ownId;
 
+
+    /**
+     * Constructor of GraphicalPlayerAdapter
+     *
+     * @param messageSocket (Socket) :
+     */
+    public GraphicalPlayerAdapter(Socket messageSocket) {
+        try {
+            writer = new BufferedWriter(new OutputStreamWriter(messageSocket.getOutputStream(), StandardCharsets.US_ASCII));
+            chatList = FXCollections.observableArrayList();
+        } catch (IOException ioException) {
+            throw new UncheckedIOException(ioException);
+        }
+    }
 
     private static <C> C taker(BlockingQueue<C> queue) {
         try {
@@ -48,7 +76,15 @@ public final class GraphicalPlayerAdapter implements Player {
      */
     @Override
     public void initPlayers(PlayerId ownId, Map<PlayerId, String> playerNames) {
-        runLater(() -> playerQueue.add(new GraphicalPlayer(ownId, playerNames)));
+        MessageSender messageSender = (message,from,to)->{
+            sendToProxy(String.join(String.valueOf(SEPARATOR_CHAR),
+                        List.of(Serdes.PLAYER_ID_SERDE.serialize(from),
+                                Serdes.PLAYER_ID_SERDE.serialize(to),
+                                Serdes.STRING_SERDE.serialize(message))));
+            chatList.add(new Text(String.format(MESSAGE_FROM,"you",message)));
+        };
+        System.out.println(ownId.name());
+        runLater(() -> playerQueue.add(new GraphicalPlayer(ownId, playerNames,messageSender,chatList)));
         graphicalPlayer = taker(playerQueue);
         this.ownId = ownId;
 
@@ -185,7 +221,6 @@ public final class GraphicalPlayerAdapter implements Player {
      */
     @Override
     public void sendToClient(String serializedMessage) {
-
     }
 
     /**
@@ -193,7 +228,22 @@ public final class GraphicalPlayerAdapter implements Player {
      */
     @Override
     public void sendToManager() {
+    }
 
+    /**
+     * This method method is used by the client to send a message to the proxy that can be transmitted to the manager after
+     *
+     * @param message (String) : the message we want to send to the proxy
+     */
+    @Override
+    public void sendToProxy(String message) {
+        try {
+            writer.write(message);
+            writer.write("\n");
+            writer.flush();
+        } catch (IOException ioException) {
+            throw new UncheckedIOException(ioException);
+        }
     }
 
     /**
@@ -203,7 +253,7 @@ public final class GraphicalPlayerAdapter implements Player {
      */
     @Override
     public void receiveMessage(String message) {
-        runLater(()-> graphicalPlayer.receive(message,ownId));
+        chatList.add(new Text(Serdes.STRING_SERDE.deserialize(message)));
     }
 
     /**

@@ -26,6 +26,8 @@ public final class RemotePlayerClient {
     private final Player player;
     private final BufferedWriter writer;
     private final BufferedReader reader;
+    private final String SEPARATION_CHAR = " ";
+    private final String RETURN_NAME = "\n";
 
     /**
      * Constructor of the remotePlayerClient
@@ -33,6 +35,7 @@ public final class RemotePlayerClient {
      * @param player (Player)  : the player represented by this client
      * @param name   (String) : the name of the proxy
      * @param id     (int) : the id of the proxy
+     * @throws UncheckedIOException : if something goes wrong
      */
     public RemotePlayerClient(Player player, String name, int id) {
         this.player = player;
@@ -48,7 +51,7 @@ public final class RemotePlayerClient {
     private void send(String message) {
         try {
             writer.write(message);
-            writer.write("\n");
+            writer.write(RETURN_NAME);
             writer.flush();
         } catch (IOException ioException) {
             throw new UncheckedIOException(ioException);
@@ -65,16 +68,18 @@ public final class RemotePlayerClient {
 
     /**
      * this method will receive the instruction from the proxy and will make the player
+     *
+     * @throws UncheckedIOException : if something goes wrong
+     * @throws Error : if another id is sent
      */
     public void run() {
         String message;
         while ((message = receive()) != null) {
             int i = 0;
-            String[] stringTab = message.split(Pattern.quote(" "), -1);
+            String[] stringTab = message.split(Pattern.quote(SEPARATION_CHAR), -1);
             MessageId messageReceived = MessageId.valueOf(stringTab[i++]);
             switch (messageReceived) {
                 case INIT_PLAYERS:
-
                     PlayerId playerId = Serdes.PLAYER_ID_SERDE.deserialize(stringTab[i++]);
                     List<String> namesList = Serdes.STRING_LIST_SERDE.deserialize(stringTab[i]);
                     Map<PlayerId, String> playerNames = new HashMap<>();

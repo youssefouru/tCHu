@@ -37,6 +37,7 @@ import static javafx.application.Platform.isFxApplicationThread;
 public final class GraphicalPlayer {
     private final static int MAX_INFO_NUMBER = 5;
     private final static String CHOOSER_CLASS = "chooser.css";
+    private final static String PROGRAM_NAME = "tCHu \u2014 %s";
     private final ObservableGameState gameState;
     private final ObservableList<Text> messages;
     private final ObjectProperty<DrawCardHandler> drawCardHP;
@@ -58,7 +59,7 @@ public final class GraphicalPlayer {
         claimRouteHP = new SimpleObjectProperty<>();
         drawTicketHP = new SimpleObjectProperty<>();
         mainStage = new Stage();
-        mainStage.setTitle("tCHu \u2014 " + playerNames.get(playerId));
+        mainStage.setTitle(String.format(PROGRAM_NAME, playerNames.get(playerId)));
         BorderPane mainPain = new BorderPane(MapViewCreator.createMapView(gameState, claimRouteHP, this::chooseClaimCards),
                 null,
                 DecksViewCreator.createCardsView(gameState, drawTicketHP, drawCardHP),

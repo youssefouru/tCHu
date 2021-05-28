@@ -24,7 +24,8 @@ import static ch.epfl.tchu.game.ChMap.tickets;
  */
 public final class ServerMain extends Application {
     private final static int PORT_NUMBER = 5108;
-    private final static List<String> DEFAULT_NAMES = List.of("Ada","Charles");
+    private final static List<String> DEFAULT_NAMES = List.of("Ada", "Charles");
+
     /**
      * This method will launch the arguments of the program
      *
@@ -51,14 +52,14 @@ public final class ServerMain extends Application {
 
         Map<PlayerId, Player> players = new EnumMap<>(PlayerId.class);
         Map<PlayerId, String> playerNames = new EnumMap<>(PlayerId.class);
-        for(PlayerId playerId : PlayerId.ALL){
-            if(playerId == PlayerId.PLAYER_1){
+        for (PlayerId playerId : PlayerId.ALL) {
+            if (playerId == PlayerId.PLAYER_1) {
                 players.put(playerId, new GraphicalPlayerAdapter());
-                playerNames.put(playerId, parameters.isEmpty() ?  DEFAULT_NAMES.get(i++): parameters.get(i++));
+                playerNames.put(playerId, parameters.isEmpty() ? DEFAULT_NAMES.get(i++) : parameters.get(i++));
                 continue;
             }
             players.put(playerId, new RemotePlayerProxy(serverSocket.accept()));
-            playerNames.put(playerId, parameters.isEmpty() ? DEFAULT_NAMES.get(i): parameters.get(i));
+            playerNames.put(playerId, parameters.isEmpty() ? DEFAULT_NAMES.get(i) : parameters.get(i));
         }
         new Thread(() -> Game.play(players, playerNames, SortedBag.of(tickets()), new Random())).start();
 

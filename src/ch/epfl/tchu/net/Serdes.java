@@ -14,9 +14,11 @@ import java.util.regex.Pattern;
  * @author Louis Yves André Barinka (329847)
  */
 public final class Serdes {
-    private static final char COMPOSITE_SEPARATOR = ';';
-    private static final char LIST_SEPARATOR = ',';
+    private final static char COMPOSITE_SEPARATOR = ';';
 
+    private final static char LIST_SEPARATOR = ',';
+
+    private final static char gameStateSeparator = ':';
 
     /**
      * (Serde<Integer>) :this attribute is the serde that will help us to serialize and deserialize an integer
@@ -137,7 +139,7 @@ public final class Serdes {
                     ROUTE_LIST_SERDE.deserialize(stringTab[i]));
         }
     };
-    private static final char gameStateSeparator = ':';
+
     /**
      * (Serde<PublicGameState>) : this is the serde used to serialize and deserialize a PublicGameState
      */

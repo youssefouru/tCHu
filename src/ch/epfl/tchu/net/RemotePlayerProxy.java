@@ -20,10 +20,10 @@ import static java.nio.charset.StandardCharsets.US_ASCII;
  * @author Louis Yves André Barinka (329847)
  */
 public final class RemotePlayerProxy implements Player {
+    private final static String SEPARATOR = " ";
+    private final static String RETURN_NAME = "\n";
     private final BufferedReader reader;
     private final BufferedWriter writer;
-    private final String SEPARATOR = " ";
-    private final String RETURN_NAME = "\n";
 
     /**
      * Constructor of RemotePlayerProxy

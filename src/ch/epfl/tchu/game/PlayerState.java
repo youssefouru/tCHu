@@ -181,7 +181,6 @@ public final class PlayerState extends PublicPlayerState {
     }
 
     private int findMaxId() {
-
         if (routes().size() == 0) {
             return 0;
         }

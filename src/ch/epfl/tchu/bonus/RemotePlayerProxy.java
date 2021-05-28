@@ -22,22 +22,23 @@ import static java.nio.charset.StandardCharsets.US_ASCII;
  * @author Louis Yves André Barinka (329847)
  */
 public final class RemotePlayerProxy implements Player {
-    private final BufferedReader instructionReader, messageReader, managerReader;
-    private final BufferedWriter instructionWriter, messageWriter, managerWriter;
+    private final BufferedReader instructionReader, messageReader;
+    private final BufferedWriter instructionWriter, messageWriter;
+    private final MessageManager manager;
 
 
     /**
      * Constructor of RemotePlayerProxy
      *
      * @param socket (Socket) : the socket we will use to write and read the data in the server
+     * @param clientToProxy (Socket) : the socket which will be used to send to client the messages
      */
-    public RemotePlayerProxy(Socket socket, Socket clientToProxy, Socket managerToProxy) {
+    public RemotePlayerProxy(Socket socket, Socket clientToProxy,MessageManager manager) {
         instructionReader = readerCreator(socket);
         instructionWriter = writerCreator(socket);
         messageReader = readerCreator(clientToProxy);
         messageWriter = writerCreator(clientToProxy);
-        managerReader = readerCreator(managerToProxy);
-        managerWriter = writerCreator(managerToProxy);
+        this.manager = manager;
 
     }
 
@@ -234,18 +235,26 @@ public final class RemotePlayerProxy implements Player {
     public void sendToManager(){
         String receiveMessage;
         while((receiveMessage=receiveFrom(messageReader)) != null){
-            sendTo(managerWriter,receiveMessage);
+            manager.manage(receiveMessage);
         }
+    }
+
+    /**
+     * This method method is used by the client to send a message to the proxy that can be transmitted to the manager after
+     *
+     * @param message (String) : the message we want to send to the proxy
+     */
+    @Override
+    public void sendToProxy(String message) {
     }
 
     /**
      * This method is used to receive a message from a the socket of messages.
      *
-     * @param message (String) :
+     * @param message (String) : the message received by the client
      */
     @Override
     public void receiveMessage(String message) {
-
     }
 
 

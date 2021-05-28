@@ -22,11 +22,14 @@ import static java.nio.charset.StandardCharsets.US_ASCII;
 public final class RemotePlayerProxy implements Player {
     private final BufferedReader reader;
     private final BufferedWriter writer;
+    private final String SEPARATOR = " ";
+    private final String RETURN_NAME = "\n";
 
     /**
      * Constructor of RemotePlayerProxy
      *
      * @param socket (Socket) : the socket we will use to write and read the data in the server
+     * @throws UncheckedIOException : if something goes wrong
      */
     public RemotePlayerProxy(Socket socket) {
         try {
@@ -40,10 +43,10 @@ public final class RemotePlayerProxy implements Player {
     private void send(MessageId messageId, String... strings) {
         List<String> messageList = Arrays.stream(strings).collect(Collectors.toCollection(ArrayList::new));
         messageList.add(0, messageId.name());
-        String message = String.join(" ", messageList);
+        String message = String.join(SEPARATOR, messageList);
         try {
             writer.write(message);
-            writer.write("\n");
+            writer.write(RETURN_NAME);
             writer.flush();
         } catch (IOException ioException) {
             throw new UncheckedIOException(ioException);

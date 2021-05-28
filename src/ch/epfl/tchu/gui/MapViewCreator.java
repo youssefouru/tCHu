@@ -14,6 +14,7 @@ import javafx.scene.shape.Rectangle;
 
 import java.util.List;
 
+
 /**
  * MapViewCreator : this class creates the view of the map
  *
@@ -24,8 +25,7 @@ final class MapViewCreator {
     private final static int CIRCLE_RADIUS = 3;
     private final static int RECTANGLE_WIDTH = 36;
     private final static int RECTANGLE_HEIGHT = 12;
-    private final static int CIRCLE_X_POS = 12;
-    private final static int CIRCLE_Y_POS = 6;
+    private final static int SPACE_BETWEEN_CIRCLE = 6;
     private final static String MAP_NAME = "map.png";
     private final static String MAP_CLASS = "map.css";
     private final static String COLOR_CLASS = "colors.css";
@@ -87,8 +87,10 @@ final class MapViewCreator {
                 Rectangle carRectangle = new Rectangle(RECTANGLE_WIDTH, RECTANGLE_HEIGHT);
 
                 carRectangle.getStyleClass().add(FILLED);
-
-                Group carGroup = new Group(carRectangle, new Circle(CIRCLE_X_POS, CIRCLE_Y_POS, CIRCLE_RADIUS), new Circle(2 * CIRCLE_X_POS, CIRCLE_Y_POS, CIRCLE_RADIUS));
+                int circle1XPos =RECTANGLE_WIDTH/2 + SPACE_BETWEEN_CIRCLE;
+                int circle2XPos =RECTANGLE_WIDTH/2 - SPACE_BETWEEN_CIRCLE;
+                int circleYPos = RECTANGLE_HEIGHT/2;
+                Group carGroup = new Group(carRectangle, new Circle(circle1XPos,circleYPos , CIRCLE_RADIUS), new Circle(circle2XPos,circleYPos, CIRCLE_RADIUS));
                 carGroup.getStyleClass().add(CAR);
 
                 Group caseGroup = new Group(wayRectangle, carGroup);

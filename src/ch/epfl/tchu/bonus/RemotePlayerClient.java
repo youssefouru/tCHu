@@ -32,11 +32,10 @@ public final class RemotePlayerClient {
      * @param name   (String) : the name of the proxy
      * @param id     (int) : the id of the proxy
      */
-    public RemotePlayerClient(ch.epfl.tchu.bonus.Player player, String name, int id) {
+    public RemotePlayerClient(ch.epfl.tchu.bonus.Player player, String name, int id,Socket messageSocket) {
         this.player = player;
         try {
             Socket instructionSocket = new Socket(name, id);
-            Socket messageSocket = new Socket(name, id);
             instructionWriter = creatWriter(instructionSocket);
             instructionReader = creatReader(instructionSocket);
             messageWriter = creatWriter(messageSocket);
@@ -161,12 +160,12 @@ public final class RemotePlayerClient {
     }
 
     /**
-     * This method will receive the
+     * This method will receive the messages
      */
     public void manageMessages() {
             String messageReceived;
             while((messageReceived = receive(messageReader)) != null){
-                 player.receiveMessage(Serdes.STRING_SERDE.deserialize(messageReceived));
+                 player.receiveMessage(messageReceived);
             }
 
     }

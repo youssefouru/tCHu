@@ -85,8 +85,9 @@ public interface ActionHandlers {
          * This method is used to send messages to a player of the game
          *
          * @param message (String) : the message Sent
-         * @param playerId (PlayerId) : the id of the player we want him to receive the message
+         * @param from (PlayerId) : the id of the player who sent the message
+         * @param to (PlayerId) : the player we want him to receive the message
          */
-        void onSendedMessage(String message, PlayerId playerId);
+        void onSentMessage(String message, PlayerId from, PlayerId to);
     }
 }

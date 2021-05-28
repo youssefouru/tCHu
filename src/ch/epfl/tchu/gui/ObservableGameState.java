@@ -85,6 +85,7 @@ public final class ObservableGameState {
         return listOfNumberOfCards;
     }
 
+
     /**
      * this method refresh the states of the game
      *

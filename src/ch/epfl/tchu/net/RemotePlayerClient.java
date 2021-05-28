@@ -23,11 +23,11 @@ import static java.nio.charset.StandardCharsets.US_ASCII;
  */
 public final class RemotePlayerClient {
 
+    private final static String SEPARATION_CHAR = " ";
+    private final static String RETURN_NAME = "\n";
     private final Player player;
     private final BufferedWriter writer;
     private final BufferedReader reader;
-    private final String SEPARATION_CHAR = " ";
-    private final String RETURN_NAME = "\n";
 
     /**
      * Constructor of the remotePlayerClient
@@ -70,7 +70,7 @@ public final class RemotePlayerClient {
      * this method will receive the instruction from the proxy and will make the player
      *
      * @throws UncheckedIOException : if something goes wrong
-     * @throws Error : if another id is sent
+     * @throws Error                : if another id is sent
      */
     public void run() {
         String message;

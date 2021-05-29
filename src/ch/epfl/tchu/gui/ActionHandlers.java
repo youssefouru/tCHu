@@ -2,6 +2,7 @@ package ch.epfl.tchu.gui;
 
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.Card;
+import ch.epfl.tchu.game.PlayerId;
 import ch.epfl.tchu.game.Route;
 import ch.epfl.tchu.game.Ticket;
 
@@ -12,6 +13,7 @@ import ch.epfl.tchu.game.Ticket;
  * @author Louis Yves André Barinka (329847)
  */
 public interface ActionHandlers {
+
 
     /**
      * This functional interface is used by the players to draw the tickets
@@ -75,5 +77,17 @@ public interface ActionHandlers {
          * @param cards (SortedBag< Card >) : The additional cards the player wants to play to claim an underground route.
          */
         void onChooseCards(SortedBag<Card> cards);
+    }
+
+    @FunctionalInterface
+    interface MessageSender {
+        /**
+         * This method is used to send messages to a player of the game
+         *
+         * @param message (String) : the message Sent
+         * @param from (PlayerId) : the id of the player who sent the message
+         * @param to (PlayerId) : the player we want him to receive the message
+         */
+        void onSentMessage(String message, PlayerId from, PlayerId to);
     }
 }

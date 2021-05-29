@@ -3,6 +3,7 @@ package ch.epfl.tchu.game;
 import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ public final class Route {
     private final int length;
     private final Level level;
     private final Color color;
+    private final BooleanProperty highlighted = new SimpleBooleanProperty();
 
 
 
@@ -164,6 +166,22 @@ public final class Route {
         }
 
         return count;
+    }
+
+    /**
+     * This method highlight a route
+     */
+    public void highlight(){
+        highlighted.set(true);
+    }
+
+    /**
+     * This method  tells us if the route is highlighted
+     *
+     * @return (ReadOnlyBooleanProperty) : returns the readOnly part of the attribute highlighted
+     */
+    public ReadOnlyBooleanProperty isHighlighted(){
+        return highlighted;
     }
 
     /**

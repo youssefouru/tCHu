@@ -2,14 +2,24 @@ package ch.epfl.tchu.gui;
 
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
+import ch.epfl.tchu.net.Serdes;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.text.Text;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.UncheckedIOException;
+import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
-import static ch.epfl.tchu.gui.ActionHandlers.*;
+import static ch.epfl.tchu.game.Player.TurnKind.*;
 import static javafx.application.Platform.runLater;
 
 /**
@@ -18,16 +28,36 @@ import static javafx.application.Platform.runLater;
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)
  */
-public final class GraphicalPlayerAdapter implements Player {
+public final class GraphicalPlayerAdapter implements AdvancedPlayer {
 
-    private final BlockingQueue<GraphicalPlayer> playerQueue = new ArrayBlockingQueue<>(1);
-    private final BlockingQueue<SortedBag<Ticket>> ticketChoice = new ArrayBlockingQueue<>(1);
-    private final BlockingQueue<SortedBag<Card>> additionalCardQueue = new ArrayBlockingQueue<>(1);
-    private final BlockingQueue<SortedBag<Card>> initialClaimCard = new ArrayBlockingQueue<>(1);
-    private final BlockingQueue<Integer> slotQueue = new ArrayBlockingQueue<>(1);
-    private final BlockingQueue<Route> routeQueue = new ArrayBlockingQueue<>(1);
+    private final static int QUEUE_CAPACITY = 1;
+    private static final String MESSAGE_FROM = "Message from %s : %s";
+    private final BlockingQueue<GraphicalPlayer> playerQueue = new ArrayBlockingQueue<>(QUEUE_CAPACITY);
+    private final BlockingQueue<SortedBag<Ticket>> ticketChoice = new ArrayBlockingQueue<>(QUEUE_CAPACITY);
+    private final BlockingQueue<SortedBag<Card>> additionalCardQueue = new ArrayBlockingQueue<>(QUEUE_CAPACITY);
+    private final BlockingQueue<SortedBag<Card>> initialClaimCard = new ArrayBlockingQueue<>(QUEUE_CAPACITY);
+    private final BlockingQueue<Integer> slotQueue = new ArrayBlockingQueue<>(QUEUE_CAPACITY);
+    private final BlockingQueue<Route> routeQueue = new ArrayBlockingQueue<>(QUEUE_CAPACITY);
+    private final BufferedWriter writer;
+    private final char SEPARATOR_CHAR = 28;
+    private final ObservableList<Text> chatList;
     private GraphicalPlayer graphicalPlayer;
+    private PlayerId ownId;
 
+
+    /**
+     * Constructor of GraphicalPlayerAdapter
+     *
+     * @param messageSocket (Socket) :
+     */
+    public GraphicalPlayerAdapter(Socket messageSocket) {
+        try {
+            writer = new BufferedWriter(new OutputStreamWriter(messageSocket.getOutputStream(), StandardCharsets.US_ASCII));
+            chatList = FXCollections.observableArrayList();
+        } catch (IOException ioException) {
+            throw new UncheckedIOException(ioException);
+        }
+    }
 
     private static <C> C taker(BlockingQueue<C> queue) {
         try {
@@ -45,8 +75,17 @@ public final class GraphicalPlayerAdapter implements Player {
      */
     @Override
     public void initPlayers(PlayerId ownId, Map<PlayerId, String> playerNames) {
-        runLater(() -> playerQueue.add(new GraphicalPlayer(ownId, playerNames)));
+        ActionHandlers.MessageSender messageSender = (message, from, to) -> {
+            sendToProxy(String.join(String.valueOf(SEPARATOR_CHAR),
+                    List.of(Serdes.PLAYER_ID_SERDE.serialize(from),
+                            Serdes.PLAYER_ID_SERDE.serialize(to),
+                            Serdes.STRING_SERDE.serialize(message))));
+            chatList.add(new Text(String.format(MESSAGE_FROM, "you", message)));
+        };
+
+        runLater(() -> playerQueue.add(new GraphicalPlayer(ownId, playerNames, messageSender, chatList)));
         graphicalPlayer = taker(playerQueue);
+        this.ownId = ownId;
 
     }
 
@@ -97,19 +136,21 @@ public final class GraphicalPlayerAdapter implements Player {
      * @return (TurnKind) : the turn kind the player has chosen
      */
     @Override
-    public TurnKind nextTurn() {
-        BlockingQueue<TurnKind> turnKindBlockingQueue = new LinkedBlockingDeque<>();
-        DrawCardHandler cardHandler = (c) -> {
-            turnKindBlockingQueue.add(TurnKind.DRAW_CARDS);
+    public ch.epfl.tchu.game.Player.TurnKind nextTurn() {
+        BlockingQueue<ch.epfl.tchu.game.Player.TurnKind> turnKindBlockingQueue = new LinkedBlockingDeque<>();
+        ActionHandlers.DrawCardHandler cardHandler = (c) -> {
+            turnKindBlockingQueue.add(DRAW_CARDS);
             slotQueue.add(c);
         };
-        ClaimRouteHandler routeHandler = (route, cards) -> {
-            turnKindBlockingQueue.add(TurnKind.CLAIM_ROUTE);
+
+        ActionHandlers.ClaimRouteHandler routeHandler = (route, cards) -> {
+            turnKindBlockingQueue.add(CLAIM_ROUTE);
             routeQueue.add(route);
             initialClaimCard.add(cards);
         };
-        DrawTicketsHandler ticketsHandler = () ->
-                turnKindBlockingQueue.add(TurnKind.DRAW_TICKETS);
+        ActionHandlers.DrawTicketsHandler ticketsHandler = () ->
+                turnKindBlockingQueue.add(DRAW_TICKETS);
+
         runLater(() -> graphicalPlayer.startTurn(ticketsHandler, cardHandler, routeHandler));
         return taker(turnKindBlockingQueue);
     }
@@ -122,7 +163,7 @@ public final class GraphicalPlayerAdapter implements Player {
      */
     @Override
     public SortedBag<Ticket> chooseTickets(SortedBag<Ticket> options) {
-        BlockingQueue<SortedBag<Ticket>> ticketsQueue = new ArrayBlockingQueue<>(1);
+        BlockingQueue<SortedBag<Ticket>> ticketsQueue = new ArrayBlockingQueue<>(QUEUE_CAPACITY);
         runLater(() -> graphicalPlayer.chooseTickets(options, ticketsQueue::add));
         return taker(ticketsQueue);
     }
@@ -170,5 +211,56 @@ public final class GraphicalPlayerAdapter implements Player {
     public SortedBag<Card> chooseAdditionalCards(List<SortedBag<Card>> options) {
         runLater(() -> graphicalPlayer.chooseAdditionalCards(options, additionalCardQueue::add));
         return taker(additionalCardQueue);
+    }
+
+    /**
+     * This method is used to send a message to the client bound to the player.
+     *
+     * @param serializedMessage (String) : the serialized message sent from the manager that we want to send tot the client
+     */
+    @Override
+    public void sendToClient(String serializedMessage) {
+    }
+
+    /**
+     * This method is used to verify if a message has been written in the socket of the client and write it in the socket of the manager
+     */
+    @Override
+    public void sendToManager() {
+    }
+
+    /**
+     * This method method is used by the client to send a message to the proxy that can be transmitted to the manager after
+     *
+     * @param message (String) : the message we want to send to the proxy
+     */
+    @Override
+    public void sendToProxy(String message) {
+        try {
+            writer.write(message);
+            writer.write("\n");
+            writer.flush();
+        } catch (IOException ioException) {
+            throw new UncheckedIOException(ioException);
+        }
+    }
+
+    /**
+     * This method is used to receive a message from a the socket of messages.
+     *
+     * @param message (String) : the message received
+     */
+    @Override
+    public void receiveMessage(String message) {
+        runLater(() -> chatList.add(new Text(Serdes.STRING_SERDE.deserialize(message))));
+    }
+
+    /**
+     * This method is used to notify the client that the routes in parameter are in the longest Trail.
+     *
+     * @param routes (List< Route >) : the routes in the longest trail.
+     */
+    @Override
+    public void notifyLongest(List<Route> routes) {
     }
 }

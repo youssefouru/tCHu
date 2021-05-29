@@ -259,7 +259,7 @@ public final class ObservableGameState {
             if (routeClaimed) {
                 for (Route gameStateRoute : gameState.claimedRoutes()) {
                     if (gameStateRoute.stations().containsAll(route.stations())) {
-                        routeClaimed = false;
+                        routeClaimed = PlayerId.COUNT>=3;
                         break;
                     }
                 }

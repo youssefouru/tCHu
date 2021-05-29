@@ -1,6 +1,9 @@
 package ch.epfl.tchu.game;
 
 
+import ch.epfl.tchu.Preconditions;
+import javafx.stage.Stage;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,19 +14,20 @@ import java.util.List;
  * @author Louis Yves André Barinka (329847)
  */
 public final class Trail {
+    private final static Trail emptyTrail = new Trail(new ArrayList<>(), null, null, 0);
     private final List<Route> routesOfTheTrail;
     private final int length;
-    private final Station station1,station2;
-    private final static Trail emptyTrail = new Trail(new ArrayList<>(),null,null,0);
+    private final Station station1, station2;
+
     /**
      * Constructor of Trail
      *
      * @param routesOfTheTrail (List<Route>) : the route list of each
-     * @param station1               (Station) : the first station of the trail
-     * @param station2               (Station) : the second station of the trail
+     * @param station1         (Station) : the first station of the trail
+     * @param station2         (Station) : the second station of the trail
      */
-    private Trail(List<Route> routesOfTheTrail, Station station1, Station station2,int length) {
-        this.routesOfTheTrail =List.copyOf(routesOfTheTrail);
+    private Trail(List<Route> routesOfTheTrail, Station station1, Station station2, int length) {
+        this.routesOfTheTrail = List.copyOf(routesOfTheTrail);
         this.length = length;
         this.station1 = station1;
         this.station2 = station2;
@@ -33,10 +37,23 @@ public final class Trail {
     private static List<Trail> trailCreation(List<Route> routes) {
         List<Trail> trails = new ArrayList<>();
         for (Route route : routes) {
-            trails.add(new Trail(List.of(route), route.station1(), route.station2(),route.length()));
-            trails.add(new Trail(List.of(route), route.station2(), route.station1(),route.length()));
+            trails.add(new Trail(List.of(route), route.station1(), route.station2(), route.length()));
+            trails.add(new Trail(List.of(route), route.station2(), route.station1(), route.length()));
         }
         return trails;
+    }
+
+    /**
+     * This method returns the shortest trail between the first station in parameter and the second station im parameter
+     *
+     * @param from (Station) : the first station
+     * @param to (Station) : the second station
+     * @return (Trail) :  the shortest trail between the first station in parameter and the second station im parameter
+     * @throws IllegalArgumentException : if the first station is equal to the second station
+     */
+    public static Trail shortest(Station from,Station to){
+        Preconditions.checkArgument(from != to);
+        return emptyTrail;
     }
 
     /**
@@ -51,7 +68,7 @@ public final class Trail {
         List<Trail> tempTrails = new ArrayList<>();
         //we create a list of trails composed of each route that we want to check what is the is the longest trail
         List<Trail> trailsToBeTested = trailCreation(routes);
-        Trail saved = new Trail(new ArrayList<>(), null, null,0);
+        Trail saved = new Trail(new ArrayList<>(), null, null, 0);
 
         while (!trailsToBeTested.isEmpty()) {
 
@@ -89,7 +106,7 @@ public final class Trail {
     private Trail addARouteToTheRight(Route route, Station commonStation) {
         List<Route> myRoutes = new ArrayList<>(routesOfTheTrail);
         myRoutes.add(route);
-        return new Trail(myRoutes, this.station1, route.stationOpposite(commonStation),length + route.length());
+        return new Trail(myRoutes, this.station1, route.stationOpposite(commonStation), length + route.length());
     }
 
     /**
@@ -117,6 +134,15 @@ public final class Trail {
      */
     public Station station2() {
         return station2;
+    }
+
+    /**
+     * This method returns the routes of the trail
+     *
+     * @return (List < Route >) : the attribute route
+     */
+    public List<Route> routes() {
+        return routesOfTheTrail;
     }
 
     /**

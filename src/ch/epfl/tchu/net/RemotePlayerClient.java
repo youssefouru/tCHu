@@ -1,10 +1,7 @@
 package ch.epfl.tchu.net;
 
 import ch.epfl.tchu.SortedBag;
-import ch.epfl.tchu.game.Card;
-import ch.epfl.tchu.game.Player;
-import ch.epfl.tchu.game.PlayerId;
-import ch.epfl.tchu.game.Ticket;
+import ch.epfl.tchu.game.*;
 
 import java.io.*;
 import java.net.Socket;
@@ -22,12 +19,11 @@ import static java.nio.charset.StandardCharsets.US_ASCII;
  * @author Louis Yves André Barinka (329847)
  */
 public final class RemotePlayerClient {
-
     private final static String SEPARATION_CHAR = " ";
     private final static String RETURN_NAME = "\n";
-    private final Player player;
-    private final BufferedWriter writer;
-    private final BufferedReader reader;
+    private final AdvancedPlayer player;
+    private final BufferedWriter instructionWriter;
+    private final BufferedReader instructionReader, messageReader;
 
     /**
      * Constructor of the remotePlayerClient
@@ -35,30 +31,47 @@ public final class RemotePlayerClient {
      * @param player (Player)  : the player represented by this client
      * @param name   (String) : the name of the proxy
      * @param id     (int) : the id of the proxy
-     * @throws UncheckedIOException : if something goes wrong
      */
-    public RemotePlayerClient(Player player, String name, int id) {
+    public RemotePlayerClient(AdvancedPlayer player, String name, int id, Socket messageSocket) {
         this.player = player;
         try {
-            Socket socket = new Socket(name, id);
-            writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), US_ASCII));
-            reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), US_ASCII));
+            Socket instructionSocket = new Socket(name, id);
+            instructionWriter = creatWriter(instructionSocket);
+            instructionReader = creatReader(instructionSocket);
+            messageReader = creatReader(messageSocket);
         } catch (IOException ioException) {
             throw new UncheckedIOException(ioException);
         }
+
     }
 
-    private void send(String message) {
+    private BufferedReader creatReader(Socket socket) {
         try {
-            writer.write(message);
-            writer.write(RETURN_NAME);
-            writer.flush();
+            return new BufferedReader(new InputStreamReader(socket.getInputStream(), US_ASCII));
         } catch (IOException ioException) {
             throw new UncheckedIOException(ioException);
         }
     }
 
-    private String receive() {
+    private BufferedWriter creatWriter(Socket socket) {
+        try {
+            return new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), US_ASCII));
+        } catch (IOException ioException) {
+            throw new UncheckedIOException(ioException);
+        }
+    }
+
+    private void sendInstruction(String message) {
+        try {
+            instructionWriter.write(message);
+            instructionWriter.write(RETURN_NAME);
+            instructionWriter.flush();
+        } catch (IOException ioException) {
+            throw new UncheckedIOException(ioException);
+        }
+    }
+
+    private String receive(BufferedReader reader) {
         try {
             return reader.readLine();
         } catch (IOException ioException) {
@@ -68,13 +81,10 @@ public final class RemotePlayerClient {
 
     /**
      * this method will receive the instruction from the proxy and will make the player
-     *
-     * @throws UncheckedIOException : if something goes wrong
-     * @throws Error                : if another id is sent
      */
     public void run() {
         String message;
-        while ((message = receive()) != null) {
+        while ((message = receive(instructionReader)) != null) {
             int i = 0;
             String[] stringTab = message.split(Pattern.quote(SEPARATION_CHAR), -1);
             MessageId messageReceived = MessageId.valueOf(stringTab[i++]);
@@ -97,7 +107,7 @@ public final class RemotePlayerClient {
 
                 case CHOOSE_INITIAL_TICKETS:
                     SortedBag<Ticket> chooseInitialTickets = player.chooseInitialTickets();
-                    send(Serdes.TICKET_BAG_SERDE.serialize(chooseInitialTickets));
+                    sendInstruction(Serdes.TICKET_BAG_SERDE.serialize(chooseInitialTickets));
                     break;
 
                 case SET_INITIAL_TICKETS:
@@ -105,45 +115,59 @@ public final class RemotePlayerClient {
                     break;
 
                 case NEXT_TURN:
-                    send(Serdes.TURN_KIND_SERDE.serialize(player.nextTurn()));
+                    sendInstruction(Serdes.TURN_KIND_SERDE.serialize(player.nextTurn()));
                     break;
 
                 case CHOOSE_TICKETS:
                     SortedBag<Ticket> chosenTicket = player.chooseTickets(Serdes.TICKET_BAG_SERDE.deserialize(stringTab[i]));
-                    send(Serdes.TICKET_BAG_SERDE.serialize(chosenTicket));
+                    sendInstruction(Serdes.TICKET_BAG_SERDE.serialize(chosenTicket));
                     break;
 
                 case DRAW_SLOT:
-                    send(Serdes.INTEGER_SERDE.serialize(player.drawSlot()));
+                    sendInstruction(Serdes.INTEGER_SERDE.serialize(player.drawSlot()));
                     break;
 
                 case ROUTE:
-                    send(Serdes.ROUTE_SERDE.serialize(player.claimedRoute()));
+                    sendInstruction(Serdes.ROUTE_SERDE.serialize(player.claimedRoute()));
                     break;
 
                 case CARDS:
-                    send(Serdes.CARD_BAG_SERDE.serialize(player.initialClaimCards()));
+                    sendInstruction(Serdes.CARD_BAG_SERDE.serialize(player.initialClaimCards()));
 
                     break;
 
                 case CHOOSE_ADDITIONAL_CARDS:
                     List<SortedBag<Card>> possibleAdditionalCard = Serdes.CARD_BAG_LIST_SERDE.deserialize(stringTab[i]);
                     SortedBag<Card> additionalCard = player.chooseAdditionalCards(possibleAdditionalCard);
-                    send(Serdes.CARD_BAG_SERDE.serialize(additionalCard));
+                    sendInstruction(Serdes.CARD_BAG_SERDE.serialize(additionalCard));
 
                     break;
-
+                case NOTIFY_LONGEST:
+                    List<Route> routesInTheLongestTrail = Serdes.ROUTE_LIST_SERDE.deserialize(stringTab[i]);
+                    for (Route route : routesInTheLongestTrail) {
+                        route.highlight();
+                    }
                 default:
                     throw new Error();
             }
-
         }
         try {
-            reader.close();
-            writer.close();
+            instructionReader.close();
+            instructionWriter.close();
         } catch (IOException ioException) {
             throw new UncheckedIOException(ioException);
         }
+    }
+
+    /**
+     * This method will receive the messages
+     */
+    public void manageMessages() {
+        String messageReceived;
+        while ((messageReceived = receive(messageReader)) != null) {
+            player.receiveMessage(messageReceived);
+        }
+
     }
 
 

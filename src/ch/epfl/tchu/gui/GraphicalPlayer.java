@@ -2,17 +2,18 @@ package ch.epfl.tchu.gui;
 
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
+import ch.epfl.tchu.gui.CardBagStringConverter;
+import ch.epfl.tchu.gui.ObservableGameState;
+import ch.epfl.tchu.gui.StringsFr;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
+import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MultipleSelectionModel;
-import javafx.scene.control.SelectionMode;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -25,7 +26,6 @@ import javafx.stage.StageStyle;
 import java.util.List;
 import java.util.Map;
 
-import static ch.epfl.tchu.gui.ActionHandlers.*;
 import static javafx.application.Platform.isFxApplicationThread;
 
 /**
@@ -37,13 +37,16 @@ import static javafx.application.Platform.isFxApplicationThread;
 public final class GraphicalPlayer {
     private final static int MAX_INFO_NUMBER = 5;
     private final static String CHOOSER_CLASS = "chooser.css";
-    private final static String PROGRAM_NAME = "tCHu \u2014 %s";
+    private static final String CHOOSE_THE_PLAYER = "Choose The  Player";
+    private static final String SEND_NAME = "SEND";
     private final ObservableGameState gameState;
     private final ObservableList<Text> messages;
-    private final ObjectProperty<DrawCardHandler> drawCardHP;
-    private final ObjectProperty<ClaimRouteHandler> claimRouteHP;
-    private final ObjectProperty<DrawTicketsHandler> drawTicketHP;
+    private final ObjectProperty<ActionHandlers.DrawCardHandler> drawCardHP;
+    private final ObjectProperty<ActionHandlers.ClaimRouteHandler> claimRouteHP;
+    private final ObjectProperty<ActionHandlers.DrawTicketsHandler> drawTicketHP;
     private final Stage mainStage;
+    private final PlayerId id;
+    private final Map<PlayerId, String> playerNames;
 
     /**
      * Constructor of the GraphicalPlayer.
@@ -51,22 +54,49 @@ public final class GraphicalPlayer {
      * @param playerId    (PlayerId) : the id of the player.
      * @param playerNames (Map< PlayerId, String >) : the names of the players.
      */
-    public GraphicalPlayer(PlayerId playerId, Map<PlayerId, String> playerNames) {
+    public GraphicalPlayer(PlayerId playerId, Map<PlayerId, String> playerNames, ActionHandlers.MessageSender messageSender, ObservableList<Text> chatList) {
         assert isFxApplicationThread();
         messages = FXCollections.observableArrayList();
+        id = playerId;
+        this.playerNames = playerNames;
         gameState = new ObservableGameState(playerId);
         drawCardHP = new SimpleObjectProperty<>();
         claimRouteHP = new SimpleObjectProperty<>();
         drawTicketHP = new SimpleObjectProperty<>();
         mainStage = new Stage();
-        mainStage.setTitle(String.format(PROGRAM_NAME, playerNames.get(playerId)));
-        BorderPane mainPain = new BorderPane(MapViewCreator.createMapView(gameState, claimRouteHP, this::chooseClaimCards),
+        mainStage.setTitle("tCHu \u2014 " + playerNames.get(playerId));
+        BorderPane mainPain = new BorderPane(MapViewCreator.createMapView(gameState, claimRouteHP,this::chooseClaimCards),
                 null,
-                DecksViewCreator.createCardsView(gameState, drawTicketHP, drawCardHP),
+                DecksViewCreator.createCardsView(gameState, drawTicketHP, drawCardHP, chatBoxCreator(chatList, playerId, playerNames,messageSender)),
                 DecksViewCreator.createHandView(gameState),
                 InfoViewCreator.createInfoView(playerId, playerNames, gameState, messages));
         mainStage.setScene(new Scene(mainPain));
+
         mainStage.show();
+    }
+
+    private static Node chatBoxCreator(ObservableList<Text> chatMessage, PlayerId currentId, Map<PlayerId, String> playerNames, ActionHandlers.MessageSender messageSender) {
+        ListView<Text> chats = new ListView<>(chatMessage);
+        TextField messageField = new TextField();
+        MenuItem[] items = new MenuItem[PlayerId.COUNT - 1];
+        for (PlayerId playerId : PlayerId.ALL) {
+            if (playerId == currentId) continue;
+            MenuItem menuItem = new MenuItem(playerNames.get(playerId));
+            menuItem.setOnAction((event) -> {
+                if(!messageField.getText().isEmpty()) {
+                    messageSender.onSentMessage(messageField.getText(), currentId, playerId);
+                    messageField.clear();
+                }
+            });
+            int index = playerId.ordinal()>currentId.ordinal()?playerId.ordinal()-1:playerId.ordinal();
+            items[index] = menuItem;
+        }
+        Button sendButton = new Button();
+        sendButton.setText(SEND_NAME);
+        MenuButton idChooser = new MenuButton(CHOOSE_THE_PLAYER, sendButton, items);
+
+
+        return new VBox(chats, idChooser,messageField);
     }
 
     private void handlerSetter() {
@@ -87,6 +117,7 @@ public final class GraphicalPlayer {
     }
 
 
+
     /**
      * this method is Called in the start of each turn
      *
@@ -94,7 +125,7 @@ public final class GraphicalPlayer {
      * @param drawCardHandler    (DrawCardHandler) : the drawCardHandler the player will use to draw cards
      * @param claimRouteHandler  (ClaimRouteHandler) : the claimRouteHandler the player will use to clain a route
      */
-    public void startTurn(DrawTicketsHandler drawTicketsHandler, DrawCardHandler drawCardHandler, ClaimRouteHandler claimRouteHandler) {
+    public void startTurn(ActionHandlers.DrawTicketsHandler drawTicketsHandler, ActionHandlers.DrawCardHandler drawCardHandler, ActionHandlers.ClaimRouteHandler claimRouteHandler) {
         assert isFxApplicationThread();
         claimRouteHP.set((route, cards) -> {
             handlerSetter();
@@ -135,7 +166,7 @@ public final class GraphicalPlayer {
      * @param tickets        (SortedBag< Ticket >) : the tickets he has to choose
      * @param ticketsHandler (ActionHandlers.ChooseTicketsHandler) : the ticketHandler the player will use to draw tickets
      */
-    public void chooseTickets(SortedBag<Ticket> tickets, ChooseTicketsHandler ticketsHandler) {
+    public void chooseTickets(SortedBag<Ticket> tickets, ActionHandlers.ChooseTicketsHandler ticketsHandler) {
         assert isFxApplicationThread();
         VBox mainBox = new VBox();
         Stage chooserStage = stageCreator(StringsFr.TICKETS_CHOICE, mainBox);
@@ -145,6 +176,8 @@ public final class GraphicalPlayer {
         listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         Button chooseButton = new Button();
         chooseButton.setText(StringsFr.CHOOSE);
+
+
         chooseButton.disableProperty().bind(Bindings.lessThan(Bindings.size(listView.getSelectionModel().getSelectedItems()),
                 minimalNumberOfCards));
         chooseButton.setOnMouseClicked(e -> {
@@ -175,7 +208,7 @@ public final class GraphicalPlayer {
      *
      * @param drawCardHandler (DrawCardHandler) : the handler we will draw cards with
      */
-    public void drawCard(DrawCardHandler drawCardHandler) {
+    public void drawCard(ActionHandlers.DrawCardHandler drawCardHandler) {
         assert isFxApplicationThread();
         drawCardHP.set((c) -> {
             drawTicketHP.set(null);
@@ -193,7 +226,7 @@ public final class GraphicalPlayer {
      * @param possibleAdditionalCards (List< SortedBag< Card > >) : the possible additional cards the player he can play to claim the underground root
      * @param chooseCardsHandler      (ChooseCardsHandler) : the handler to choose the player will use to choose it's cards
      */
-    public void chooseAdditionalCards(List<SortedBag<Card>> possibleAdditionalCards, ChooseCardsHandler chooseCardsHandler) {
+    public void chooseAdditionalCards(List<SortedBag<Card>> possibleAdditionalCards, ActionHandlers.ChooseCardsHandler chooseCardsHandler) {
         assert isFxApplicationThread();
         VBox mainBox = new VBox();
         Stage additionalCardsStage = stageCreator(StringsFr.CHOOSE_ADDITIONAL_CARDS, mainBox);
@@ -225,7 +258,7 @@ public final class GraphicalPlayer {
      * @param claimCards         (List<SortedBag<Card>>) : all the possible claimCards the player can play to claim the route
      * @param chooseCardsHandler (ChooseCardsHandler) : the handler that the player will use to choose which cards he wants to play
      */
-    public void chooseClaimCards(List<SortedBag<Card>> claimCards, ChooseCardsHandler chooseCardsHandler) {
+    public void chooseClaimCards(List<SortedBag<Card>> claimCards, ActionHandlers.ChooseCardsHandler chooseCardsHandler) {
         assert isFxApplicationThread();
         VBox mainBox = new VBox();
         Stage claimCardsStage = stageCreator(StringsFr.CHOOSE_CARDS, mainBox);

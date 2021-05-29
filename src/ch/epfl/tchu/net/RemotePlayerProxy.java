@@ -3,6 +3,9 @@ package ch.epfl.tchu.net;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
 
+import ch.epfl.tchu.gui.MessageManager;
+import ch.epfl.tchu.net.Serdes;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -19,31 +22,46 @@ import static java.nio.charset.StandardCharsets.US_ASCII;
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)
  */
-public final class RemotePlayerProxy implements Player {
+public final class RemotePlayerProxy implements AdvancedPlayer {
     private final static String SEPARATOR = " ";
     private final static String RETURN_NAME = "\n";
-    private final BufferedReader reader;
-    private final BufferedWriter writer;
+    private final BufferedReader instructionReader, messageReader;
+    private final BufferedWriter instructionWriter, messageWriter;
+    private final MessageManager manager;
+
 
     /**
      * Constructor of RemotePlayerProxy
      *
      * @param socket (Socket) : the socket we will use to write and read the data in the server
-     * @throws UncheckedIOException : if something goes wrong
+     * @param clientToProxy (Socket) : the socket which will be used to send to client the messages
      */
-    public RemotePlayerProxy(Socket socket) {
+    public RemotePlayerProxy(Socket socket, Socket clientToProxy,MessageManager manager) {
+        instructionReader = readerCreator(socket);
+        instructionWriter = writerCreator(socket);
+        messageReader = readerCreator(clientToProxy);
+        messageWriter = writerCreator(clientToProxy);
+        this.manager = manager;
+
+    }
+
+    private static BufferedReader readerCreator(Socket socket) {
         try {
-            reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), US_ASCII));
-            writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), US_ASCII));
+            return new BufferedReader(new InputStreamReader(socket.getInputStream(), US_ASCII));
         } catch (IOException ioException) {
             throw new UncheckedIOException(ioException);
         }
     }
 
-    private void send(MessageId messageId, String... strings) {
-        List<String> messageList = Arrays.stream(strings).collect(Collectors.toCollection(ArrayList::new));
-        messageList.add(0, messageId.name());
-        String message = String.join(SEPARATOR, messageList);
+    private static BufferedWriter writerCreator(Socket socket) {
+        try {
+            return new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), US_ASCII));
+        } catch (IOException ioException) {
+            throw new UncheckedIOException(ioException);
+        }
+    }
+
+    private void sendTo(BufferedWriter writer, String message){
         try {
             writer.write(message);
             writer.write(RETURN_NAME);
@@ -53,12 +71,23 @@ public final class RemotePlayerProxy implements Player {
         }
     }
 
-    private String receive() {
+    private String receiveFrom(BufferedReader reader){
         try {
             return reader.readLine();
         } catch (IOException ioException) {
             throw new UncheckedIOException(ioException);
         }
+    }
+
+    private void sendInstruction(MessageId messageId, String... strings) {
+        List<String> messageList = Arrays.stream(strings).collect(Collectors.toCollection(ArrayList::new));
+        messageList.add(0, messageId.name());
+        String message = String.join(SEPARATOR, messageList);
+        sendTo(instructionWriter,message);
+    }
+
+    private String receiveInstruction() {
+        return receiveFrom(instructionReader);
     }
 
     /**
@@ -69,7 +98,7 @@ public final class RemotePlayerProxy implements Player {
      */
     @Override
     public void initPlayers(PlayerId ownId, Map<PlayerId, String> playerNames) {
-        send(MessageId.INIT_PLAYERS,
+        sendInstruction(MessageId.INIT_PLAYERS,
                 Serdes.PLAYER_ID_SERDE.serialize(ownId),
                 Serdes.STRING_LIST_SERDE.serialize((PlayerId.ALL.stream().
                         map(playerNames::get)).
@@ -84,114 +113,161 @@ public final class RemotePlayerProxy implements Player {
      */
     @Override
     public void receiveInfo(String info) {
-        send(MessageId.RECEIVE_INFO,
+        sendInstruction(MessageId.RECEIVE_INFO,
                 Serdes.STRING_SERDE.serialize(info));
     }
 
     /**
-     * this method send to the client the state updated to the client
+     * this method sendInstruction to the client the state updated to the client
      *
      * @param newState (PublicGameState) : the PublicGameState we want to communicate
      * @param ownState (PlayerState) : own state of the client
      */
     @Override
     public void updateState(PublicGameState newState, PlayerState ownState) {
-        send(MessageId.UPDATE_STATE,
+        sendInstruction(MessageId.UPDATE_STATE,
                 Serdes.PUBLIC_GAME_STATE_SERDE.serialize(newState),
                 Serdes.PLAYER_STATE_SERDE.serialize(ownState));
     }
 
     /**
-     * this method send to the client the message to chose the initial cards among the tickets in parameter
+     * this method sendInstruction to the client the message to chose the initial cards among the tickets in parameter
      *
      * @param tickets (SortedBag<Ticket>) : the tickets initially proposed to the client
      */
     @Override
     public void setInitialTicketChoice(SortedBag<Ticket> tickets) {
-        send(MessageId.SET_INITIAL_TICKETS,
+        sendInstruction(MessageId.SET_INITIAL_TICKETS,
                 Serdes.TICKET_BAG_SERDE.serialize(tickets));
     }
 
     /**
-     * this method send to the client the message to chose the the initialTickets and receive the tickets chosen by the player that he returns
+     * this method sendInstruction to the client the message to chose the the initialTickets and receiveInstruction the tickets chosen by the player that he returns
      *
      * @return (SortedBag < Ticket >) : the tickets chosen by the the client
      */
     @Override
     public SortedBag<Ticket> chooseInitialTickets() {
-        send(MessageId.CHOOSE_INITIAL_TICKETS);
-        return Serdes.TICKET_BAG_SERDE.deserialize(receive());
+        sendInstruction(MessageId.CHOOSE_INITIAL_TICKETS);
+        return Serdes.TICKET_BAG_SERDE.deserialize(receiveInstruction());
     }
 
     /**
-     * this method send to the client that he has to choose the next turn et receive the nextTurn chosen by him and returns it
+     * this method sendInstruction to the client that he has to choose the next turn et receiveInstruction the nextTurn chosen by him and returns it
      *
      * @return (TurnKind) : the turnKind chosen by the client
      */
     @Override
-    public TurnKind nextTurn() {
-        send(MessageId.NEXT_TURN);
-        return Serdes.TURN_KIND_SERDE.deserialize(receive());
+    public ch.epfl.tchu.game.Player.TurnKind nextTurn() {
+        sendInstruction(MessageId.NEXT_TURN);
+        return Serdes.TURN_KIND_SERDE.deserialize(receiveInstruction());
     }
 
     /**
-     * this method send to the client that he has received the tickets in parameter and receive the cards that he chosen
+     * this method sendInstruction to the client that he has received the tickets in parameter and receiveInstruction the cards that he chosen
      *
      * @param options (SortedBag<Ticket>) : the tickets drawn by the client
      * @return (SortedBag < Ticket >) : the tickets that the client has chosen
      */
     @Override
     public SortedBag<Ticket> chooseTickets(SortedBag<Ticket> options) {
-        send(MessageId.CHOOSE_TICKETS,
+        sendInstruction(MessageId.CHOOSE_TICKETS,
                 Serdes.TICKET_BAG_SERDE.serialize(options));
 
-        return Serdes.TICKET_BAG_SERDE.deserialize(receive());
+        return Serdes.TICKET_BAG_SERDE.deserialize(receiveInstruction());
     }
 
     /**
-     * this method send to the client to choose the slot he wants to draw , receives it and returns it
+     * this method sendInstruction to the client to choose the slot he wants to draw , receives it and returns it
      *
      * @return (int) : the slot that the client has chosen
      */
     @Override
     public int drawSlot() {
-        send(MessageId.DRAW_SLOT);
-        return Serdes.INTEGER_SERDE.deserialize(receive());
+        sendInstruction(MessageId.DRAW_SLOT);
+        return Serdes.INTEGER_SERDE.deserialize(receiveInstruction());
     }
 
     /**
-     * this method send to the client to claim a route he wants to claim , receives it and returns it
+     * this method sendInstruction to the client to claim a route he wants to claim , receives it and returns it
      *
      * @return (Route) : the route claimed by the client
      */
     @Override
     public Route claimedRoute() {
-        send(MessageId.ROUTE);
-        return Serdes.ROUTE_SERDE.deserialize(receive());
+        sendInstruction(MessageId.ROUTE);
+        return Serdes.ROUTE_SERDE.deserialize(receiveInstruction());
     }
 
     /**
-     * this method send to the client to choose the claim  cards he wants to play to claim the route , receives it and returns it
+     * this method sendInstruction to the client to choose the claim  cards he wants to play to claim the route , receives it and returns it
      *
      * @return (SortedBag < Card >) : returns the initial cards that the player chosen
      */
     @Override
     public SortedBag<Card> initialClaimCards() {
-        send(MessageId.CARDS);
-        return Serdes.CARD_BAG_SERDE.deserialize(receive());
+        sendInstruction(MessageId.CARDS);
+        return Serdes.CARD_BAG_SERDE.deserialize(receiveInstruction());
     }
 
     /**
-     * this method send to the client the additional cards he wants to play to claim the underground route , receives it and returns it
+     * this method sendInstruction to the client the additional cards he wants to play to claim the underground route , receives it and returns it
      *
      * @param options (List< SortedBag< Card > >) : all the additional cards that the client can play
      * @return (SortedBag < Card >) : the additional cards that the player can play to claim the underground route
      */
     @Override
     public SortedBag<Card> chooseAdditionalCards(List<SortedBag<Card>> options) {
-        send(MessageId.CHOOSE_ADDITIONAL_CARDS,
+        sendInstruction(MessageId.CHOOSE_ADDITIONAL_CARDS,
                 Serdes.CARD_BAG_LIST_SERDE.serialize(options));
-        return Serdes.CARD_BAG_SERDE.deserialize(receive());
+        return Serdes.CARD_BAG_SERDE.deserialize(receiveInstruction());
+    }
 
+
+    /**
+     * This method is used to send a message to the client bound to the player.
+     * @param serializedMessage (String) : the serialized message sent from the manager that we want to send tot the client
+     */
+    public void sendToClient(String serializedMessage){
+        sendTo(messageWriter,serializedMessage);
+    }
+
+    /**
+     * This method is used to verify if a message has been written in the socket of the client and write it in the socket of the manager
+     */
+    public void sendToManager(){
+        String receiveMessage;
+        while((receiveMessage=receiveFrom(messageReader)) != null){
+            manager.manage(receiveMessage);
+        }
+    }
+
+    /**
+     * This method method is used by the client to send a message to the proxy that can be transmitted to the manager after
+     *
+     * @param message (String) : the message we want to send to the proxy
+     */
+    @Override
+    public void sendToProxy(String message) {
+    }
+
+    /**
+     * This method is used to receive a message from a the socket of messages.
+     *
+     * @param message (String) : the message received by the client
+     */
+    @Override
+    public void receiveMessage(String message) {
+    }
+
+
+    /**
+     * This method is used to notify the client that the routes in parameter are in the longest Trail.
+     *
+     * @param routes (List< Route >) : the routes in the longest trail.
+     */
+    @Override
+    public void notifyLongest(List<Route> routes) {
+        sendInstruction(MessageId.NOTIFY_LONGEST,Serdes.ROUTE_LIST_SERDE.serialize(routes));
     }
 }

@@ -76,7 +76,9 @@ final class MapViewCreator {
             routeGroup.getStyleClass().addAll(ROUTE,
                     route.level().name(),
                     route.color() == null ? NEUTRAL_COLOR : route.color().name());
-
+            route.isHighlighted().addListener((o,oV,nV)->{
+                routeGroup.getStyleClass().add("longest");
+            });
             gameState.routeOwner(route).addListener((o, oV, nV) -> routeGroup.getStyleClass().add(nV.name()));
 
             for (int i = 1; i <= route.length(); i++) {

@@ -1,6 +1,7 @@
 package ch.epfl.tchu.game;
 
 import ch.epfl.tchu.SortedBag;
+import ch.epfl.tchu.game.*;
 
 import java.util.List;
 import java.util.Map;
@@ -93,6 +94,13 @@ public interface Player {
      * @return (SortedBag < Card >) : all the possible cards that the player can use to claim a route
      */
     SortedBag<Card> chooseAdditionalCards(List<SortedBag<Card>> options);
+
+    /**
+     * This method is used to notify the client that the routes in parameter are in the longest Trail.
+     *
+     * @param routes (List< Route >) : the routes in the longest trail.
+     */
+    void notifyLongest(List<Route> routes);
 
     /**
      * A TurnKind

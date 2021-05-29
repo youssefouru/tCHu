@@ -30,7 +30,7 @@ public final class Game {
      * @param tickets     (SortedBag<Ticket>) : the initial tickets of the game
      * @param rng         (Random) : the random object which is used several times in this method
      */
-    public static void play(Map<PlayerId, Player> players, Map<PlayerId, String> playerNames, SortedBag<Ticket> tickets, Random rng) {
+    public static void play(Map<PlayerId,? extends Player> players, Map<PlayerId, String> playerNames, SortedBag<Ticket> tickets, Random rng) {
         Preconditions.checkArgument(players.size() == PlayerId.COUNT && playerNames.size() == PlayerId.COUNT);
         GameState gameState = GameState.initial(tickets, rng);
         players.forEach(((playerId, player) -> player.initPlayers(playerId, playerNames)));
@@ -67,8 +67,9 @@ public final class Game {
             transmitInfo(players, currentPlayerInfo.canPlay());
             switch (currentPlayer.nextTurn()) {
                 case DRAW_TICKETS:
-                    SortedBag<Ticket> drawnTickets = gameState.topTickets(Constants.IN_GAME_TICKETS_COUNT);
-                    transmitInfo(players, currentPlayerInfo.drewTickets(Constants.IN_GAME_TICKETS_COUNT));
+                    int ticketsDrawn = Math.min(Constants.IN_GAME_TICKETS_COUNT,gameState.ticketsCount());
+                    SortedBag<Ticket> drawnTickets = gameState.topTickets(ticketsDrawn);
+                    transmitInfo(players, currentPlayerInfo.drewTickets(ticketsDrawn));
                     SortedBag<Ticket> chosenTickets = currentPlayer.chooseTickets(drawnTickets);
                     gameState = gameState.withChosenAdditionalTickets(drawnTickets, chosenTickets);
                     transmitInfo(players, currentPlayerInfo.keptTickets(chosenTickets.size()));
@@ -159,7 +160,9 @@ public final class Game {
             int bonus = playerTheLongestTrails.contains(playerId) ? Constants.LONGEST_TRAIL_BONUS_POINTS : 0;
             mapPoints.put(playerId, gameState.playerState(playerId).finalPoints() + bonus);
             if (bonus == Constants.LONGEST_TRAIL_BONUS_POINTS) {
-                transmitInfo(players, playersInfos.get(playerId).getsLongestTrailBonus(mapOfTrails.get(playerId)));
+                Trail maximalTrail =mapOfTrails.get(playerId);
+                notifyLongest(players,maximalTrail);
+                transmitInfo(players, playersInfos.get(playerId).getsLongestTrailBonus(maximalTrail));
             }
         }
 
@@ -181,12 +184,17 @@ public final class Game {
     }
 
 
-    private static void transmitInfo(Map<PlayerId, Player> map, String info) {
+    private static void transmitInfo(Map<PlayerId,? extends Player> map, String info) {
         map.forEach(((playerId, player) -> player.receiveInfo(info)));
     }
 
-    private static void updateStates(Map<PlayerId, Player> map, GameState gameState) {
+    private static void updateStates(Map<PlayerId,? extends Player> map, GameState gameState) {
         map.forEach(((playerId, player) -> player.updateState(gameState, gameState.playerState(playerId))));
+
+    }
+
+    private static void notifyLongest(Map<PlayerId, ? extends Player> map, Trail trail){
+            map.forEach(((playerId, player) -> player.notifyLongest(trail.routes())));
 
     }
 

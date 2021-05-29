@@ -20,8 +20,7 @@ import javafx.scene.text.Text;
 
 import java.util.List;
 
-import static ch.epfl.tchu.gui.ActionHandlers.DrawCardHandler;
-import static ch.epfl.tchu.gui.ActionHandlers.DrawTicketsHandler;
+
 
 /**
  * DecksViewCreator : this class creates the view of the deck
@@ -29,7 +28,7 @@ import static ch.epfl.tchu.gui.ActionHandlers.DrawTicketsHandler;
  * @author Amine Youssef (324253)
  * @author Louis Yves André Barinka (329847)
  */
-final class DecksViewCreator {
+public final class DecksViewCreator {
     private static final String DECK_CLASS = "decks.css";
     private static final String COLORS_CLASS = "colors.css";
     private static final String DECKS_CLASS = "decks.css";
@@ -65,7 +64,7 @@ final class DecksViewCreator {
      * @param drawCardsHP (ObjectProperty< DrawCardHandler >) : The handler of the cards.
      * @return (Node) : The view of the cards.
      */
-    public static Node createCardsView(ObservableGameState gameState, ObjectProperty<DrawTicketsHandler> ticketsHP, ObjectProperty<DrawCardHandler> drawCardsHP) {
+    public static Node createCardsView(ObservableGameState gameState, ObjectProperty<ActionHandlers.DrawTicketsHandler> ticketsHP, ObjectProperty<ActionHandlers.DrawCardHandler> drawCardsHP, Node chatBox) {
         VBox cardPaneBox = new VBox();
         cardPaneBox.getStylesheets().addAll(DECKS_CLASS, COLORS_CLASS);
         cardPaneBox.setId(CARD_PANE_NAME);
@@ -101,9 +100,8 @@ final class DecksViewCreator {
             cardPane.disableProperty().bind(drawCardsHP.isNull());
             cardPane.setOnMouseClicked(event -> drawCardsHP.get().onDrawCard(slot));
         }
-
         cardPaneBox.getChildren().add(cardButton);
-        return cardPaneBox;
+        return new HBox(chatBox, cardPaneBox);
     }
 
     /**
@@ -181,6 +179,7 @@ final class DecksViewCreator {
         mainButton.setGraphic(graphicGroup);
 
         mainButton.disableProperty().bind(booleanProperty);
+
         return mainButton;
     }
 

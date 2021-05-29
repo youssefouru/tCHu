@@ -431,6 +431,18 @@ class GameTest {
                     ? SortedBag.of()
                     : options.get(rng.nextInt(options.size()));
         }
+
+        /**
+         * This method is used to notify the client that the routes in parameter are in the longest Trail.
+         *
+         * @param routes (List< Route >) : the routes in the longest trail.
+         */
+        @Override
+        public void notifyLongest(List<Route> routes) {
+
+        }
+
+
     }
 
     // Simplified Swiss map (only single routeOwner)

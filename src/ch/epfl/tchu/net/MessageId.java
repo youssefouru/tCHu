@@ -1,11 +1,5 @@
 package ch.epfl.tchu.net;
 
-/**
- * A MessageId : this class represents all of the types of a messages used by a player
- *
- * @author Amine Youssef (324253)
- * @author Louis Yves André Barinka (329847)
- */
 public enum MessageId {
     INIT_PLAYERS,
     RECEIVE_INFO,
@@ -17,5 +11,6 @@ public enum MessageId {
     DRAW_SLOT,
     ROUTE,
     CARDS,
-    CHOOSE_ADDITIONAL_CARDS;
+    CHOOSE_ADDITIONAL_CARDS,
+    NOTIFY_LONGEST;
 }

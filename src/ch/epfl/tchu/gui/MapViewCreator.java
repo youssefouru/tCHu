@@ -76,9 +76,7 @@ final class MapViewCreator {
             routeGroup.getStyleClass().addAll(ROUTE,
                     route.level().name(),
                     route.color() == null ? NEUTRAL_COLOR : route.color().name());
-            route.isHighlighted().addListener((o,oV,nV)->{
-                routeGroup.getStyleClass().add("longest");
-            });
+
             gameState.routeOwner(route).addListener((o, oV, nV) -> routeGroup.getStyleClass().add(nV.name()));
 
             for (int i = 1; i <= route.length(); i++) {
@@ -87,7 +85,9 @@ final class MapViewCreator {
                 wayRectangle.getStyleClass().addAll(TRACK_STRING, FILLED);
 
                 Rectangle carRectangle = new Rectangle(RECTANGLE_WIDTH, RECTANGLE_HEIGHT);
-
+                route.isHighlighted().addListener((o,oV,nV)->{
+                    carRectangle.getStyleClass().add("longest");
+                });
                 carRectangle.getStyleClass().add(FILLED);
                 int circle1XPos =RECTANGLE_WIDTH/2 + SPACE_BETWEEN_CIRCLE;
                 int circle2XPos =RECTANGLE_WIDTH/2 - SPACE_BETWEEN_CIRCLE;

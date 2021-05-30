@@ -147,7 +147,10 @@ public final class RemotePlayerClient {
                     for (Route route : routesInTheLongestTrail) {
                         route.highlight();
                     }
+                    break;
+
                 default:
+                    System.out.println(messageReceived);
                     throw new Error();
             }
         }

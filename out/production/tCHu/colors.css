@@ -12,4 +12,8 @@
 
 .PLAYER_1 .filled { -fx-fill: lightblue; }
 .PLAYER_2 .filled { -fx-fill: lightpink; }
-.PLAYER_3 .filled { -fx-fill : #c5eac5;  }
+.PLAYER_3 .filled { -fx-fill : #c5eac5 ; }
+.PLAYER_4 .filled { -fx-fill : #4abe93 ; }
+.PLAYER_5 .filled { -fx-fill : #320202 ; }
+.PLAYER_6 .filled { -fx-fill : #050c1a ; }
+.PLAYER_7 .filled { -fx-fill : #9d731f ; }

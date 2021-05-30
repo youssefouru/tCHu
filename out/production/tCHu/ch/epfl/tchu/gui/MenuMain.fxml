@@ -23,7 +23,7 @@
                 <ListView fx:id="texts" layoutX="24.0" layoutY="224.0" prefHeight="129.0" prefWidth="200.0" />
                 <Button fx:id="startServerButton" layoutX="235.0" layoutY="242.0" mnemonicParsing="false" onAction="#startServer" style="-fx-background-radius: 10;" text="Start Server" AnchorPane.topAnchor="242.0" />
                 <Button fx:id="launchNgrokButton" layoutX="67.0" layoutY="187.0" mnemonicParsing="false" onAction="#LaunchNgrok" style="-fx-background-radius: 10;" text="launch with ngrok" />
-                <Button layoutX="237.0" layoutY="302.0" mnemonicParsing="false" style="-fx-background-radius: 10;" text="Stop Game" />
+                <Button layoutX="236.0" layoutY="289.0" mnemonicParsing="false" style="-fx-background-radius: 10;" text="Start Game" />
             <Text layoutX="24.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Server">
                <font>
                   <Font name="Times New Roman Italic" size="22.0" />
@@ -53,7 +53,7 @@
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
-                  <TextArea layoutY="-1.0" prefHeight="375.0" prefWidth="386.0" text="-Pour pouvoir lancer ngrok sur votre machine il vous faut l'avoir &#10; télécharger au préalable et que vous disposez d'une machine &#10; linux ou mac pouvant  executer le sript shell.&#10;&#10;- Si vous décider d'héberger la partie vérifiér que le port est pas &#10; utilisé par votre machine.&#10;&#10;-Attendez que le serveur soit lancé avant de vous connecter.&#10;&#10;&#10;- si vous jouer à partir d'un IDE n'oublier pas d'ajouter à votre VM options cette ligne :&#10;--module-path &lt;chemin&gt; --add-modules javafx.controls,javafx.fxml -ea&#10;&#10;&#10;-Lisez bien les règles du jeu.&#10;&#10;&#10;- Amusez vous bien!&#10;" />
+                  <TextArea layoutY="-1.0" prefHeight="375.0" prefWidth="386.0" text="-Pour pouvoir lancer ngrok sur votre machine il vous faut l'avoir &#10; télécharger au préalable et que vous disposez d'une machine &#10; linux ou mac pouvant  executer le sript shell.&#10;&#10;&#10;- Si vous décider d'héberger la partie vérifiér que le port est pas &#10; utilisé par votre machine.&#10;&#10;&#10;-Attendez que le serveur soit lancé avant de vous connecter.&#10;&#10;&#10;- si vous jouer à partir d'un IDE n'oublier pas d'ajouter à votre VM options cette ligne :&#10;--module-path &lt;chemin&gt; --add-modules javafx.controls,javafx.fxml -ea&#10;&#10;&#10;-Lisez bien les règles du jeu.&#10;&#10;&#10;- Amusez vous bien!&#10;" />
                </children>
             </AnchorPane>
         </content>

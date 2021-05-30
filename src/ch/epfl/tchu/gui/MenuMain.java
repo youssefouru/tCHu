@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 
 import java.util.Objects;
 
-public class MenuMain extends Application {
+public final class MenuMain extends Application {
 
     public static void main(String[] args) {
         launch(args);
@@ -42,3 +42,4 @@ public class MenuMain extends Application {
         primaryStage.show();
     }
 }
+

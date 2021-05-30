@@ -3,9 +3,10 @@ package ch.epfl.tchu.gui;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.AdvancedPlayer;
 import ch.epfl.tchu.game.Game;
-import ch.epfl.tchu.game.Player;
 import ch.epfl.tchu.game.PlayerId;
 import ch.epfl.tchu.net.RemotePlayerProxy;
+import javafx.collections.ObservableList;
+import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -33,7 +34,7 @@ public final class ServerMain {
      * @param args (String[]) : the arguments of the program
      * @throws IOException : if something goes wrong
      */
-    public static void main(String[] args,int portNumber) throws IOException {
+    public static void main(String[] args, int portNumber, ObservableList<Text> playerConnected) throws IOException {
         ServerSocket server = new ServerSocket(PORT_NUMBER);
         int i = 0;
         Map<PlayerId, AdvancedPlayer> players = new EnumMap<>(PlayerId.class);
@@ -42,7 +43,7 @@ public final class ServerMain {
         for (PlayerId playerId : PlayerId.ALL) {
             Socket messageSocket = server.accept();
             Socket instructionSocket = server.accept();
-            players.put(playerId, new RemotePlayerProxy(instructionSocket,messageSocket,manager));
+            players.put(playerId, new RemotePlayerProxy(instructionSocket, messageSocket, manager));
             playerNames.put(playerId, args.length == 0 ? DEFAULT_NAMES.get(i++) : args[i++]);
         }
 

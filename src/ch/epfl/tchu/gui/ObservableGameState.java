@@ -17,6 +17,7 @@ import static javafx.collections.FXCollections.unmodifiableObservableList;
  * @author Louis Yves André Barinka (329847)
  */
 public final class ObservableGameState {
+    private final static int MINIMAL_NUMBER = 3;
     private final PlayerId playerId;
     private final IntegerProperty ticketPct = new SimpleIntegerProperty();
     private final IntegerProperty cardPct = new SimpleIntegerProperty();
@@ -259,7 +260,7 @@ public final class ObservableGameState {
             if (routeClaimed) {
                 for (Route gameStateRoute : gameState.claimedRoutes()) {
                     if (gameStateRoute.stations().containsAll(route.stations())) {
-                        routeClaimed = PlayerId.COUNT>=3;
+                        routeClaimed = PlayerId.COUNT >= MINIMAL_NUMBER;
                         break;
                     }
                 }

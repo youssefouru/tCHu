@@ -87,7 +87,7 @@ public final class MenuController {
      */
     @FXML
     public void connectClient() {
-
+        ClientMain clientMain = new ClientMain();
         String[] args;
         if (hostNameField.getText().isEmpty() && !portNumberClient.getText().isEmpty()) {
             args = new String[]{portNumberClient.getText()};
@@ -98,7 +98,7 @@ public final class MenuController {
         }
         new Thread(()-> {
             try {
-                ClientMain.main(args);
+                clientMain.main(args);
             } catch (IOException ioException) {
                 throw new UncheckedIOException(ioException);
             }

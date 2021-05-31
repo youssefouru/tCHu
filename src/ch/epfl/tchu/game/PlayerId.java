@@ -1,5 +1,7 @@
 package ch.epfl.tchu.game;
 
+import ch.epfl.tchu.Preconditions;
+
 import java.util.List;
 
 /**
@@ -27,8 +29,29 @@ public enum PlayerId {
      * @return the next player
      */
     public PlayerId next() {
-        int i = this.ordinal();
-        int newIndex = (i + 1) % COUNT;
-        return ALL.get(newIndex);
+        return nextPlayable(ALL);
+    }
+
+    /**
+     * This method will set the players in the game
+     *
+     * @param i :the number of players that can play
+     * @return (List < PlayerId >) : the players who plays
+     */
+    public List<PlayerId> playable(int i) {
+        return ALL.subList(0, i);
+    }
+
+    /**
+     * This Method will gives us the next player in the playable list
+     * @param playablePlayer (List<PlayerId> ) : the playable players
+     * @return (PlayerId) : the next playerId who plays
+     * @throws IllegalArgumentException : if this playerId is not in the playable players
+     */
+    public PlayerId nextPlayable(List<PlayerId> playablePlayer){
+        Preconditions.checkArgument(playablePlayer.contains(this));
+        int i = playablePlayer.indexOf(this);
+        int newIndex = (i + 1) % playablePlayer.size();
+        return playablePlayer.get(newIndex);
     }
 }

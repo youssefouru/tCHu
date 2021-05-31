@@ -78,24 +78,31 @@ public final class GraphicalPlayer {
     private static Node chatBoxCreator(ObservableList<Text> chatMessage, PlayerId currentId, Map<PlayerId, String> playerNames, ActionHandlers.MessageSender messageSender) {
         ListView<Text> chats = new ListView<>(chatMessage);
         TextField messageField = new TextField();
-        MenuItem[] items = new MenuItem[PlayerId.COUNT - 1];
+        MenuItem[] items = new MenuItem[PlayerId.COUNT];
         for (PlayerId playerId : PlayerId.ALL) {
             if (playerId == currentId) continue;
             MenuItem menuItem = new MenuItem(playerNames.get(playerId));
             menuItem.setOnAction((event) -> {
                 if(!messageField.getText().isEmpty()) {
-                    messageSender.onSentMessage(messageField.getText(), currentId, playerId);
+                    messageSender.onSentMessage(messageField.getText().trim(), currentId, playerId);
                     messageField.clear();
                 }
             });
             int index = playerId.ordinal()>currentId.ordinal()?playerId.ordinal()-1:playerId.ordinal();
             items[index] = menuItem;
         }
+        MenuItem allItem = new MenuItem("ALL");
+        allItem.setOnAction((event -> {
+            if(!messageField.getText().trim().isEmpty()) {
+                messageSender.onSentMessage(messageField.getText(), currentId, null);
+                messageField.clear();
+            }
+        }));
+        items[PlayerId.COUNT -1] = allItem;
+
         Button sendButton = new Button();
         sendButton.setText(SEND_NAME);
         MenuButton idChooser = new MenuButton(CHOOSE_THE_PLAYER, sendButton, items);
-
-
         return new VBox(chats, idChooser,messageField);
     }
 

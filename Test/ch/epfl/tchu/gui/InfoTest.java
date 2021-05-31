@@ -266,11 +266,11 @@ InfoTest {
     void infoWonWorks() {
         var info = new Info("Bjarne");
 
-        var actual1 = info.won(2, 1);
+        var actual1 = info.won(2, List.of(1));
         var expected1 = "\nBjarne remporte la victoire avec 2 points, contre 1 point !\n";
         assertEquals(expected1, actual1);
 
-        var actual2 = info.won(3, 2);
+        var actual2 = info.won(3, List.of(2));
         var expected2 = "\nBjarne remporte la victoire avec 3 points, contre 2 points !\n";
         assertEquals(expected2, actual2);
     }

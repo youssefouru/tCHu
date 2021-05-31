@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 public class GameTest2 {
 
-    @Test
+
     void exceptionsAreThrown() {
         Random rng = new Random();
         SortedBag<Ticket> tickets = SortedBag.of(ChMap.tickets());
@@ -31,7 +31,6 @@ public class GameTest2 {
     }
 
 
-    @Test
     void gameWorks() {
         Random rng = new Random();
         long seed = 2000000000;
@@ -47,7 +46,6 @@ public class GameTest2 {
 
     }
 
-    @Test
     void moyennePoints() {
         Random rng = new Random();
         int BEAUCOUP = 100;
@@ -120,7 +118,7 @@ public class GameTest2 {
 
         public TestPlayer(long randomSeed, List<Route> allRoutes) {
             this.rng = new Random(randomSeed);
-            this.allRoutes = List.copyOf(allRoutes);
+            this.allRoutes = new ArrayList<>(allRoutes);
             this.turnCounter = 0;
         }
 
@@ -180,22 +178,23 @@ public class GameTest2 {
                 throw new Error("Trop de tours joués !");
 
             // Détermine les routes dont ce joueur peut s'emparer
-            List<Route> claimableRoutes = new ArrayList<>(allRoutes);
-            claimableRoutes.removeIf(next -> !ownState.canClaimRoute(next) || gameState.claimedRoutes().contains(next));
+            allRoutes.removeIf(next -> !ownState.canClaimRoute(next) || gameState.claimedRoutes().contains(next));
             //            if (turnCounter < 5)
             //                return TurnKind.DRAW_TICKETS;
             if (rng.nextInt(50) == 1 && gameState.canDrawTickets())
                 return TurnKind.DRAW_TICKETS;
-            if (claimableRoutes.isEmpty() && gameState.canDrawCards()) {
+            if (allRoutes.isEmpty() && gameState.canDrawCards()) {
                 return TurnKind.DRAW_CARDS;
-            } else {
-                int routeIndex = rng.nextInt(claimableRoutes.size());
-                Route route = claimableRoutes.get(routeIndex);
+            } else if (!allRoutes.isEmpty()){
+                int routeIndex = rng.nextInt(allRoutes.size());
+                Route route = allRoutes.get(routeIndex);
                 List<SortedBag<Card>> cards = ownState.possibleClaimCards(route);
 
                 routeToClaim = route;
                 initialClaimCards = cards.get(0);
                 return TurnKind.CLAIM_ROUTE;
+            }else {
+                return TurnKind.DRAW_TICKETS;
             }
         }
 
@@ -288,7 +287,7 @@ public class GameTest2 {
         /**
          * This method is used to receive a message from a the socket of messages.
          *
-         * @param message
+         * @param message jhjjh
          */
         @Override
         public void receiveMessage(String message) {

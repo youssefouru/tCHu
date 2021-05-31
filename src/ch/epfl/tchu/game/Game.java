@@ -4,8 +4,11 @@ import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.gui.Info;
 
+import javax.swing.*;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static ch.epfl.tchu.game.PlayerId.COUNT;
 
 
 /**
@@ -31,7 +34,7 @@ public final class Game {
      * @param rng         (Random) : the random object which is used several times in this method
      */
     public static void play(Map<PlayerId,? extends Player> players, Map<PlayerId, String> playerNames, SortedBag<Ticket> tickets, Random rng) {
-        Preconditions.checkArgument(players.size() == PlayerId.COUNT && playerNames.size() == PlayerId.COUNT);
+        Preconditions.checkArgument(players.size() == COUNT && playerNames.size() == COUNT);
         GameState gameState = GameState.initial(tickets, rng);
         players.forEach(((playerId, player) -> player.initPlayers(playerId, playerNames)));
         Map<PlayerId, Info> playersInfos = new EnumMap<>(PlayerId.class);
@@ -168,10 +171,14 @@ public final class Game {
 
         List<PlayerId> listOfPlayer = maxPoints(mapPoints);
         PlayerId winner = listOfPlayer.get(0);
+        List<Integer> loserPoints = PlayerId.ALL.
+                                             stream().
+                                             filter(playerId -> !listOfPlayer.contains(playerId)).
+                                             map(mapPoints::get).
+                                             collect(Collectors.toList());
         if (listOfPlayer.size() == 1) {
             int winnerPoint = mapPoints.get(winner);
-            int looserPoint = mapPoints.get(winner.next());
-            transmitInfo(players, playersInfos.get(listOfPlayer.get(0)).won(winnerPoint, looserPoint));
+            transmitInfo(players, playersInfos.get(listOfPlayer.get(0)).won(winnerPoint, loserPoints));
         } else {
             int points = mapPoints.get(winner);
             List<String> names = listOfPlayer.stream().

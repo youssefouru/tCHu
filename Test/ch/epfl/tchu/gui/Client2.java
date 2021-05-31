@@ -1,6 +1,7 @@
 package ch.epfl.tchu.gui;
 
 import ch.epfl.tchu.game.AdvancedPlayer;
+import ch.epfl.tchu.game.ChMap;
 import ch.epfl.tchu.game.GameTest2;
 import ch.epfl.tchu.game.Player;
 import ch.epfl.tchu.net.RemotePlayerClient;
@@ -42,11 +43,11 @@ public final class Client2 extends Application {
     public void start(Stage primaryStage) throws Exception {
         List<String> parameters = getParameters().getRaw();
         int i = 0;
-        String instructionSocketName = (parameters.isEmpty() || parameters.size() == 2) ?DEFAULT_HOST_NAME: parameters.get(i++);
+        String instructionSocketName = (parameters.isEmpty() || parameters.size() == 1) ?DEFAULT_HOST_NAME: parameters.get(i++);
         int instructionSocketPort = parameters.isEmpty() ? DEFAULT_PORT : Integer.parseInt(parameters.get(i));
         Socket messageSocket = new Socket(instructionSocketName,instructionSocketPort);
         //AdvancedPlayer graphicalPlayer =new GraphicalPlayerAdapter(messageSocket);
-        RemotePlayerClient client = new RemotePlayerClient(new GameTest2.TestPlayer(5108, new ArrayList<>()), instructionSocketName, instructionSocketPort,messageSocket);
+        RemotePlayerClient client = new RemotePlayerClient(new GameTest2.TestPlayer(5108, ChMap.routes()), instructionSocketName, instructionSocketPort,messageSocket);
         new Thread(client::run).start();
         new Thread(client::manageMessages).start();
     }

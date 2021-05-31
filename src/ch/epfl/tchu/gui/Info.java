@@ -1,9 +1,7 @@
 package ch.epfl.tchu.gui;
 
 import ch.epfl.tchu.SortedBag;
-import ch.epfl.tchu.game.Card;
-import ch.epfl.tchu.game.Route;
-import ch.epfl.tchu.game.Trail;
+import ch.epfl.tchu.game.*;
 
 import java.util.List;
 
@@ -18,6 +16,7 @@ import java.util.List;
 public final class Info {
     private final String player;
     private final CardBagStringConverter cardBagStringConverter;
+    private final String  POINTS_NAME = "%s point%s";
 
 
     /**
@@ -73,7 +72,7 @@ public final class Info {
     /**
      * Displays if there is a draw between two players with the number of points.
      *
-     * @param playerNames (String) : the name of the player
+     * @param playerNames (List<String>) : the name of the player
      * @param points      (int) : the number of points
      * @return (String) if there is a draw between two players with the number of points
      */
@@ -223,11 +222,26 @@ public final class Info {
      * Display that a player won, among the number of points of the winner and the number of points of the loser.
      *
      * @param points      (int) : the number of points of the player
-     * @param loserPoints (int) : the loser points of the other player
+     * @param loserPoints (List< Integer > ) : the loser points of the other player
      * @return (String) : a player won, among the number of points of the winner and the number of points of the loser
      */
-    public String won(int points, int loserPoints) {
-        return String.format(StringsFr.WINS, player, points, StringsFr.plural(points), loserPoints, StringsFr.plural(loserPoints));
+    public String won(int points, List<Integer> loserPoints) {
+        StringBuilder builder = new StringBuilder();
+        int last = 0;
+        for (int i = 0; i < loserPoints.size(); ++i) {
+            String separator = i == loserPoints.size() - 2 ? StringsFr.AND_SEPARATOR : ",";
+            separator = i == loserPoints.size() - 1 ? "" : separator;
+            int point = loserPoints.get(i);
+            if(i == loserPoints.size() - 1 ){
+                builder.append(point);
+                last = point;
+                break;
+            }
+
+            builder.append(String.format(POINTS_NAME,point,StringsFr.plural(point)));
+            builder.append(separator);
+        }
+        return String.format(StringsFr.WINS, player, points, StringsFr.plural(points),builder,StringsFr.plural(last));
     }
 
 

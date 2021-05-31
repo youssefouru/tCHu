@@ -86,7 +86,9 @@ final class MapViewCreator {
 
                 Rectangle carRectangle = new Rectangle(RECTANGLE_WIDTH, RECTANGLE_HEIGHT);
                 route.isHighlighted().addListener((o,oV,nV)->{
-                    carRectangle.getStyleClass().add("longest");
+                    if(nV) {
+                        carRectangle.getStyleClass().add("longest");
+                    }
                 });
                 carRectangle.getStyleClass().add(FILLED);
                 int circle1XPos =RECTANGLE_WIDTH/2 + SPACE_BETWEEN_CIRCLE;

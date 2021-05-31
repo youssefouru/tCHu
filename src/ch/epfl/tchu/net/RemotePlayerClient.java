@@ -81,6 +81,8 @@ public final class RemotePlayerClient {
 
     /**
      * this method will receive the instruction from the proxy and will make the player
+     * @throws UncheckedIOException if something goes wrong
+     * @throws Error if the messageId received is not good
      */
     public void run() {
         String message;
@@ -148,9 +150,7 @@ public final class RemotePlayerClient {
                         route.highlight();
                     }
                     break;
-
                 default:
-                    System.out.println(messageReceived);
                     throw new Error();
             }
         }

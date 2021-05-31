@@ -21,9 +21,8 @@
                 <Text layoutX="157.0" layoutY="112.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Player Names" />
                 <Text layoutX="159.0" layoutY="33.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Port Number" />
                 <ListView fx:id="texts" layoutX="24.0" layoutY="224.0" prefHeight="129.0" prefWidth="200.0" />
-                <Button fx:id="startServerButton" layoutX="235.0" layoutY="242.0" mnemonicParsing="false" onAction="#startServer" style="-fx-background-radius: 10;" text="Start Server" AnchorPane.topAnchor="242.0" />
-                <Button fx:id="launchNgrokButton" layoutX="67.0" layoutY="187.0" mnemonicParsing="false" onAction="#LaunchNgrok" style="-fx-background-radius: 10;" text="launch with ngrok" />
-                <Button layoutX="237.0" layoutY="302.0" mnemonicParsing="false" style="-fx-background-radius: 10;" text="Stop Game" />
+                <Button fx:id="startServerButton" layoutX="252.0" layoutY="249.0" mnemonicParsing="false" onAction="#startServer" style="-fx-background-radius: 10;" text="Start Server" AnchorPane.topAnchor="249.0" />
+                <Button fx:id="launchNgrokButton" layoutX="236.0" layoutY="313.0" mnemonicParsing="false" onAction="#LaunchNgrok" style="-fx-background-radius: 10;" text="launch with ngrok" />
             <Text layoutX="24.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Server">
                <font>
                   <Font name="Times New Roman Italic" size="22.0" />
@@ -39,7 +38,7 @@
                     </opaqueInsets>
                 </TextField>
                 <TextField fx:id="portNumberClient" layoutX="113.0" layoutY="187.0" promptText="Default 5108" style="-fx-background-radius: 10;" />
-                <Button layoutX="161.0" layoutY="238.0" mnemonicParsing="false" onAction="#connectClient" style="-fx-background-radius: 10;" text="Connect" />
+                <Button fx:id="clientButton" layoutX="161.0" layoutY="238.0" mnemonicParsing="false" onAction="#connectClient" style="-fx-background-radius: 10;" text="Connect" />
                 <Text layoutX="148.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Host Name" textAlignment="CENTER" wrappingWidth="90.33740234375" />
                 <Text layoutX="151.0" layoutY="163.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Port Number" textAlignment="CENTER" wrappingWidth="84.3310546875" />
             <Text layoutX="14.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Client " textAlignment="CENTER" wrappingWidth="67.646484375">
@@ -49,10 +48,9 @@
             </Text>
             </AnchorPane>
         </Tab>
-        <Tab text="Consigne">
+        <Tab text="Consignes">
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                <TextArea layoutY="-1.0" prefHeight="375.0" prefWidth="386.0"
-                          text="-Pour pouvoir lancer ngrok sur votre machine il vous faut l'avoir &#10; télécharger au préalable et que vous disposez d'une machine &#10; linux ou mac pouvant  executer le sript shell.&#10;&#10;- Si vous décider d'héberger la partie vérifiér que le port est pas &#10; utilisé par votre machine.&#10;&#10;-Attendez que le serveur soit lancé avant de vous connecter.&#10;&#10;&#10;- si vous jouer à partir d'un IDE n'oublier pas d'ajouter à votre VM options cette ligne :&#10;--module-path &lt;chemin&gt; --add-modules javafx.controls,javafx.fxml -ea&#10;&#10;&#10;-Lisez bien les règles du jeu.&#10;&#10;&#10;- Amusez vous bien!&#10;"/>
+                <TextArea layoutY="-1.0" prefHeight="375.0" prefWidth="386.0" text="-Pour pouvoir lancer ngrok sur votre machine il vous faut l'avoir &#10; télécharger au préalable et que vous disposez d'une machine &#10; lmac pouvant  executer le sript shell sur le terminal.&#10;&#10;-Avant d'executer launch ngrok veillez au préalable lancer cette &#10; de commande sur votre terminal &quot;chmod +x &lt;chemin vers launcher.sh&gt;&quot;&#10; et que vous soyez connecter à votre compte ngrok&#10;&#10;- Si vous décider d'héberger la partie vérifiér que le port est pas &#10; utilisé par votre machine.&#10;&#10;-Attendez que le serveur soit lancé avant de vous connecter.&#10;&#10;&#10;- si vous jouer à partir d'un IDE n'oublier pas d'ajouter à votre VM options cette ligne :&#10;--module-path &lt;chemin&gt; --add-modules javafx.controls,javafx.fxml -ea&#10;&#10;&#10;-Lisez bien les règles du jeu.&#10;&#10;&#10;- Amusez vous bien!&#10;" />
             </AnchorPane>
         </Tab>
     </TabPane>

@@ -14,7 +14,10 @@ import javafx.stage.Stage;
 
 import java.util.Objects;
 
+import static ch.epfl.tchu.gui.MenuController.hide;
+
 public final class MenuMain extends Application {
+
 
     public static void main(String[] args) {
         launch(args);
@@ -40,6 +43,11 @@ public final class MenuMain extends Application {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("MenuMain.fxml")));
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
+        hide().addListener((o,oV,nV)->{
+            if(nV) {
+                primaryStage.hide();
+            }
+        });
     }
 }
 

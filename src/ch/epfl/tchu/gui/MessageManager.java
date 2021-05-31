@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 
 public final class MessageManager {
 
-    private final static String MESSAGE_FROM = "Message from %s : %s";
+    private final static String MESSAGE_FROM = "Message from %s (%s) : %s";
     private final static String SEPARATION_CHAR = String.valueOf((char) 28);
     private final Map<PlayerId, AdvancedPlayer> proxies;
     private final Map<PlayerId, String> playerNames;
@@ -38,6 +38,13 @@ public final class MessageManager {
         PlayerId from = Serdes.PLAYER_ID_SERDE.deserialize(messageTab[i++]);
         PlayerId to = Serdes.PLAYER_ID_SERDE.deserialize(messageTab[i++]);
         String messageSent = Serdes.STRING_SERDE.deserialize(messageTab[i]);
-        proxies.get(to).sendToClient(Serdes.STRING_SERDE.serialize(String.format(MESSAGE_FROM, playerNames.get(from), messageSent)));
+        if(to == null){
+            for (PlayerId playerId : PlayerId.ALL) {
+                if(playerId == from) continue;
+                proxies.get(playerId).sendToClient(Serdes.STRING_SERDE.serialize(String.format(MESSAGE_FROM,playerNames.get(from),"public",messageSent)));
+            }
+            return;
+        }
+        proxies.get(to).sendToClient(Serdes.STRING_SERDE.serialize(String.format(MESSAGE_FROM, playerNames.get(from),"private", messageSent)));
     }
 }

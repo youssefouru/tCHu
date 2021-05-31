@@ -12,5 +12,5 @@ public enum MessageId {
     ROUTE,
     CARDS,
     CHOOSE_ADDITIONAL_CARDS,
-    NOTIFY_LONGEST;
+    NOTIFY_LONGEST,
 }

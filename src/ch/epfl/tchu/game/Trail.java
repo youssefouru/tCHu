@@ -51,7 +51,7 @@ public final class Trail {
      * @return (Trail) :  the shortest trail between the first station in parameter and the second station im parameter
      * @throws IllegalArgumentException : if the first station is equal to the second station
      */
-    public static Trail shortest(Station from,Station to){
+    public static Trail shortest(Station from,Station to,List<Route> claimableRoutes){
         Preconditions.checkArgument(from != to);
         return emptyTrail;
     }

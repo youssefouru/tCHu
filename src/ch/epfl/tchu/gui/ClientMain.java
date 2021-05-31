@@ -27,7 +27,7 @@ public final class ClientMain  {
      *
      * @param args (String[]) : the arguments of the programme
      */
-    public void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException {
 
         List<String> parameters = Arrays.stream(args).collect(Collectors.toList());
         int i = 0;

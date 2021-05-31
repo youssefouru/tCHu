@@ -71,7 +71,6 @@ public final class GraphicalPlayer {
                 DecksViewCreator.createHandView(gameState),
                 InfoViewCreator.createInfoView(playerId, playerNames, gameState, messages));
         mainStage.setScene(new Scene(mainPain));
-
         mainStage.show();
     }
 

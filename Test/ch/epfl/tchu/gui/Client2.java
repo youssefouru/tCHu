@@ -46,8 +46,8 @@ public final class Client2 extends Application {
         String instructionSocketName = (parameters.isEmpty() || parameters.size() == 1) ?DEFAULT_HOST_NAME: parameters.get(i++);
         int instructionSocketPort = parameters.isEmpty() ? DEFAULT_PORT : Integer.parseInt(parameters.get(i));
         Socket messageSocket = new Socket(instructionSocketName,instructionSocketPort);
-        //AdvancedPlayer graphicalPlayer =new GraphicalPlayerAdapter(messageSocket);
-        RemotePlayerClient client = new RemotePlayerClient(new GameTest2.TestPlayer(5108, ChMap.routes()), instructionSocketName, instructionSocketPort,messageSocket);
+        AdvancedPlayer graphicalPlayer =new GraphicalPlayerAdapter(messageSocket);
+        RemotePlayerClient client = new RemotePlayerClient(graphicalPlayer, instructionSocketName, instructionSocketPort,messageSocket);
         new Thread(client::run).start();
         new Thread(client::manageMessages).start();
     }

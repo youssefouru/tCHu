@@ -43,11 +43,6 @@ public final class MenuMain extends Application {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("MenuMain.fxml")));
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
-        hide().addListener((o,oV,nV)->{
-            if(nV) {
-                primaryStage.hide();
-            }
-        });
     }
 }
 

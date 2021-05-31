@@ -1,5 +1,7 @@
 package ch.epfl.tchu.gui;
 
+import ch.epfl.tchu.game.AdvancedPlayer;
+import ch.epfl.tchu.net.RemotePlayerClient;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -14,11 +16,16 @@ import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.net.Socket;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 
 public final class MenuController {
-
+    private final static String DEFAULT_HOST_NAME = "localhost";
+    private final static int DEFAULT_PORT = 5108;
     private final static int portNumber = 5108;
 
     private static BooleanProperty hide = new SimpleBooleanProperty();
@@ -98,7 +105,7 @@ public final class MenuController {
         }
         new Thread(()-> {
             try {
-                clientMain.main(args);
+                ClientMain.main(args);
             } catch (IOException ioException) {
                 throw new UncheckedIOException(ioException);
             }

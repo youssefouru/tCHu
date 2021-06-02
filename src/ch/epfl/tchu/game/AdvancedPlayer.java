@@ -1,7 +1,12 @@
 package ch.epfl.tchu.game;
 
 import java.util.List;
-
+/**
+ * AdvancedPlayer : this class is implemented by all the advanced players,
+ *
+ * @author Amine Youssef (324253)
+ * @author Louis Yves André Barinka (329847)
+ */
 public interface AdvancedPlayer extends Player{
     /**
      * This method is used to send a message to the client bound to the player.

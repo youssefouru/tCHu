@@ -13,6 +13,7 @@ import java.util.List;
 public enum PlayerId {
     PLAYER_1,
     PLAYER_2;
+    //PLAYER_3;
 
     /**
      * ALL (List<PLayerId>) : contains all the element of this enum type
@@ -24,34 +25,25 @@ public enum PlayerId {
     public final static int COUNT = PlayerId.values().length;
 
     /**
-     * this method returns the next player who has to play
-     *
-     * @return the next player
-     */
-    public PlayerId next() {
-        return nextPlayable(ALL);
-    }
-
-    /**
      * This method will set the players in the game
      *
      * @param i :the number of players that can play
      * @return (List < PlayerId >) : the players who plays
      */
-    public List<PlayerId> playable(int i) {
+    public static List<PlayerId> playable(int i) {
         return ALL.subList(0, i);
     }
 
     /**
-     * This Method will gives us the next player in the playable list
-     * @param playablePlayer (List<PlayerId> ) : the playable players
-     * @return (PlayerId) : the next playerId who plays
-     * @throws IllegalArgumentException : if this playerId is not in the playable players
+     * this method returns the next player who has to play
+     *
+     * @return the next player
      */
-    public PlayerId nextPlayable(List<PlayerId> playablePlayer){
-        Preconditions.checkArgument(playablePlayer.contains(this));
-        int i = playablePlayer.indexOf(this);
-        int newIndex = (i + 1) % playablePlayer.size();
-        return playablePlayer.get(newIndex);
+    public PlayerId next() {
+        int i = ALL.indexOf(this);
+        int newIndex = (i + 1) % COUNT;
+        return ALL.get(newIndex);
     }
+
+
 }

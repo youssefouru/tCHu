@@ -1,7 +1,5 @@
 package ch.epfl.tchu.gui;
 
-import ch.epfl.tchu.game.AdvancedPlayer;
-import ch.epfl.tchu.net.RemotePlayerClient;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -11,53 +9,86 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.net.Socket;
-import java.util.Arrays;
-import java.util.List;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
-
+/**
+ * MenuController : This class represents the controller of the menu.
+ *
+ * @author Amine Youssef (324253)
+ * @author Louis Yves André Barinka (329847)
+ */
 public final class MenuController {
-    private final static String DEFAULT_HOST_NAME = "localhost";
-    private final static int DEFAULT_PORT = 5108;
     private final static int portNumber = 5108;
-
-    private static BooleanProperty hide = new SimpleBooleanProperty();
+    private static final BooleanProperty hide = new SimpleBooleanProperty();
+    private static final int DEFAULT_NUMBER_OF_PLAYERS = 2;
+    private String OSName = "Mac";
     private boolean isServer = false;
     private boolean launched = false;
-
-    public static ReadOnlyBooleanProperty hide(){
-        return hide;
-    }
+    @FXML
+    private RadioButton macButton;
+    @FXML
+    private RadioButton LinuxButton;
     @FXML
     private TextField nameField;
-
     @FXML
     private TextField portField;
-
     @FXML
     private TextField portNumberClient;
-
     @FXML
     private TextField hostNameField;
-
     @FXML
     private ListView<Text> texts;
-
     @FXML
     private Button startServerButton;
-
     @FXML
     private Button launchNgrokButton;
-
     @FXML
     private Button clientButton;
+
+    /**
+     * This method return the attribute hide
+     *
+     * @return (ReadOnlyBooleanProperty) : the attribute hide
+     */
+    public static ReadOnlyBooleanProperty hide() {
+        return hide;
+    }
+
+    /**
+     * This method make the server choose macOS as his operative system to launch ngrok on it
+     */
+    @FXML
+    public void chooseMac() {
+        if (macButton.isPressed()) {
+            LinuxButton.disableProperty().set(false);
+            OSName = "";
+        } else {
+            LinuxButton.disableProperty().set(true);
+            OSName = "Mac";
+        }
+    }
+
+    /**
+     * This method make the server choose linux as his operative system to launch ngrok on it
+     */
+    @FXML
+    public void chooseLinux() {
+        if (LinuxButton.isPressed()) {
+            macButton.disableProperty().set(false);
+            OSName = "";
+
+        } else {
+            macButton.disableProperty().set(true);
+            OSName = "Linux";
+
+        }
+    }
 
     /**
      * This method will start the Server
@@ -77,12 +108,12 @@ public final class MenuController {
                 throw new UncheckedIOException(ioException);
             }
         }).start();
-        nodeDisabler(startServerButton,portField,nameField);
+        nodeDisabler(startServerButton, portField, nameField);
         isServer = true;
         launched = true;
     }
 
-    private void nodeDisabler(Node... nodes){
+    private void nodeDisabler(Node... nodes) {
         for (Node node : nodes) {
             node.disableProperty().set(true);
         }
@@ -94,7 +125,6 @@ public final class MenuController {
      */
     @FXML
     public void connectClient() {
-        ClientMain clientMain = new ClientMain();
         String[] args;
         if (hostNameField.getText().isEmpty() && !portNumberClient.getText().isEmpty()) {
             args = new String[]{portNumberClient.getText()};
@@ -103,7 +133,7 @@ public final class MenuController {
         } else {
             args = new String[]{hostNameField.getText(), portNumberClient.getText()};
         }
-        new Thread(()-> {
+        new Thread(() -> {
             try {
                 ClientMain.main(args);
             } catch (IOException ioException) {
@@ -111,13 +141,13 @@ public final class MenuController {
             }
         }
         ).start();
-        if(!isServer) {
+        if (!isServer) {
             hide.set(true);
         }
-        if(!isServer){
+        if (!isServer) {
             nodeDisabler(launchNgrokButton);
         }
-        nodeDisabler(startServerButton,clientButton,nameField,hostNameField,portField,portNumberClient);
+        nodeDisabler(startServerButton, clientButton, nameField, hostNameField, portField, portNumberClient);
     }
 
 
@@ -130,10 +160,10 @@ public final class MenuController {
     @FXML
     public void LaunchNgrok() throws IOException {
 
-        ProcessBuilder builder = new ProcessBuilder("/bin/zsh", "src/launcher.sh", portField.getText().isEmpty() ? String.valueOf(portNumber) : portField.getText());
+        ProcessBuilder builder = new ProcessBuilder("/bin/zsh", "src/launcher.sh", OSName, portField.getText().isEmpty() ? String.valueOf(portNumber) : portField.getText());
         nodeDisabler(launchNgrokButton);
         builder.start();
-        if(!launched)
+        if (!launched)
             startServer();
     }
 

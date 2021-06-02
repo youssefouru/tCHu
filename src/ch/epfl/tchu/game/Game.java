@@ -51,7 +51,7 @@ public final class Game {
         }
 
         updateStates(players, gameState);
-        for (PlayerId playerId : PlayerId.ALL) {
+        for (PlayerId playerId :PlayerId.ALL) {
             Player player = players.get(playerId);
             SortedBag<Ticket> chosenTickets = player.chooseInitialTickets();
             gameState = gameState.withInitiallyChosenTickets(playerId, chosenTickets);
@@ -206,15 +206,17 @@ public final class Game {
 
     private static Set<PlayerId> getsBonus(Map<PlayerId, Trail> longestTrailList) {
         int maxLength = longestTrailList.get(PlayerId.PLAYER_1).length();
-        for (PlayerId playerId : PlayerId.ALL) {
-            if (longestTrailList.get(playerId).length() > maxLength) {
-                maxLength = longestTrailList.get(playerId).length();
+        for (Map.Entry<PlayerId, Trail> entry : longestTrailList.entrySet()) {
+            Trail trail =entry.getValue();
+            if (trail.length() > maxLength) {
+                maxLength = trail.length();
             }
         }
         Set<PlayerId> playerIdList = new TreeSet<>(Enum::compareTo);
-        for (PlayerId playerId : PlayerId.ALL) {
-            if (longestTrailList.get(playerId).length() == maxLength) {
-                playerIdList.add(playerId);
+        for (Map.Entry<PlayerId, Trail> entry : longestTrailList.entrySet()) {
+            Trail trail =entry.getValue();
+            if (trail.length() == maxLength) {
+                playerIdList.add(entry.getKey());
             }
         }
         return playerIdList;
@@ -225,14 +227,14 @@ public final class Game {
         List<PlayerId> winner = new ArrayList<>();
 
         int max = points.get(PlayerId.PLAYER_1);
-        for (PlayerId playerId : PlayerId.ALL) {
-            if (points.get(playerId) > max) {
-                max = points.get(playerId);
+        for (Map.Entry<PlayerId, Integer> entry : points.entrySet()) {
+            if (points.get(entry.getKey()) > max) {
+                max = points.get(entry.getKey());
             }
         }
-        for (PlayerId playerId : PlayerId.ALL) {
-            if (points.get(playerId) == max) {
-                winner.add(playerId);
+        for (Map.Entry<PlayerId, Integer> entry : points.entrySet()) {
+            if (points.get(entry.getKey()) == max) {
+                winner.add(entry.getKey());
             }
         }
         return winner;

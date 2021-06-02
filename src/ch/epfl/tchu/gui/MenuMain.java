@@ -11,11 +11,17 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.util.Objects;
 
 import static ch.epfl.tchu.gui.MenuController.hide;
-
+/**
+ * MenuMain : this class will be the menu of the game
+ *
+ * @author Amine Youssef (324253)
+ * @author Louis Yves André Barinka (329847)
+ */
 public final class MenuMain extends Application {
 
 
@@ -41,8 +47,9 @@ public final class MenuMain extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("MenuMain.fxml")));
-        primaryStage.setScene(new Scene(root));
-        primaryStage.show();
+        Stage stage = new Stage(StageStyle.UTILITY);
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 }
 

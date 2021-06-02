@@ -8,6 +8,12 @@ import ch.epfl.tchu.net.Serdes;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+/**
+ * MessageManager : this class will manages the messages
+ *
+ * @author Amine Youssef (324253)
+ * @author Louis Yves André Barinka (329847)
+ */
 public final class MessageManager {
 
     private final static String MESSAGE_FROM = "Message from %s (%s) : %s";

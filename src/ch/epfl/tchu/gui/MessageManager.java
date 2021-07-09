@@ -1,7 +1,6 @@
 package ch.epfl.tchu.gui;
 
 import ch.epfl.tchu.game.AdvancedPlayer;
-import ch.epfl.tchu.game.Player;
 import ch.epfl.tchu.game.PlayerId;
 import ch.epfl.tchu.net.Serdes;
 
@@ -44,13 +43,13 @@ public final class MessageManager {
         PlayerId from = Serdes.PLAYER_ID_SERDE.deserialize(messageTab[i++]);
         PlayerId to = Serdes.PLAYER_ID_SERDE.deserialize(messageTab[i++]);
         String messageSent = Serdes.STRING_SERDE.deserialize(messageTab[i]);
-        if(to == null){
+        if (to == null) {
             for (PlayerId playerId : PlayerId.ALL) {
-                if(playerId == from) continue;
-                proxies.get(playerId).sendToClient(Serdes.STRING_SERDE.serialize(String.format(MESSAGE_FROM,playerNames.get(from),"public",messageSent)));
+                if (playerId == from) continue;
+                proxies.get(playerId).sendToClient(Serdes.STRING_SERDE.serialize(String.format(MESSAGE_FROM, playerNames.get(from), "public", messageSent)));
             }
             return;
         }
-        proxies.get(to).sendToClient(Serdes.STRING_SERDE.serialize(String.format(MESSAGE_FROM, playerNames.get(from),"private", messageSent)));
+        proxies.get(to).sendToClient(Serdes.STRING_SERDE.serialize(String.format(MESSAGE_FROM, playerNames.get(from), "private", messageSent)));
     }
 }

@@ -27,5 +27,7 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="OpenJFX 11" level="application" />
+    <orderEntry type="library" name="jaxb-api" level="project" />
+    <orderEntry type="library" name="rasp" level="project" />
   </component>
 </module>

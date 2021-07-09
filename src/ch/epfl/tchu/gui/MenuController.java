@@ -1,8 +1,6 @@
 package ch.epfl.tchu.gui;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ReadOnlyBooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -25,8 +23,7 @@ import java.util.regex.Pattern;
  */
 public final class MenuController {
     private final static int portNumber = 5108;
-    private static final BooleanProperty hide = new SimpleBooleanProperty();
-    private static final int DEFAULT_NUMBER_OF_PLAYERS = 2;
+    //by default ngrok is launched on mac os
     private String OSName = "Mac";
     private boolean isServer = false;
     private boolean launched = false;
@@ -51,27 +48,14 @@ public final class MenuController {
     @FXML
     private Button clientButton;
 
-    /**
-     * This method return the attribute hide
-     *
-     * @return (ReadOnlyBooleanProperty) : the attribute hide
-     */
-    public static ReadOnlyBooleanProperty hide() {
-        return hide;
-    }
 
     /**
      * This method make the server choose macOS as his operative system to launch ngrok on it
      */
     @FXML
     public void chooseMac() {
-        if (macButton.isPressed()) {
-            LinuxButton.disableProperty().set(false);
-            OSName = "";
-        } else {
-            LinuxButton.disableProperty().set(true);
+           nodeDisabler(macButton,LinuxButton);
             OSName = "Mac";
-        }
     }
 
     /**
@@ -79,15 +63,9 @@ public final class MenuController {
      */
     @FXML
     public void chooseLinux() {
-        if (LinuxButton.isPressed()) {
-            macButton.disableProperty().set(false);
-            OSName = "";
-
-        } else {
-            macButton.disableProperty().set(true);
+            nodeDisabler(macButton,LinuxButton);
             OSName = "Linux";
 
-        }
     }
 
     /**
@@ -102,8 +80,8 @@ public final class MenuController {
         new Thread(() -> {
             try {
                 ServerMain.main(nameField.getText().isEmpty() ? new String[]{} : nameField.getText().trim().split(Pattern.quote(" "), -1),
-                                portField.getText().isEmpty() ? portNumber : Integer.parseInt(portField.getText().trim()),
-                                playersConnected);
+                        portField.getText().isEmpty() ? portNumber : Integer.parseInt(portField.getText().trim()),
+                        playersConnected);
             } catch (IOException ioException) {
                 throw new UncheckedIOException(ioException);
             }
@@ -141,9 +119,6 @@ public final class MenuController {
             }
         }
         ).start();
-        if (!isServer) {
-            hide.set(true);
-        }
         if (!isServer) {
             nodeDisabler(launchNgrokButton);
         }

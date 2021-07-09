@@ -1,0 +1,16 @@
+<component name="libraryTable">
+  <library name="rasp">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../Downloads/pi4j-1.4/lib/jaxb-api.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../Downloads/pi4j-1.4/lib/junit.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../Downloads/pi4j-1.4/lib/pi4j-core-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../Downloads/pi4j-1.4/lib/pi4j-core.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../Downloads/pi4j-1.4/lib/pi4j-example.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../Downloads/pi4j-1.4/lib/pi4j-core-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../Downloads/pi4j-1.4/lib/pi4j-example-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -4,19 +4,13 @@ import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.AdvancedPlayer;
 import ch.epfl.tchu.game.Game;
 import ch.epfl.tchu.game.PlayerId;
-import ch.epfl.tchu.net.MessageId;
 import ch.epfl.tchu.net.RemotePlayerProxy;
-import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.text.Text;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.UncheckedIOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +57,6 @@ public final class ServerMain {
 
 
     }
-
 
 
 }
